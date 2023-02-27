@@ -22,7 +22,7 @@ const Map = ({ data, setSelectedHcp }) => {
   return (
     <div style={{ position: "relative" }}>
       <MapContainer
-        style={{ width: "100%", height: "75vh" }}
+        style={{ width: "100%", height: "800px" }}
         center={[37.445767, -100.161522]}
         zoom={4}
         scrollWheelZoom={false}
