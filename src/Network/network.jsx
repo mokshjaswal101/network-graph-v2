@@ -68,7 +68,7 @@ const Network = () => {
   }, [selectedHcp]);
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div style={{ padding: "1rem", position: "relative" }}>
       <Filters
         setIsGraph={setIsGraph}
         isGraph={isGraph}
