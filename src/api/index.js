@@ -1,6 +1,6 @@
 import axios from "axios";
 const client = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://networkgraph-backend.pharmaacuity.com/",
 });
 
 // "http://pa-v2-api-nlb-3c27031a599085c6.elb.us-east-2.amazonaws.com:3000"
