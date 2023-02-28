@@ -23,7 +23,6 @@ const StyledSelect = styled.select`
   color: black;
   padding: 4px 5px;
   font-size: 14px;
-  margin-left: 10px;
 
   option {
     color: black;
@@ -220,13 +219,11 @@ const Filters = ({
           <option value="citation">Citations</option>
         </StyledSelect> */}
 
-        {selectedHcp?.key && (
-          <StyledSelect>
-            <option value="">Influence Level</option>
-            <option value="coauthorship">First Level</option>
-            <option value="coaffiliation">Second Level</option>
-          </StyledSelect>
-        )}
+        {/* <text style={{ fontSize: "24px" }}>Influence Level</text>
+        <select>
+          <option value="coauthorship">First Level</option>
+          <option value="coaffiliation">Second Level</option>
+        </select> */}
       </div>
 
       <div
