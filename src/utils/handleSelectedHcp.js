@@ -21,6 +21,7 @@ const handleSelectedHcp = (selectedHcp, totalData, setData) => {
     newData.edges.forEach((edge) => {
       if (
         element.key != selectedHcp.key &&
+        !newData.nodes.some((x) => x.key == element.key) &&
         (element.key == edge.source || element.key == edge.target)
       ) {
         newData.nodes.push(element);

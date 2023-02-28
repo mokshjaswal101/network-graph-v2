@@ -80,7 +80,7 @@ const Graph = ({ data }) => {
   return (
     <SigmaContainer
       graph={graph}
-      style={{ height: "800px", width: "100%" }}
+      style={{ height: "100%", width: "100%" }}
       settings={{
         nodeProgramClasses: { image: getNodeProgramImage() },
         defaultNodeType: "image",

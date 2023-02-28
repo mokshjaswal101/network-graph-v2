@@ -7,6 +7,7 @@ import Filters from "./filters";
 import HcpDetails from "./hcpDetails";
 import Legends from "./legends";
 import TopHcps from "./topHcps";
+import Loader from "./loader";
 
 //apis to fetch data
 import { fetchAllData } from "../api";
@@ -35,7 +36,7 @@ const Network = () => {
 
   const [rankRange, setRankRange] = useState(null);
 
-  const [showTopHcps, setShowTopHcps] = useState(false);
+  const [showTopHcps, setShowTopHcps] = useState(true);
   const [topHcps, setTopHcps] = useState([]);
 
   const specializationList = [
@@ -79,21 +80,31 @@ const Network = () => {
         setData={setData}
         specializationList={specializationList}
         rankRange={rankRange}
+        selectedHcp={selectedHcp}
       />
-      <div>
+      <div style={{ width: "100%", height: "550px", position: "relative" }}>
+        {totalData?.nodes?.length <= 0 && <Loader />}
+
+        {showHcpDetails && selectedHcp?.key && (
+          <HcpDetails
+            selectedHcp={selectedHcp}
+            setSelectedHcp={setSelectedHcp}
+            setShowHcpDetails={setShowHcpDetails}
+          />
+        )}
+
         {isGraph ? (
           <Graph data={data} />
         ) : (
-          <Map data={data} setSelectedHcp={setSelectedHcp} />
+          <Map
+            selectedHcp={selectedHcp}
+            data={data}
+            setSelectedHcp={setSelectedHcp}
+            setShowHcpDetails={setShowHcpDetails}
+          />
         )}
       </div>
-      {showHcpDetails && selectedHcp?.key && (
-        <HcpDetails
-          selectedHcp={selectedHcp}
-          setSelectedHcp={setSelectedHcp}
-          setShowHcpDetails={setShowHcpDetails}
-        />
-      )}
+
       <Legends legends={legends} selectedHcp={selectedHcp} />
 
       {showTopHcps && (

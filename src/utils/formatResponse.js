@@ -16,7 +16,7 @@ const formatResponse = (data) => {
         label: el.attributes.label
           .split(" ")
           .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
-          .join(""),
+          .join(" "),
         color: el.attributes.color,
         zipcode: el.attributes.zipcode,
         icon: el.attributes.kol ? starred : null,

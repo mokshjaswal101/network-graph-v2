@@ -24,7 +24,6 @@ const HcpDetails = ({
         res.prescription_info = res.prescription_info.slice(0, 3);
 
       setHcpData(res);
-      console.log(res);
     });
   }, [hcp]);
 
@@ -35,17 +34,19 @@ const HcpDetails = ({
         top: "50%",
         transform: "translateY(-50%)",
         height: "fit-content",
-        maxHeight: "80%",
-        width: "30%",
+        maxHeight: "75%",
+        width: "320px",
         overflowY: "scroll",
         background: "white",
         border: "1px solid black",
-        boxShadow: "0 0 7px 0 black",
-        borderRadius: "5px",
+        boxShadow: "0 0 7px 0 rgba(0,0,0,0.5)",
+        borderRadius: "3px",
         padding: "1rem",
         color: "black",
         zIndex: 1000,
         right: "1rem",
+        wordWrap: "break-word",
+        wordBreak: "break-word",
       }}
     >
       <button
@@ -65,46 +66,55 @@ const HcpDetails = ({
       {hcpData && (
         <div>
           <StyledDiv>
-            <b>Name : </b>
+            <b>Name </b>
             {hcpData.first_name + " " + hcpData.last_name}
           </StyledDiv>
           {hcpData.rank && (
             <StyledDiv>
-              <b>Rank : </b>
+              <b>Rank </b>
               {hcpData.rank}
             </StyledDiv>
           )}
           {hcpData?.taxanomy_codes?.[0]?.specialization && (
             <StyledDiv>
-              <b>Specialization : </b>
+              <b>Specialization </b>
               {hcpData?.taxanomy_codes?.[0]?.specialization}
             </StyledDiv>
           )}
           {hcpData.credentials && (
             <StyledDiv>
-              <b>Credentials : </b>
-              <br />
+              <b>Credentials </b>
               {hcpData.credentials.map((el, index) => {
-                return <div key={index}>{`• ${el.toUpperCase()}`}</div>;
+                return (
+                  <span
+                    style={{ marginRight: ".5rem" }}
+                    key={index}
+                  >{`${el.toUpperCase()}`}</span>
+                );
               })}
             </StyledDiv>
           )}
           {hcpData.emails && (
             <StyledDiv>
-              <b>Emails : </b>
+              <b>Emails </b>
               <br />
               {hcpData.emails.map((el, index) => {
-                return <div key={index}>{`• ${el}`}</div>;
+                return (
+                  <div
+                    style={{ wordWrap: "break-word" }}
+                    key={index}
+                  >{`• ${el}`}</div>
+                );
               })}
             </StyledDiv>
           )}
           {hcpData.current_affiliation && (
             <StyledDiv>
-              <b>Current Affiliation : </b>
+              <b>Recent Affiliation </b>
               {hcpData.current_affiliation}
             </StyledDiv>
           )}
-          {hcpData.affiliations && (
+          {/* {hcpData.affiliations && (
             <StyledDiv>
               <b>Affiliations : </b>
               <br />
@@ -112,30 +122,28 @@ const HcpDetails = ({
                 return <div key={index}>{`• ${el}`}</div>;
               })}
             </StyledDiv>
-          )}
+          )} */}
           {(hcpData?.clinical_trial_counts == 0 ||
             hcpData.clinical_trial_counts) && (
             <StyledDiv>
-              <b>Clinical Trials : </b>
+              <b>Clinical Trials </b>
               {hcpData.clinical_trial_counts}
             </StyledDiv>
           )}
 
           {hcpData.prescription_info && (
             <StyledDiv>
-              <b>Prescriptions : </b>
+              <b>Prescriptions </b>
               <br />
               {hcpData.prescription_info.map((el, index) => {
                 return (
-                  <>
+                  <div key={index}>
                     <div key={el.key}>{`• ${el.key} -`}</div>
-                    <div
-                      key={el.doc_count}
-                    >{`Documents : ${el.doc_count}`}</div>
+                    <div key={el.doc_count}>{`Documents ${el.doc_count}`}</div>
                     <div
                       key={el.total_claims}
-                    >{`Total Claims : ${el.total_claims}`}</div>
-                  </>
+                    >{`Total Claims ${el.total_claims}`}</div>
+                  </div>
                 );
               })}
             </StyledDiv>

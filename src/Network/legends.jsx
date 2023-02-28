@@ -84,7 +84,12 @@ const Legends = ({ legends = {}, selectedHcp }) => {
           return (
             <div
               key={index}
-              style={{ display: "flex", alignItems: "center", gap: ".3rem" }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: ".3rem",
+                wrap: "wrap",
+              }}
             >
               <div
                 style={{
