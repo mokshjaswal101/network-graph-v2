@@ -29,7 +29,9 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setShowHcpDetails }) => {
         parseFloat(selectedHcp?.attributes.lat),
         parseFloat(selectedHcp?.attributes.lng),
       ]);
-    } else map.setView(center);
+    } else {
+      map.setView(center);
+    }
     return null;
   };
 
@@ -58,6 +60,7 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setShowHcpDetails }) => {
                     key={index}
                     id={element?.key}
                     position={[element.attributes.lat, element.attributes.lng]}
+                    zIndexOffset={element.attributes.icon ? 1000 : 0}
                     icon={
                       element.attributes.icon != null
                         ? new L.Icon({
@@ -79,12 +82,14 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setShowHcpDetails }) => {
                             };padding:${
                               selectedHcp?.key == element?.key ? "10px" : "5px"
                             };" ></div>`,
-                            popupAnchor: [6, 0],
+                            popupAnchor: [0, -5],
                           })
                     }
                   >
                     <Popup closeOnClick>
-                      {element.attributes.label}
+                      {element.attributes.label +
+                        ", " +
+                        element.attributes.credentials}
                       <button
                         style={{
                           fontStyle: "italic",

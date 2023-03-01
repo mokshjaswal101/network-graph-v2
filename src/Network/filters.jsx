@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-
 import starred from "../assets/starred.png";
 import diamondBlue from "../assets/diamondblue.png";
 import starBlue from "../assets/bluestar.png";
@@ -17,22 +16,18 @@ const StyledButton = styled.button`
 
 const StyledSelect = styled.select`
   height: 35px;
-  width: 150px;
+  width: 175px;
   border: 1px solid black;
   background: white;
   color: black;
   padding: 4px 5px;
   font-size: 14px;
-
-  option {
-    color: black;
-    background: white;
-    display: flex;
-    white-space: pre;
-    min-height: 20px;
-    padding: 4px 4px 2px;
-  }
 `;
+
+const typeFilters = [
+  { value: "coauthorship", label: "Co-Authorship" },
+  { value: "coaffiliation", label: "Co-Affiliation" },
+];
 
 const Filters = ({
   setIsGraph,
@@ -45,22 +40,30 @@ const Filters = ({
   specializationList = [],
   rankRange,
   selectedHcp,
+  stateList,
+  setInfluenceLevel,
+  influenceTypes,
+  setInfluenceTypes,
 }) => {
   const [showFilters, setShowFilters] = useState(false);
 
   const [selectedSpecialization, setSelectedSpecialization] = useState("");
   const [selectedRank, setSelectedRank] = useState("");
+  const [selectedState, setSelectedState] = useState("");
 
   const handleResetFilters = () => {
-    setSelectedHcp("");
+    setSelectedHcp(null);
     setSelectedSpecialization("");
+    setSelectedRank("");
+    setSelectedState("");
     setData(totalData);
   };
 
   const handleFilters = () => {
-    let displayData = { nodes: [], edges: [] };
+    setSelectedHcp("");
+    let displayData = structuredClone(totalData);
 
-    //filtering based on specialization
+    // filtering based on specialization
     if (selectedSpecialization) {
       let filteredData = { nodes: [], edges: [] };
       if (selectedSpecialization == "others") {
@@ -77,8 +80,6 @@ const Filters = ({
         );
       }
 
-      console.log("filteredData", filteredData);
-
       let extraNodes = [];
 
       totalData.edges.forEach((edge) => {
@@ -91,9 +92,7 @@ const Filters = ({
 
         if (source && target) {
           filteredData.edges.push(edge);
-        }
-
-        if (source || target) {
+        } else if (source || target) {
           if (source) {
             extraNodes.push(
               totalData.nodes.find((node) => node.key === edge.target)
@@ -112,6 +111,7 @@ const Filters = ({
 
       {
         !selectedRank &&
+          !selectedState &&
           filteredData.nodes.forEach((node) => {
             if (node?.attributes?.icon == starred)
               node.attributes.icon = starBlue;
@@ -119,11 +119,12 @@ const Filters = ({
           });
       }
 
-      extraNodes.forEach((node) => filteredData.nodes.push(node));
+      extraNodes.forEach((node) => {
+        if (!filteredData.nodes.some((el) => el.key == node.key))
+          filteredData.nodes.push(node);
+      });
 
       displayData = filteredData;
-    } else {
-      displayData = structuredClone(totalData);
     }
 
     //filtering based on rank
@@ -131,13 +132,11 @@ const Filters = ({
       let filteredData = { nodes: [], edges: [] };
 
       displayData.nodes.forEach((node) =>
-        node.attributes.rank >= selectedRank &&
-        node.attributes.rank < selectedRank + 500
+        node.attributes.rank >= parseInt(selectedRank) &&
+        node.attributes.rank < parseInt(selectedRank) + 500
           ? filteredData.nodes.push(structuredClone(node))
           : null
       );
-
-      console.log("filteredData", filteredData);
 
       let extraNodes = [];
 
@@ -151,9 +150,7 @@ const Filters = ({
 
         if (source && target) {
           filteredData.edges.push(edge);
-        }
-
-        if (source || target) {
+        } else if (source || target) {
           if (source) {
             extraNodes.push(
               totalData.nodes.find((node) => node.key === edge.target)
@@ -170,16 +167,86 @@ const Filters = ({
         return false;
       });
 
-      filteredData.nodes.forEach((node) => {
-        if (node?.attributes?.icon == starred) node.attributes.icon = starBlue;
-        else node.attributes.icon = diamondBlue;
+      {
+        !selectedState &&
+          filteredData.nodes.forEach((node) => {
+            if (node?.attributes?.icon == starred)
+              node.attributes.icon = starBlue;
+            else node.attributes.icon = diamondBlue;
+          });
+      }
+
+      extraNodes.forEach((node) => {
+        if (!filteredData.nodes.some((el) => el.key == node.key))
+          filteredData.nodes.push(node);
       });
 
-      extraNodes.forEach((node) => filteredData.nodes.push(node));
+      displayData = filteredData;
+    }
+
+    //filtering based on state
+    if (selectedState) {
+      let filteredData = { nodes: [], edges: [] };
+
+      displayData.nodes.forEach((node) =>
+        node.attributes.state === selectedState
+          ? filteredData.nodes.push(structuredClone(node))
+          : null
+      );
+
+      let extraNodes = [];
+
+      displayData.edges.forEach((edge) => {
+        let source = filteredData.nodes.find(
+          (node) => node.key === edge.source
+        );
+        let target = filteredData.nodes.find(
+          (node) => node.key === edge.target
+        );
+
+        if (source && target) {
+          filteredData.edges.push(edge);
+        } else if (source || target) {
+          if (source) {
+            extraNodes.push(
+              totalData.nodes.find((node) => node.key === edge.target)
+            );
+          }
+          if (target) {
+            extraNodes.push(
+              totalData.nodes.find((node) => node.key === edge.source)
+            );
+          }
+
+          filteredData.edges.push(edge);
+        }
+        return false;
+      });
+
+      {
+        filteredData.nodes.forEach((node) => {
+          if (node?.attributes?.icon == starred)
+            node.attributes.icon = starBlue;
+          else node.attributes.icon = diamondBlue;
+        });
+      }
+
+      extraNodes.forEach((node) => {
+        if (!filteredData.nodes.some((el) => el.key == node.key))
+          filteredData.nodes.push(node);
+      });
 
       setData(filteredData);
     } else {
       setData(displayData);
+    }
+  };
+
+  const handleTypeFilterChange = (type) => {
+    if (influenceTypes.includes(type)) {
+      setInfluenceTypes(influenceTypes.filter((item) => item !== type));
+    } else {
+      setInfluenceTypes([...influenceTypes, type]);
     }
   };
 
@@ -191,12 +258,13 @@ const Filters = ({
         justifyContent: "space-between",
         marginBottom: ".5rem",
         position: "relative",
+        alignItems: "flex-end",
       }}
     >
       <div
         style={{
           display: "flex",
-          alignItems: "center",
+          alignItems: "flex-end",
           gap: "1rem",
           fontSize: "2rem",
         }}
@@ -211,7 +279,6 @@ const Filters = ({
         >
           Top KOLs
         </StyledButton>
-
         {/* <StyledSelect>
           <option value="">Influence Type</option>
           <option value="coauthorship">Co-Authorship</option>
@@ -219,11 +286,74 @@ const Filters = ({
           <option value="citation">Citations</option>
         </StyledSelect> */}
 
-        {/* <text style={{ fontSize: "24px" }}>Influence Level</text>
-        <select>
-          <option value="coauthorship">First Level</option>
-          <option value="coaffiliation">Second Level</option>
-        </select> */}
+        {/* <div
+          className="checkbox-dropdown"
+          style={{ zIndex: "2000" }}
+          onClick={() =>
+            document
+              .querySelector(".checkbox-dropdown")
+              .classList.toggle("is-active")
+          }
+        >
+          Influence Types
+          <ul
+            className="checkbox-dropdown-list"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {typeFilters.map((filter, index) => (
+              <li key={index}>
+                <label>
+                  <input
+                    onChange={(e) => {
+                      handleTypeFilterChange(e.target.value);
+                    }}
+                    checked={influenceTypes.includes(filter.value)}
+                    type="checkbox"
+                    value={filter.value}
+                    name={filter.value}
+                  />
+                  {filter.label}
+                </label>
+              </li>
+            ))}
+          </ul>
+        </div> */}
+
+        {/* <div style={{ display: "flex", flexDirection: "column" }}>
+          <span
+            style={{
+              fontSize: "14px",
+              fontWeight: "bold",
+              marginBottom: "5px",
+            }}
+          >
+            INFLUENCE TYPE
+          </span>
+          <StyledSelect onChange={(e) => setInfluenceLevel(e.target.value)}>
+            <option defaultChecked value="1">
+              Co-Authorship
+            </option>
+            <option value="2">Co-Affiliation</option>
+          </StyledSelect>
+        </div> */}
+
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <span
+            style={{
+              fontSize: "14px",
+              fontWeight: "bold",
+              marginBottom: "5px",
+            }}
+          >
+            INFLUENCE LEVEL
+          </span>
+          <StyledSelect onChange={(e) => setInfluenceLevel(e.target.value)}>
+            <option defaultChecked value="1">
+              First Level
+            </option>
+            <option value="2">Second Level</option>
+          </StyledSelect>
+        </div>
       </div>
 
       <div
@@ -268,7 +398,6 @@ const Filters = ({
       {showFilters && (
         <div
           style={{
-            height: "75px",
             border: "1px solid black",
             boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)",
             backgroundColor: "white",
@@ -277,51 +406,93 @@ const Filters = ({
             right: "0",
             zIndex: 100000,
             display: "flex",
-            alignItems: "center",
+            alignItems: "flex-end",
             gap: "1rem",
             fontSize: "2rem",
             padding: "0 1rem",
+            padding: "1rem ",
           }}
         >
-          <h1 style={{ fontSize: "1.2rem" }}>Specialization</h1>
-          <select
-            style={{
-              padding: ".5rem 1rem",
-              width: "150px",
-            }}
-            onChange={(e) => setSelectedSpecialization(e.target.value)}
-            value={selectedSpecialization}
-          >
-            <option value="">All</option>
-            {specializationList.map((el, index) => {
-              return (
-                <option key={index} value={el}>
-                  {el}
-                </option>
-              );
-            })}
-            <option value={"others"}>Others</option>
-          </select>
-
-          <h1 style={{ fontSize: "1.2rem" }}>Rank</h1>
-          <select
-            style={{
-              padding: ".5rem 1rem",
-              width: "150px",
-            }}
-            onChange={(e) => setSelectedRank(e.target.value)}
-            value={selectedRank}
-          >
-            <option value="">All</option>
-            {rankRange?.length > 0 &&
-              rankRange.map((el, index) => {
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                marginBottom: "5px",
+              }}
+            >
+              SPECIALIZATION
+            </span>
+            <StyledSelect
+              onChange={(e) => setSelectedSpecialization(e.target.value)}
+              value={selectedSpecialization}
+            >
+              <option value="">All</option>
+              {specializationList.map((el, index) => {
                 return (
                   <option key={index} value={el}>
-                    {`${el + 1} - ${el + 500}`}
+                    {el
+                      .split(" ")
+                      .map((el) => el[0].toUpperCase() + el.slice(1))
+                      .join(" ")}
                   </option>
                 );
               })}
-          </select>
+              <option value={"others"}>Others</option>
+            </StyledSelect>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                marginBottom: "5px",
+              }}
+            >
+              RANK
+            </span>
+            <StyledSelect
+              onChange={(e) => setSelectedRank(e.target.value)}
+              value={selectedRank}
+            >
+              <option value="">All</option>
+              {rankRange?.length > 0 &&
+                rankRange.map((el, index) => {
+                  return (
+                    <option key={index} value={el}>
+                      {`${el + 1} - ${el + 500}`}
+                    </option>
+                  );
+                })}
+            </StyledSelect>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                marginBottom: "5px",
+              }}
+            >
+              STATE
+            </span>
+            <StyledSelect
+              onChange={(e) => setSelectedState(e.target.value)}
+              value={selectedState}
+            >
+              <option value="">All</option>
+              {stateList?.length > 0 &&
+                stateList.map((el, index) => {
+                  return (
+                    <option key={index} value={el}>
+                      {el}
+                    </option>
+                  );
+                })}
+            </StyledSelect>
+          </div>
 
           <StyledButton
             style={{

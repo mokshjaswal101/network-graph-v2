@@ -10,11 +10,12 @@ import TopHcps from "./topHcps";
 import Loader from "./loader";
 
 //apis to fetch data
-import { fetchAllData } from "../api";
+import { fetchAllData, fetchAffiliations } from "../api";
 
 //utils
 import formatResponse from "../utils/formatResponse";
 import handleSelectedHcp from "../utils/handleSelectedHcp";
+import filterDataBasedOnInfluenceTypes from "../utils/filterDataBasedOnInfluenceTypes";
 
 const Network = () => {
   const [isGraph, setIsGraph] = useState(false);
@@ -48,25 +49,54 @@ const Network = () => {
     "Psychiatry",
   ];
 
+  const [influenceLevel, setInfluenceLevel] = useState(1);
+
+  const [stateList, setStateList] = useState([]);
+
+  const [influenceTypes, setInfluenceTypes] = useState(["coauthorship"]);
+
   useEffect(() => {
     if (selectedHcp) setShowHcpDetails(true);
   }, [selectedHcp]);
 
   useEffect(() => {
-    fetchAllData().then((res) => {
-      let formattedResponse = formatResponse(res);
-      setTotalData(formattedResponse.formattedData);
-      setData(formattedResponse.formattedData);
-      setTopHcps(formattedResponse.topHcps);
-      setRankRange(formattedResponse.rankRange);
-      console.log(formattedResponse);
+    fetchAllData().then((authorship) => {
+      fetchAffiliations().then((affiliations) => {
+        let formattedResponse = formatResponse(authorship, affiliations);
+        setTotalData(formattedResponse.formattedData);
+        setData(formattedResponse.formattedData);
+        setTopHcps(formattedResponse.topHcps);
+        setRankRange(formattedResponse.rankRange);
+        setStateList(formattedResponse.stateList);
+      });
     });
   }, []);
 
   useEffect(() => {
-    if (selectedHcp?.key) handleSelectedHcp(selectedHcp, totalData, setData);
-    else setData(totalData);
-  }, [selectedHcp]);
+    if (selectedHcp?.key)
+      handleSelectedHcp(selectedHcp, totalData, setData, influenceLevel);
+  }, [selectedHcp, influenceLevel, influenceTypes]);
+
+  // useEffect(() => {
+  //   if (influenceTypes.length > 0) {
+  //     let filteredData = filterDataBasedOnInfluenceTypes(
+  //       totalData,
+  //       setData,
+  //       influenceTypes
+  //     );
+  //     setData(filteredData);
+  //   }
+  // }, [influenceTypes, totalData]);
+
+  useEffect(() => {}, [influenceTypes]);
+
+  // useEffect(() => {
+  //   console.log("data", data);
+  // }, [data]);
+
+  useEffect(() => {
+    console.log(influenceTypes);
+  }, [influenceTypes]);
 
   return (
     <div style={{ padding: "1rem", position: "relative" }}>
@@ -81,6 +111,10 @@ const Network = () => {
         specializationList={specializationList}
         rankRange={rankRange}
         selectedHcp={selectedHcp}
+        setInfluenceLevel={setInfluenceLevel}
+        stateList={stateList}
+        influenceTypes={influenceTypes}
+        setInfluenceTypes={setInfluenceTypes}
       />
       <div style={{ width: "100%", height: "550px", position: "relative" }}>
         {totalData?.nodes?.length <= 0 && <Loader />}

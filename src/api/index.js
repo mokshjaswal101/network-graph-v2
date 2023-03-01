@@ -25,4 +25,14 @@ const fetchHcpDetails = async (id) => {
   }
 };
 
-export { fetchAllData, fetchHcpDetails };
+const fetchAffiliations = async (id) => {
+  try {
+    let response = await client.get(`/elastic/getaffiliation`);
+
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export { fetchAllData, fetchHcpDetails, fetchAffiliations };

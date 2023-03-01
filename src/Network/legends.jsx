@@ -52,7 +52,7 @@ const Legends = ({ legends = {}, selectedHcp }) => {
                 style={{
                   width: "16px",
                   height: "5px",
-                  background: "rgba(255, 99, 71, 1)",
+                  background: "rgba(139,0,0, 0.8)",
                 }}
               ></div>
               <div style={{ color: "black" }}>First Level Influence</div>
@@ -64,7 +64,7 @@ const Legends = ({ legends = {}, selectedHcp }) => {
                 style={{
                   width: "16px",
                   height: "5px",
-                  background: "rgba(255,255,0, 0.7)",
+                  background: "rgba(128,0,128, 0.3)",
                 }}
               ></div>
               <div style={{ color: "black" }}>Second Level Influence</div>

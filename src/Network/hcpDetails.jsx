@@ -67,7 +67,13 @@ const HcpDetails = ({
         <div>
           <StyledDiv>
             <b>Name </b>
-            {hcpData.first_name + " " + hcpData.last_name}
+            {hcpData.first_name[0].toUpperCase() +
+              hcpData.first_name.slice(1).toLowerCase() +
+              " " +
+              hcpData.last_name[0].toUpperCase() +
+              hcpData.last_name.slice(1).toLowerCase() +
+              ", " +
+              hcpData.credentials.map((el) => el.toUpperCase()).join(" ")}
           </StyledDiv>
           {hcpData.rank && (
             <StyledDiv>
@@ -81,19 +87,7 @@ const HcpDetails = ({
               {hcpData?.taxanomy_codes?.[0]?.specialization}
             </StyledDiv>
           )}
-          {hcpData.credentials && (
-            <StyledDiv>
-              <b>Credentials </b>
-              {hcpData.credentials.map((el, index) => {
-                return (
-                  <span
-                    style={{ marginRight: ".5rem" }}
-                    key={index}
-                  >{`${el.toUpperCase()}`}</span>
-                );
-              })}
-            </StyledDiv>
-          )}
+
           {hcpData.emails && (
             <StyledDiv>
               <b>Emails </b>
@@ -138,7 +132,18 @@ const HcpDetails = ({
               {hcpData.prescription_info.map((el, index) => {
                 return (
                   <div key={index}>
-                    <div key={el.key}>{`• ${el.key} -`}</div>
+                    <div key={el.key}>{`• ${
+                      el.key.slice(0, 5) == "Govt_"
+                        ? el.key
+                            .slice(5)
+                            .split(" ")
+                            .map((el) => el[0].toUpperCase() + el.slice(1))
+                            .join(" ")
+                        : el.key
+                            .split(" ")
+                            .map((el) => el[0].toUpperCase() + el.slice(1))
+                            .join(" ")
+                    } -`}</div>
                     <div key={el.doc_count}>{`Documents ${el.doc_count}`}</div>
                     <div
                       key={el.total_claims}

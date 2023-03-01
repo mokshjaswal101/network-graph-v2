@@ -40,7 +40,7 @@ const TopHcps = ({
         >
           X
         </button>
-        <b style={{ fontSize: "1.5rem" }}>Top KOLs</b>
+        <b style={{ fontSize: "1.2rem" }}>TOP KOLs</b>
         {topHcps.map((hcp, index) => {
           return (
             <div
@@ -60,7 +60,9 @@ const TopHcps = ({
                 onChange={() => setSelectedHcp(hcp)}
                 checked={selectedHcp?.key === hcp?.key || false}
               />
-              <div>{hcp.attributes.label}</div>
+              <div>
+                {hcp.attributes.label + ", " + hcp.attributes.credentials}
+              </div>
             </div>
           );
         })}
