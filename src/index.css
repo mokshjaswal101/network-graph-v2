@@ -33,12 +33,12 @@ html {
   width: 175px;
   border: 1px solid black;
   position: relative;
-  padding: 4px 5px;
+  padding: 0 5px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   user-select: none;
-  height: 35px;
+  height: 33px;
   font-size: 14px;
 }
 
@@ -95,4 +95,52 @@ html {
 .checkbox-dropdown-list li label:hover {
   background-color: #555;
   color: white;
+}
+
+/* pagination */
+
+.page-item,
+.item {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  justify-content: center;
+  padding: 0.1rem 0.5rem;
+}
+
+.active {
+  border: solid 1px #808e9b;
+  background-color: blue;
+  color: white;
+}
+
+.next {
+  border-left: solid 1px #808e9b;
+  font-size: 4px;
+  position: absolute;
+  right: 0;
+  width: 150px;
+}
+
+.pagination {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  list-style-type: none;
+  position: relative;
+  padding: 0;
+}
+
+.pagination-page {
+  font-weight: 700;
+}
+
+.previous {
+  border-right: solid 1px #808e9b;
+  font-size: 4px;
+  left: 0;
+  position: absolute;
+  width: 150px;
 }

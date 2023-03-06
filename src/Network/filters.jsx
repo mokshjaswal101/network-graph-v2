@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import starred from "../assets/starred.png";
-import diamondBlue from "../assets/diamondblue.png";
-import starBlue from "../assets/bluestar.png";
+
+import filterData from "../utils/filterData";
 
 const StyledButton = styled.button`
   font-size: 1rem;
@@ -24,9 +23,12 @@ const StyledSelect = styled.select`
   font-size: 14px;
 `;
 
+//data for influence type dropdown
 const typeFilters = [
   { value: "coauthorship", label: "Co-Authorship" },
   { value: "coaffiliation", label: "Co-Affiliation" },
+  { value: "citation", label: "Citation" },
+  { value: "referral", label: "Referral" },
 ];
 
 const Filters = ({
@@ -38,210 +40,30 @@ const Filters = ({
   totalData,
   setData,
   specializationList = [],
-  rankRange,
-  selectedHcp,
   stateList,
   setInfluenceLevel,
   influenceTypes,
   setInfluenceTypes,
+  selectedHcp,
+  selectedSpecialization,
+  setSelectedSpecialization,
+  selectedState,
+  setSelectedState,
+  setSpecializationList,
+  setStateList,
+  influenceLevel,
+  shownKols,
+  topHcps,
 }) => {
   const [showFilters, setShowFilters] = useState(false);
-
-  const [selectedSpecialization, setSelectedSpecialization] = useState("");
-  const [selectedRank, setSelectedRank] = useState("");
-  const [selectedState, setSelectedState] = useState("");
 
   const handleResetFilters = () => {
     setSelectedHcp(null);
     setSelectedSpecialization("");
-    setSelectedRank("");
     setSelectedState("");
-    setData(totalData);
   };
 
-  const handleFilters = () => {
-    setSelectedHcp("");
-    let displayData = structuredClone(totalData);
-
-    // filtering based on specialization
-    if (selectedSpecialization) {
-      let filteredData = { nodes: [], edges: [] };
-      if (selectedSpecialization == "others") {
-        totalData.nodes.forEach((node) =>
-          !node.attributes.specialization
-            ? filteredData.nodes.push(structuredClone(node))
-            : null
-        );
-      } else {
-        totalData.nodes.forEach((node) =>
-          node.attributes.specialization === selectedSpecialization
-            ? filteredData.nodes.push(structuredClone(node))
-            : null
-        );
-      }
-
-      let extraNodes = [];
-
-      totalData.edges.forEach((edge) => {
-        let source = filteredData.nodes.find(
-          (node) => node.key === edge.source
-        );
-        let target = filteredData.nodes.find(
-          (node) => node.key === edge.target
-        );
-
-        if (source && target) {
-          filteredData.edges.push(edge);
-        } else if (source || target) {
-          if (source) {
-            extraNodes.push(
-              totalData.nodes.find((node) => node.key === edge.target)
-            );
-          }
-          if (target) {
-            extraNodes.push(
-              totalData.nodes.find((node) => node.key === edge.source)
-            );
-          }
-
-          filteredData.edges.push(edge);
-        }
-        return false;
-      });
-
-      {
-        !selectedRank &&
-          !selectedState &&
-          filteredData.nodes.forEach((node) => {
-            if (node?.attributes?.icon == starred)
-              node.attributes.icon = starBlue;
-            else node.attributes.icon = diamondBlue;
-          });
-      }
-
-      extraNodes.forEach((node) => {
-        if (!filteredData.nodes.some((el) => el.key == node.key))
-          filteredData.nodes.push(node);
-      });
-
-      displayData = filteredData;
-    }
-
-    //filtering based on rank
-    if (selectedRank) {
-      let filteredData = { nodes: [], edges: [] };
-
-      displayData.nodes.forEach((node) =>
-        node.attributes.rank >= parseInt(selectedRank) &&
-        node.attributes.rank < parseInt(selectedRank) + 500
-          ? filteredData.nodes.push(structuredClone(node))
-          : null
-      );
-
-      let extraNodes = [];
-
-      displayData.edges.forEach((edge) => {
-        let source = filteredData.nodes.find(
-          (node) => node.key === edge.source
-        );
-        let target = filteredData.nodes.find(
-          (node) => node.key === edge.target
-        );
-
-        if (source && target) {
-          filteredData.edges.push(edge);
-        } else if (source || target) {
-          if (source) {
-            extraNodes.push(
-              totalData.nodes.find((node) => node.key === edge.target)
-            );
-          }
-          if (target) {
-            extraNodes.push(
-              totalData.nodes.find((node) => node.key === edge.source)
-            );
-          }
-
-          filteredData.edges.push(edge);
-        }
-        return false;
-      });
-
-      {
-        !selectedState &&
-          filteredData.nodes.forEach((node) => {
-            if (node?.attributes?.icon == starred)
-              node.attributes.icon = starBlue;
-            else node.attributes.icon = diamondBlue;
-          });
-      }
-
-      extraNodes.forEach((node) => {
-        if (!filteredData.nodes.some((el) => el.key == node.key))
-          filteredData.nodes.push(node);
-      });
-
-      displayData = filteredData;
-    }
-
-    //filtering based on state
-    if (selectedState) {
-      let filteredData = { nodes: [], edges: [] };
-
-      displayData.nodes.forEach((node) =>
-        node.attributes.state === selectedState
-          ? filteredData.nodes.push(structuredClone(node))
-          : null
-      );
-
-      let extraNodes = [];
-
-      displayData.edges.forEach((edge) => {
-        let source = filteredData.nodes.find(
-          (node) => node.key === edge.source
-        );
-        let target = filteredData.nodes.find(
-          (node) => node.key === edge.target
-        );
-
-        if (source && target) {
-          filteredData.edges.push(edge);
-        } else if (source || target) {
-          if (source) {
-            extraNodes.push(
-              totalData.nodes.find((node) => node.key === edge.target)
-            );
-          }
-          if (target) {
-            extraNodes.push(
-              totalData.nodes.find((node) => node.key === edge.source)
-            );
-          }
-
-          filteredData.edges.push(edge);
-        }
-        return false;
-      });
-
-      {
-        filteredData.nodes.forEach((node) => {
-          if (node?.attributes?.icon == starred)
-            node.attributes.icon = starBlue;
-          else node.attributes.icon = diamondBlue;
-        });
-      }
-
-      extraNodes.forEach((node) => {
-        if (!filteredData.nodes.some((el) => el.key == node.key))
-          filteredData.nodes.push(node);
-      });
-
-      setData(filteredData);
-    } else {
-      setData(displayData);
-    }
-  };
-
+  //change influence type state based on options selected
   const handleTypeFilterChange = (type) => {
     if (influenceTypes.includes(type)) {
       setInfluenceTypes(influenceTypes.filter((item) => item !== type));
@@ -279,63 +101,51 @@ const Filters = ({
         >
           Top KOLs
         </StyledButton>
-        {/* <StyledSelect>
-          <option value="">Influence Type</option>
-          <option value="coauthorship">Co-Authorship</option>
-          <option value="coaffiliation">Co-Affiliations</option>
-          <option value="citation">Citations</option>
-        </StyledSelect> */}
 
-        {/* <div
-          className="checkbox-dropdown"
-          style={{ zIndex: "2000" }}
-          onClick={() =>
-            document
-              .querySelector(".checkbox-dropdown")
-              .classList.toggle("is-active")
-          }
-        >
-          Influence Types
-          <ul
-            className="checkbox-dropdown-list"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {typeFilters.map((filter, index) => (
-              <li key={index}>
-                <label>
-                  <input
-                    onChange={(e) => {
-                      handleTypeFilterChange(e.target.value);
-                    }}
-                    checked={influenceTypes.includes(filter.value)}
-                    type="checkbox"
-                    value={filter.value}
-                    name={filter.value}
-                  />
-                  {filter.label}
-                </label>
-              </li>
-            ))}
-          </ul>
-        </div> */}
-
-        {/* <div style={{ display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <span
             style={{
               fontSize: "14px",
               fontWeight: "bold",
               marginBottom: "5px",
+              height: "fit-content",
             }}
           >
-            INFLUENCE TYPE
+            INFLUENCE TYPES
           </span>
-          <StyledSelect onChange={(e) => setInfluenceLevel(e.target.value)}>
-            <option defaultChecked value="1">
-              Co-Authorship
-            </option>
-            <option value="2">Co-Affiliation</option>
-          </StyledSelect>
-        </div> */}
+          <div
+            className="checkbox-dropdown"
+            style={{ zIndex: "2000" }}
+            onClick={() =>
+              document
+                .querySelector(".checkbox-dropdown")
+                .classList.toggle("is-active")
+            }
+          >
+            Influence Types
+            <ul
+              className="checkbox-dropdown-list"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {typeFilters.map((filter, index) => (
+                <li key={index}>
+                  <label>
+                    <input
+                      onChange={(e) => {
+                        handleTypeFilterChange(e.target.value);
+                      }}
+                      checked={influenceTypes.includes(filter.value)}
+                      type="checkbox"
+                      value={filter.value}
+                      name={filter.value}
+                    />
+                    {filter.label}
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
           <span
@@ -348,10 +158,10 @@ const Filters = ({
             INFLUENCE LEVEL
           </span>
           <StyledSelect onChange={(e) => setInfluenceLevel(e.target.value)}>
-            <option defaultChecked value="1">
+            <option defaultChecked value={1}>
               First Level
             </option>
-            <option value="2">Second Level</option>
+            <option value={2}>Second Level</option>
           </StyledSelect>
         </div>
       </div>
@@ -438,33 +248,6 @@ const Filters = ({
                   </option>
                 );
               })}
-              <option value={"others"}>Others</option>
-            </StyledSelect>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <span
-              style={{
-                fontSize: "14px",
-                fontWeight: "bold",
-                marginBottom: "5px",
-              }}
-            >
-              RANK
-            </span>
-            <StyledSelect
-              onChange={(e) => setSelectedRank(e.target.value)}
-              value={selectedRank}
-            >
-              <option value="">All</option>
-              {rankRange?.length > 0 &&
-                rankRange.map((el, index) => {
-                  return (
-                    <option key={index} value={el}>
-                      {`${el + 1} - ${el + 500}`}
-                    </option>
-                  );
-                })}
             </StyledSelect>
           </div>
 
@@ -499,7 +282,21 @@ const Filters = ({
               background: "#0079fb",
             }}
             onClick={() => {
-              handleFilters();
+              filterData(
+                totalData,
+                setData,
+                influenceTypes,
+                influenceLevel,
+                selectedHcp,
+                selectedSpecialization,
+                selectedState,
+                setStateList,
+                setSpecializationList,
+                setSelectedState,
+                setSelectedSpecialization,
+                shownKols,
+                topHcps
+              );
             }}
           >
             Submit

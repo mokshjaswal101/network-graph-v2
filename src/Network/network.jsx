@@ -10,22 +10,41 @@ import TopHcps from "./topHcps";
 import Loader from "./loader";
 
 //apis to fetch data
-import { fetchAllData, fetchAffiliations } from "../api";
+import { fetchAllData, fetchAffiliations, fetchCitations } from "../api";
 
 //utils
 import formatResponse from "../utils/formatResponse";
-import handleSelectedHcp from "../utils/handleSelectedHcp";
-import filterDataBasedOnInfluenceTypes from "../utils/filterDataBasedOnInfluenceTypes";
+import filterData from "../utils/filterData";
 
 const Network = () => {
   const [isGraph, setIsGraph] = useState(false);
 
+  //data variables
   const [totalData, setTotalData] = useState({ nodes: [], edges: [] });
   const [data, setData] = useState({ nodes: [], edges: [] });
 
+  //which KOLs to display
+  const [shownKols, setShownKols] = useState(0);
+
+  //hcp details
   const [selectedHcp, setSelectedHcp] = useState(null);
   const [showHcpDetails, setShowHcpDetails] = useState(false);
 
+  //top KOLs
+  const [showTopHcps, setShowTopHcps] = useState(true);
+  const [topHcps, setTopHcps] = useState([]);
+
+  //influence variables
+  const [influenceLevel, setInfluenceLevel] = useState(1);
+  const [influenceTypes, setInfluenceTypes] = useState(["coauthorship"]);
+
+  //advanced Filter variables
+  const [selectedSpecialization, setSelectedSpecialization] = useState("");
+  const [selectedState, setSelectedState] = useState("");
+  const [stateList, setStateList] = useState([]);
+  const [specializationList, setSpecializationList] = useState([]);
+
+  //legends
   const [legends, setLegends] = useState({
     "internal medicine pediatrics": "#827ad5",
     Neurology: "#63af34",
@@ -35,68 +54,59 @@ const Network = () => {
     Psychiatry: "#60b6e2",
   });
 
-  const [rankRange, setRankRange] = useState(null);
-
-  const [showTopHcps, setShowTopHcps] = useState(true);
-  const [topHcps, setTopHcps] = useState([]);
-
-  const specializationList = [
-    "internal medicine pediatrics",
-    "Neurology",
-    "Vascular Neurology",
-    "Neuromuscular Medicine",
-    "Hematology & Oncology",
-    "Psychiatry",
-  ];
-
-  const [influenceLevel, setInfluenceLevel] = useState(1);
-
-  const [stateList, setStateList] = useState([]);
-
-  const [influenceTypes, setInfluenceTypes] = useState(["coauthorship"]);
-
+  //handle initial loading of data
   useEffect(() => {
-    if (selectedHcp) setShowHcpDetails(true);
-  }, [selectedHcp]);
+    fetchAllData().then((res) => {
+      let formattedResponse = formatResponse(
+        res.co_author,
+        res.co_affiliation,
+        res.citation,
+        res.referral
+      );
 
-  useEffect(() => {
-    fetchAllData().then((authorship) => {
-      fetchAffiliations().then((affiliations) => {
-        let formattedResponse = formatResponse(authorship, affiliations);
-        setTotalData(formattedResponse.formattedData);
-        setData(formattedResponse.formattedData);
-        setTopHcps(formattedResponse.topHcps);
-        setRankRange(formattedResponse.rankRange);
-        setStateList(formattedResponse.stateList);
-      });
+      filterData(
+        formattedResponse.formattedData,
+        setData,
+        influenceTypes,
+        influenceLevel,
+        selectedHcp,
+        selectedSpecialization,
+        selectedState,
+        setStateList,
+        setSpecializationList,
+        setSelectedState,
+        setSelectedSpecialization,
+        shownKols,
+        formattedResponse.topHcps
+      );
+      setTotalData(formattedResponse.formattedData);
+      setTopHcps(formattedResponse.topHcps);
     });
   }, []);
 
+  //filter data based on filter changes
   useEffect(() => {
-    if (selectedHcp?.key)
-      handleSelectedHcp(selectedHcp, totalData, setData, influenceLevel);
-  }, [selectedHcp, influenceLevel, influenceTypes]);
+    filterData(
+      totalData,
+      setData,
+      influenceTypes,
+      influenceLevel,
+      selectedHcp,
+      selectedSpecialization,
+      selectedState,
+      setStateList,
+      setSpecializationList,
+      setSelectedState,
+      setSelectedSpecialization,
+      shownKols,
+      topHcps
+    );
+  }, [influenceLevel, influenceTypes, selectedHcp, shownKols]);
 
-  // useEffect(() => {
-  //   if (influenceTypes.length > 0) {
-  //     let filteredData = filterDataBasedOnInfluenceTypes(
-  //       totalData,
-  //       setData,
-  //       influenceTypes
-  //     );
-  //     setData(filteredData);
-  //   }
-  // }, [influenceTypes, totalData]);
-
-  useEffect(() => {}, [influenceTypes]);
-
-  // useEffect(() => {
-  //   console.log("data", data);
-  // }, [data]);
-
+  //display hcp details when selected hcp changes
   useEffect(() => {
-    console.log(influenceTypes);
-  }, [influenceTypes]);
+    if (selectedHcp?.key) setShowHcpDetails(true);
+  }, [selectedHcp?.key]);
 
   return (
     <div style={{ padding: "1rem", position: "relative" }}>
@@ -109,12 +119,20 @@ const Network = () => {
         totalData={totalData}
         setData={setData}
         specializationList={specializationList}
-        rankRange={rankRange}
         selectedHcp={selectedHcp}
+        influenceLevel={influenceLevel}
         setInfluenceLevel={setInfluenceLevel}
         stateList={stateList}
         influenceTypes={influenceTypes}
         setInfluenceTypes={setInfluenceTypes}
+        selectedSpecialization={selectedSpecialization}
+        setSelectedSpecialization={setSelectedSpecialization}
+        selectedState={selectedState}
+        setSelectedState={setSelectedState}
+        setStateList={setStateList}
+        setSpecializationList={setSpecializationList}
+        shownKols={shownKols}
+        topHcps={topHcps}
       />
       <div style={{ width: "100%", height: "550px", position: "relative" }}>
         {totalData?.nodes?.length <= 0 && <Loader />}
@@ -124,6 +142,17 @@ const Network = () => {
             selectedHcp={selectedHcp}
             setSelectedHcp={setSelectedHcp}
             setShowHcpDetails={setShowHcpDetails}
+          />
+        )}
+
+        {showTopHcps && (
+          <TopHcps
+            topHcps={topHcps}
+            setSelectedHcp={setSelectedHcp}
+            setShowTopHcps={setShowTopHcps}
+            selectedHcp={selectedHcp}
+            shownKols={shownKols}
+            setShownKols={setShownKols}
           />
         )}
 
@@ -140,15 +169,6 @@ const Network = () => {
       </div>
 
       <Legends legends={legends} selectedHcp={selectedHcp} />
-
-      {showTopHcps && (
-        <TopHcps
-          topHcps={topHcps}
-          setSelectedHcp={setSelectedHcp}
-          setShowTopHcps={setShowTopHcps}
-          selectedHcp={selectedHcp}
-        />
-      )}
     </div>
   );
 };

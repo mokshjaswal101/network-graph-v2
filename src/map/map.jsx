@@ -8,6 +8,7 @@ import {
   Marker,
   Popup,
   useMap,
+  FeatureGroup,
 } from "react-leaflet";
 
 import calculatePolyLines from "./polylines";
@@ -51,6 +52,12 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setShowHcpDetails }) => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
           </LayersControl.BaseLayer>
+          <LayersControl.BaseLayer name="Street Map">
+            <TileLayer
+              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+            />
+          </LayersControl.BaseLayer>
 
           <LayersControl.Overlay checked name="KOLs Marked on Map">
             <LayerGroup>
@@ -60,7 +67,13 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setShowHcpDetails }) => {
                     key={index}
                     id={element?.key}
                     position={[element.attributes.lat, element.attributes.lng]}
-                    zIndexOffset={element.attributes.icon ? 1000 : 0}
+                    zIndexOffset={
+                      selectedHcp?.key == element?.key
+                        ? 2000
+                        : element.attributes.icon
+                        ? 1000
+                        : 0
+                    }
                     icon={
                       element.attributes.icon != null
                         ? new L.Icon({
@@ -114,12 +127,23 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setShowHcpDetails }) => {
             <LayerGroup>
               {polylines?.length > 0 &&
                 polylines.map((poly, index) => {
-                  return (
+                  return poly.level == "first" ? (
                     <Polyline
                       key={index}
-                      pathOptions={{ color: poly.cc, weight: 1 }}
+                      pathOptions={{ color: poly.cc, weight: poly.weight }}
                       positions={poly.pointList}
                     />
+                  ) : poly.level == "second" ? (
+                    <>
+                      <Polyline
+                        key={index}
+                        pathOptions={{ color: poly.cc, weight: poly.weight }}
+                        positions={poly.pointList}
+                        dashArray={"7, 7"}
+                      />
+                    </>
+                  ) : (
+                    <></>
                   );
                 })}
             </LayerGroup>

@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
+import ReactPaginate from "react-paginate";
 
 const TopHcps = ({
   topHcps = [],
   setSelectedHcp,
   setShowTopHcps,
   selectedHcp,
+  shownKols,
+  setShownKols,
 }) => {
+  const [displayKols, setDisplayKols] = useState([]);
+
   return (
     topHcps?.length > 0 && (
       <div
@@ -23,7 +28,6 @@ const TopHcps = ({
           padding: "1rem",
           color: "black",
           zIndex: 1000,
-          left: "1rem",
           overflowY: "scroll",
         }}
       >
@@ -41,7 +45,7 @@ const TopHcps = ({
           X
         </button>
         <b style={{ fontSize: "1.2rem" }}>TOP KOLs</b>
-        {topHcps.map((hcp, index) => {
+        {topHcps.slice(shownKols, shownKols + 10).map((hcp, index) => {
           return (
             <div
               key={index}
@@ -66,6 +70,28 @@ const TopHcps = ({
             </div>
           );
         })}
+        {Math.ceil(topHcps.length / 10) > 1 && (
+          <ReactPaginate
+            nextLabel=">"
+            onPageChange={(e) => setShownKols(e.selected * 10)}
+            pageRangeDisplayed={2}
+            marginPagesDisplayed={1}
+            pageCount={Math.ceil(topHcps.length / 10)}
+            previousLabel="<"
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakLabel="..."
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            containerClassName="pagination"
+            activeClassName="active"
+            renderOnZeroPageCount={null}
+          />
+        )}
       </div>
     )
   );

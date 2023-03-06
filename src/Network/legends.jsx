@@ -3,7 +3,7 @@ import starred from "../assets/starred.png";
 import diamondblue from "../assets/diamondblue.png";
 import bluestar from "../assets/bluestar.png";
 
-const Legends = ({ legends = {}, selectedHcp }) => {
+const Legends = ({ legends = {} }) => {
   return (
     <>
       <div
@@ -27,7 +27,7 @@ const Legends = ({ legends = {}, selectedHcp }) => {
             style={{
               width: "16px",
               height: "5px",
-              background: "rgba(251, 192, 147, 0.7)",
+              background: "orange",
             }}
           ></div>
           <div style={{ color: "black" }}>Affiliations</div>
@@ -42,35 +42,60 @@ const Legends = ({ legends = {}, selectedHcp }) => {
           ></div>
           <div style={{ color: "black" }}>Co-Authorship</div>
         </div>
+        <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
+          <div
+            style={{
+              width: "16px",
+              height: "5px",
+              background: "purple",
+            }}
+          ></div>
+          <div style={{ color: "black" }}>Citations</div>
+        </div>
 
-        {selectedHcp?.key && (
-          <>
+        <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
+          <div
+            style={{
+              width: "16px",
+              height: "5px",
+              background: "black",
+            }}
+          ></div>
+          <div style={{ color: "black" }}>First Level Influence</div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justContent: "center",
+              gap: ".2rem",
+            }}
+          >
             <div
-              style={{ display: "flex", alignItems: "center", gap: ".3rem" }}
-            >
-              <div
-                style={{
-                  width: "16px",
-                  height: "5px",
-                  background: "rgba(139,0,0, 0.8)",
-                }}
-              ></div>
-              <div style={{ color: "black" }}>First Level Influence</div>
-            </div>
+              style={{
+                width: "8px",
+                height: "5px",
+                background: "black",
+              }}
+            ></div>
             <div
-              style={{ display: "flex", alignItems: "center", gap: ".3rem" }}
-            >
-              <div
-                style={{
-                  width: "16px",
-                  height: "5px",
-                  background: "rgba(128,0,128, 0.3)",
-                }}
-              ></div>
-              <div style={{ color: "black" }}>Second Level Influence</div>
-            </div>
-          </>
-        )}
+              style={{
+                width: "8px",
+                height: "5px",
+                background: "black",
+              }}
+            ></div>
+            <div
+              style={{
+                width: "8px",
+                height: "5px",
+                background: "black",
+              }}
+            ></div>
+          </div>
+          <div style={{ color: "black" }}>Second Level Influence</div>
+        </div>
       </div>
       <hr style={{ height: ".5px", width: "100%", backgroundColor: "black" }} />
       <div

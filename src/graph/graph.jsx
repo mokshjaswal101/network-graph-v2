@@ -84,10 +84,10 @@ const Graph = ({ data }) => {
       settings={{
         nodeProgramClasses: { image: getNodeProgramImage() },
         defaultNodeType: "image",
+        defaultEdgeTyp: "edge",
         renderEdgeLabels: true,
-        defaultEdgeType: "arrow",
         minEdgeSize: 1,
-        maxEdgeSize: 100,
+        maxEdgeSize: 1000,
         maxIterations: 100,
         defaultNodeColor: "#3388AA",
       }}

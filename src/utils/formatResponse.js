@@ -2,17 +2,24 @@ import zipcodes from "zipcodes";
 
 import starred from "../assets/starred.png";
 
-const formatResponse = (data) => {
+import specializations from "../data/specializations";
+
+const formatResponse = (
+  data,
+  affiliationsData,
+  citationsData,
+  referralData
+) => {
   let formattedData = { nodes: [], edges: [] };
 
   let topHcps = [];
-  let states = new Set();
+  let date = new Date();
+  let count = 0;
 
-  formattedData.nodes = data.nodes.map((el) => {
+  //coauthorship data
+  formattedData.nodes = data?.nodes?.map((el) => {
     let zip = zipcodes.lookup(el.attributes.zipcode) || zipcodes.random();
-
-    states.add(zip?.state);
-
+    if (!el?.attributes?.zipcode && !el?.attributes?.state) count++;
     let hcpNode = {
       key: el.key,
       attributes: {
@@ -20,7 +27,9 @@ const formatResponse = (data) => {
           .split(" ")
           .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
           .join(" "),
-        color: el.attributes.color,
+        color:
+          specializations[el.attributes.specialization] ||
+          specializations["other"],
         state: zip?.state,
         zipcode: el.attributes.zipcode,
         icon: el.attributes.kol ? starred : null,
@@ -42,29 +51,190 @@ const formatResponse = (data) => {
     return hcpNode;
   });
 
-  formattedData.edges = data.edges.map((el, index) => {
+  formattedData.edges = data?.edges?.map((el, index) => {
     return {
       key: index,
+      type: "coauthorship",
       source: el.source,
       target: el.target,
       attributes: {
-        color: el.attributes.color,
-        size: 0.1,
+        color: "rgba(3, 169, 244, 0.3)",
+        size: el.attributes.weight || 0.1,
         label: el.attributes.label,
       },
     };
   });
 
-  let rankMax = Math.max(...data.nodes.map((el) => el.attributes.rank));
-  let rankRange = [];
+  //affiliations data
+  affiliationsData?.nodes?.forEach((node) => {
+    if (!formattedData.nodes.find((el) => el.key === node.key)) {
+      let zip = zipcodes.lookup(node.attributes.zipcode) || zipcodes.random();
 
-  for (let i = 0; i < rankMax; i += 500) {
-    rankRange.push(i);
-  }
+      if (!node?.attributes?.zipcode && !node?.attributes?.state) count++;
+      let hcpNode = {
+        key: node.key,
+        attributes: {
+          label: node.attributes.label
+            .split(" ")
+            .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
+            .join(" "),
+          color:
+            specializations[node.attributes.specialization] ||
+            specializations["other"],
+          state: zip?.state,
+          zipcode: node.attributes.zipcode,
+          icon: node.attributes.kol ? starred : null,
+          lat: parseFloat(zip?.latitude),
+          lng: parseFloat(zip?.longitude),
+          x: Math.random(),
+          y: Math.random(),
+          specialization: node.attributes.specialization,
+          rank: node.attributes.rank,
+          size: "4",
+          affiliation: node.attributes.affiliation,
+          credentials: node.attributes.credentials
+            .map((el) => el.toUpperCase())
+            .join(" "),
+        },
+      };
 
-  let stateList = Array.from(states);
+      if (node.attributes.kol) topHcps.push(hcpNode);
 
-  return { formattedData, topHcps, rankRange, stateList };
+      formattedData.nodes.push(hcpNode);
+    }
+  });
+
+  affiliationsData?.edges?.forEach((el, index) => {
+    let edge = {
+      key: formattedData.edges.length + index,
+      type: "coaffiliation",
+      source: el.source,
+      target: el.target,
+      attributes: {
+        color: "orange",
+        size: el.attributes.weight || 0.1,
+        label: el.attributes.label,
+      },
+    };
+
+    formattedData.edges.push(edge);
+  });
+
+  //Citations Data
+  citationsData?.nodes?.forEach((node) => {
+    if (!formattedData.nodes.find((el) => el.key === node.key)) {
+      let zip = zipcodes.lookup(node.attributes.zipcode) || zipcodes.random();
+
+      if (!node?.attributes?.zipcode && !node?.attributes?.state) count++;
+      let hcpNode = {
+        key: node.key,
+        attributes: {
+          label: node.attributes.label
+            .split(" ")
+            .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
+            .join(" "),
+          color:
+            specializations[node.attributes.specialization] ||
+            specializations["other"],
+          state: zip?.state,
+          zipcode: node.attributes.zipcode,
+          icon: node.attributes.kol ? starred : null,
+          lat: parseFloat(zip?.latitude),
+          lng: parseFloat(zip?.longitude),
+          x: Math.random(),
+          y: Math.random(),
+          specialization: node.attributes.specialization,
+          rank: node.attributes.rank,
+          size: "4",
+          affiliation: node.attributes.affiliation,
+          credentials: node.attributes.credentials
+            .map((el) => el.toUpperCase())
+            .join(" "),
+        },
+      };
+
+      if (node.attributes.kol) topHcps.push(hcpNode);
+
+      formattedData.nodes.push(hcpNode);
+    }
+  });
+
+  citationsData?.edges?.forEach((el, index) => {
+    let edge = {
+      key: formattedData.edges.length + index + 1,
+      type: "citation",
+      source: el.source,
+      target: el.target,
+      attributes: {
+        color: "rgba(80,00,88, 0.6)",
+        size: el.attributes.weight * 0.15 || 0.1,
+        label: el.attributes.label,
+        type: "arrow",
+      },
+    };
+
+    formattedData.edges.push(edge);
+  });
+
+  //referral data
+  referralData?.nodes?.forEach((node) => {
+    if (!formattedData.nodes.find((el) => el.key === node.key)) {
+      let zip = zipcodes.lookup(node.attributes.zipcode) || zipcodes.random();
+
+      if (!node?.attributes?.zipcode && !node?.attributes?.state) count++;
+      let hcpNode = {
+        key: node.key,
+        attributes: {
+          label: node.attributes.label
+            .split(" ")
+            .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
+            .join(" "),
+          color:
+            specializations[node.attributes.specialization] ||
+            specializations["other"],
+          state: zip?.state,
+          zipcode: node.attributes.zipcode,
+          icon: node.attributes.kol ? starred : null,
+          lat: parseFloat(zip?.latitude),
+          lng: parseFloat(zip?.longitude),
+          x: Math.random(),
+          y: Math.random(),
+          specialization: node.attributes.specialization,
+          rank: node.attributes.rank,
+          size: "4",
+          affiliation: node.attributes.affiliation,
+          credentials: node?.attributes?.credentials
+            ?.map((el) => el.toUpperCase())
+            .join(" "),
+        },
+      };
+
+      if (node.attributes.kol) topHcps.push(hcpNode);
+
+      formattedData.nodes.push(hcpNode);
+    }
+  });
+
+  referralData?.edges?.forEach((el, index) => {
+    let edge = {
+      key: formattedData.edges.length + index + 1,
+      type: "referral",
+      source: el.source,
+      target: el.target,
+      attributes: {
+        color: "pink",
+        size: el.attributes.weight || 0.1,
+        label: el.attributes.label,
+        type: "arrow",
+      },
+    };
+
+    formattedData.edges.push(edge);
+  });
+
+  console.log("time for formatting: ", (new Date() - date) / 1000);
+  console.log("Nodes without zip and state:", count);
+  return { formattedData, topHcps };
 };
 
 export default formatResponse;

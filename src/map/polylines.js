@@ -18,10 +18,13 @@ const calculatePolyLines = (data) => {
         return;
       }
     });
+
     return {
       pointList: [pointA, pointB],
       op: edge.attributes.opacity || 1,
       cc: edge.attributes.color || "#000",
+      level: edge.level,
+      weight: edge.attributes.size,
     };
   });
 

@@ -8,21 +8,11 @@ const StyledDiv = styled.div`
   font-size: 1.2rem;
 `;
 
-const HcpDetails = ({
-  selectedHcp: hcp,
-  setSelectedHcp,
-  setShowHcpDetails,
-}) => {
+const HcpDetails = ({ selectedHcp: hcp, setShowHcpDetails }) => {
   const [hcpData, setHcpData] = useState(null);
 
   useEffect(() => {
     fetchHcpDetails(hcp.key).then((res) => {
-      if (res?.affiliations?.length > 3)
-        res.affiliations = res.affiliations.slice(0, 3);
-
-      if (res?.prescription_info?.length > 3)
-        res.prescription_info = res.prescription_info.slice(0, 3);
-
       setHcpData(res);
     });
   }, [hcp]);
@@ -44,9 +34,8 @@ const HcpDetails = ({
         padding: "1rem",
         color: "black",
         zIndex: 1000,
-        right: "1rem",
+        right: "0",
         wordWrap: "break-word",
-        wordBreak: "break-word",
       }}
     >
       <button
@@ -90,7 +79,7 @@ const HcpDetails = ({
 
           {hcpData.emails && (
             <StyledDiv>
-              <b>Emails </b>
+              <b>Email </b>
               <br />
               {hcpData.emails.map((el, index) => {
                 return (
@@ -108,15 +97,7 @@ const HcpDetails = ({
               {hcpData.current_affiliation}
             </StyledDiv>
           )}
-          {/* {hcpData.affiliations && (
-            <StyledDiv>
-              <b>Affiliations : </b>
-              <br />
-              {hcpData.affiliations.map((el, index) => {
-                return <div key={index}>{`• ${el}`}</div>;
-              })}
-            </StyledDiv>
-          )} */}
+
           {(hcpData?.clinical_trial_counts == 0 ||
             hcpData.clinical_trial_counts) && (
             <StyledDiv>
