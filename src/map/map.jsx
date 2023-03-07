@@ -42,6 +42,7 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
         style={{ width: "100%", height: "550px" }}
         center={center}
         zoom={4}
+        scrollWheelZoom={false}
       >
         <ChangeView />
         <LayersControl position="topright">
