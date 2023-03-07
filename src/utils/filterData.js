@@ -16,16 +16,15 @@ const filterData = (
   setSpecializationList,
   setSelectedState,
   setSelectedSpecialization,
-  shownKols,
-  topHcps
+  KolsOffset,
+  topKols
 ) => {
   let filteredData = { nodes: [], edges: [] };
   let stateList = [];
   let specializationList = new Set();
 
   let date = new Date();
-
-  filteredData = filterBasedOnTopHcps(data, shownKols, topHcps);
+  filteredData = filterBasedOnTopHcps(data, KolsOffset, topKols);
 
   //filter based on influence filters
   let res = filterBasedOnInfluence(
@@ -67,16 +66,15 @@ const filterData = (
   setStateList(stateList);
   setData(filteredData);
   setSpecializationList(specializationList);
-  console.log("Filter time: ", (new Date() - date) / 1000);
+  // console.log("Filter time: ", (new Date() - date) / 1000);
 };
 
-const filterBasedOnTopHcps = (data, shownKols, topHcps) => {
+const filterBasedOnTopHcps = (data, KolsOffset, topKols) => {
   let formattedData = { nodes: [], edges: [] };
 
-  topHcps.slice(shownKols, shownKols + 10).forEach((kol) => {
+  topKols.slice(KolsOffset, KolsOffset + 10).forEach((kol) => {
     data.edges.forEach((edge) => {
       if (edge.source == kol.key || edge.target == kol.key) {
-        edge.level = "first";
         if (!formattedData.edges.some((el) => el.key == edge.key))
           formattedData.edges.push(edge);
       }
@@ -103,43 +101,45 @@ const filterBasedOnInfluence = (data, influenceTypes, influenceLevel) => {
   filteredData.edges.forEach((edge) => [
     data.nodes.forEach((node) => {
       if (
-        !filteredData.nodes.some((el) => el.key == node.key) &&
-        (edge.source == node.key || edge.target == node.key)
+        (edge.source == node.key || edge.target == node.key) &&
+        !filteredData.nodes.some((el) => el.key == node.key)
       ) {
         filteredData.nodes.push(node);
+        specializationList.add(node.attributes.specialization);
+        stateList.add(node.attributes.state);
       }
     }),
   ]);
 
   //filter based on influence level
-  if (influenceLevel == 2) {
-    filteredData.edges = filteredData.edges.filter(
-      (edge) => edge.level == "first" || edge.level == "second"
-    );
-  } else
-    filteredData.edges = filteredData.edges.filter(
-      (edge) => edge.level == "first"
-    );
+  // if (influenceLevel == 2) {
+  //   filteredData.edges = filteredData.edges.filter(
+  //     (edge) => edge.level == "first" || edge.level == "second"
+  //   );
+  // } else
+  //   filteredData.edges = filteredData.edges.filter(
+  //     (edge) => edge.level == "first"
+  //   );
 
-  let tempNodes = [];
+  // let tempNodes = [];
 
-  filteredData.edges.forEach((edge) => {
-    filteredData.nodes.forEach((node) => {
-      if (
-        !tempNodes.some((el) => el.key == node.key) &&
-        (edge.source == node.key || edge.target == node.key)
-      ) {
-        if (
-          Object.keys(specializations).includes(node.attributes.specialization)
-        )
-          specializationList.add(node.attributes.specialization);
-        stateList.add(node.attributes.state);
-        tempNodes.push(node);
-      }
-    });
-  });
+  // filteredData.edges.forEach((edge) => {
+  //   filteredData.nodes.forEach((node) => {
+  //     if (
+  //       !tempNodes.some((el) => el.key == node.key) &&
+  //       (edge.source == node.key || edge.target == node.key)
+  //     ) {
+  //       if (
+  //         Object.keys(specializations).includes(node.attributes.specialization)
+  //       )
+  //         specializationList.add(node.attributes.specialization);
+  //       stateList.add(node.attributes.state);
+  //       tempNodes.push(node);
+  //     }
+  //   });
+  // });
 
-  filteredData.nodes = tempNodes;
+  // filteredData.nodes = tempNodes;
 
   stateList = Array.from(stateList);
   specializationList = Array.from(specializationList);
@@ -170,7 +170,9 @@ const filterBasedOnSelectedHcp = (
   newData.nodes.push(selectedHcp);
   stateList.add(selectedHcp.attributes.state);
   if (
-    Object.keys(specializations).includes(selectedHcp.attributes.specialization)
+    !Object.keys(specializations).includes(
+      selectedHcp.attributes.specialization
+    )
   )
     specializationList.add(selectedHcp.attributes.specialization);
 

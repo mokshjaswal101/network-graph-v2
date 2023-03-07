@@ -9,7 +9,7 @@ const LegendsBottom = () => {
       style={{
         display: "flex",
         flexWrap: "wrap",
-        gap: ".5rem",
+        gap: ".75rem",
       }}
     >
       {Object.entries(Specializations)?.map((el, index) => {
@@ -30,7 +30,7 @@ const LegendsBottom = () => {
                 background: `${el[1]}`,
               }}
             ></div>
-            <div style={{ color: "black" }}>
+            <div>
               {el[0]
                 .split(" ")
                 .map((el) => el[0].toUpperCase() + el.slice(1))

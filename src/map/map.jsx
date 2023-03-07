@@ -14,7 +14,7 @@ import {
 import calculatePolyLines from "./polylines";
 import L from "leaflet";
 
-const Map = ({ data, setSelectedHcp, selectedHcp, setShowHcpDetails }) => {
+const Map = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
   const [polylines, setPolylines] = useState([]);
 
   useEffect(() => {
@@ -42,7 +42,6 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setShowHcpDetails }) => {
         style={{ width: "100%", height: "550px" }}
         center={center}
         zoom={4}
-        scrollWheelZoom={false}
       >
         <ChangeView />
         <LayersControl position="topright">
@@ -59,7 +58,7 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setShowHcpDetails }) => {
             />
           </LayersControl.BaseLayer>
 
-          <LayersControl.Overlay checked name="KOLs Marked on Map">
+          <LayersControl.Overlay checked name="KOLs">
             <LayerGroup>
               {data?.nodes?.map((element, index) => {
                 return (
@@ -86,11 +85,12 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setShowHcpDetails }) => {
                                 : new L.Point(20, 20),
                           })
                         : new L.divIcon({
+                            className: "divMarkerLeaflet",
                             iconSize:
                               selectedHcp?.key == element?.key
                                 ? new L.point(20, 20)
                                 : new L.Point(10, 10),
-                            html: `<div style="background-color:${
+                            html: `<div style=" background-color:${
                               element.attributes.color
                             };padding:${
                               selectedHcp?.key == element?.key ? "10px" : "5px"
@@ -100,21 +100,22 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setShowHcpDetails }) => {
                     }
                   >
                     <Popup closeOnClick>
-                      {element.attributes.label +
-                        ", " +
-                        element.attributes.credentials}
+                      {element.attributes.label}
+                      {element?.attributes?.credentials
+                        ? ", " + element.attributes.credentials
+                        : ""}
                       <button
                         style={{
-                          fontStyle: "italic",
-                          fontWeight: "bold",
-                          marginLeft: "5px",
+                          marginLeft: ".5rem",
+                          border: "1px solid black",
+                          padding: ".2rem .5rem",
                         }}
                         onClick={() => {
                           setSelectedHcp(element);
-                          setShowHcpDetails(true);
+                          setIsHcpDetailsShown(true);
                         }}
                       >
-                        i
+                        <i className="fa fa-info"></i>
                       </button>
                     </Popup>
                   </Marker>
@@ -123,27 +124,23 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setShowHcpDetails }) => {
             </LayerGroup>
           </LayersControl.Overlay>
 
-          <LayersControl.Overlay checked name="Influence Directed on Map">
+          <LayersControl.Overlay checked name="Influence">
             <LayerGroup>
               {polylines?.length > 0 &&
                 polylines.map((poly, index) => {
-                  return poly.level == "first" ? (
+                  return poly.level == "second" ? (
+                    <Polyline
+                      key={index}
+                      pathOptions={{ color: poly.cc, weight: poly.weight }}
+                      positions={poly.pointList}
+                      dashArray={"7, 7"}
+                    />
+                  ) : (
                     <Polyline
                       key={index}
                       pathOptions={{ color: poly.cc, weight: poly.weight }}
                       positions={poly.pointList}
                     />
-                  ) : poly.level == "second" ? (
-                    <>
-                      <Polyline
-                        key={index}
-                        pathOptions={{ color: poly.cc, weight: poly.weight }}
-                        positions={poly.pointList}
-                        dashArray={"7, 7"}
-                      />
-                    </>
-                  ) : (
-                    <></>
                   );
                 })}
             </LayerGroup>

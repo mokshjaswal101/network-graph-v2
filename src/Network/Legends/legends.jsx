@@ -8,7 +8,13 @@ const Legends = ({ legends = {} }) => {
   return (
     <>
       <LegendsTop />
-      <hr style={{ height: ".5px", backgroundColor: "black" }} />
+      <hr
+        style={{
+          height: "1px",
+          backgroundColor: "var(--color-bg)",
+          border: "none",
+        }}
+      />
       <LegendsBottom />
     </>
   );

@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 //components
 import Graph from "../graph/graph";
 import Map from "../map/map";
-import Filters from "./filters";
-import HcpDetails from "./hcpDetails";
+import Filters from "./Filters/filters";
+import HcpDetails from "./HcpDetails/hcpDetails";
 import Legends from "./Legends/legends";
-import TopHcps from "./topHcps";
+import TopKols from "./TopKols/topKols";
 import Loader from "./loader";
 
 //apis to fetch data
@@ -24,15 +24,15 @@ const Network = () => {
   const [data, setData] = useState({ nodes: [], edges: [] });
 
   //which KOLs to display
-  const [shownKols, setShownKols] = useState(0);
+  const [KolsOffset, setKolsOffset] = useState(0);
 
   //hcp details
   const [selectedHcp, setSelectedHcp] = useState(null);
-  const [showHcpDetails, setShowHcpDetails] = useState(false);
+  const [isHcpDetailsShown, setIsHcpDetailsShown] = useState(false);
 
   //top KOLs
   const [showTopHcps, setShowTopHcps] = useState(true);
-  const [topHcps, setTopHcps] = useState([]);
+  const [topKols, setTopHcps] = useState([]);
 
   //influence variables
   const [influenceLevel, setInfluenceLevel] = useState(1);
@@ -66,11 +66,11 @@ const Network = () => {
         setSpecializationList,
         setSelectedState,
         setSelectedSpecialization,
-        shownKols,
-        formattedResponse.topHcps
+        KolsOffset,
+        formattedResponse.topKols
       );
       setTotalData(formattedResponse.formattedData);
-      setTopHcps(formattedResponse.topHcps);
+      setTopHcps(formattedResponse.topKols);
     });
   }, []);
 
@@ -88,14 +88,14 @@ const Network = () => {
       setSpecializationList,
       setSelectedState,
       setSelectedSpecialization,
-      shownKols,
-      topHcps
+      KolsOffset,
+      topKols
     );
-  }, [influenceLevel, influenceTypes, selectedHcp, shownKols]);
+  }, [influenceLevel, influenceTypes, selectedHcp, KolsOffset]);
 
   //display hcp details when selected hcp changes
   useEffect(() => {
-    if (selectedHcp?.key) setShowHcpDetails(true);
+    if (selectedHcp?.key) setIsHcpDetailsShown(true);
   }, [selectedHcp?.key]);
 
   return (
@@ -121,28 +121,29 @@ const Network = () => {
         setSelectedState={setSelectedState}
         setStateList={setStateList}
         setSpecializationList={setSpecializationList}
-        shownKols={shownKols}
-        topHcps={topHcps}
+        KolsOffset={KolsOffset}
+        topKols={topKols}
+        data={data}
       />
       <div style={{ width: "100%", height: "550px", position: "relative" }}>
         {totalData?.nodes?.length <= 0 && <Loader />}
 
-        {showHcpDetails && selectedHcp?.key && (
+        {isHcpDetailsShown && selectedHcp?.key && (
           <HcpDetails
             selectedHcp={selectedHcp}
             setSelectedHcp={setSelectedHcp}
-            setShowHcpDetails={setShowHcpDetails}
+            setIsHcpDetailsShown={setIsHcpDetailsShown}
           />
         )}
 
         {showTopHcps && (
-          <TopHcps
-            topHcps={topHcps}
+          <TopKols
+            topKols={topKols}
             setSelectedHcp={setSelectedHcp}
             setShowTopHcps={setShowTopHcps}
             selectedHcp={selectedHcp}
-            shownKols={shownKols}
-            setShownKols={setShownKols}
+            KolsOffset={KolsOffset}
+            setKolsOffset={setKolsOffset}
           />
         )}
 
@@ -153,7 +154,7 @@ const Network = () => {
             selectedHcp={selectedHcp}
             data={data}
             setSelectedHcp={setSelectedHcp}
-            setShowHcpDetails={setShowHcpDetails}
+            setIsHcpDetailsShown={setIsHcpDetailsShown}
           />
         )}
       </div>

@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import { fetchHcpDetails } from "../api";
+import { fetchHcpDetails } from "../../api";
 
 const StyledDiv = styled.div`
   margin-bottom: 0.5rem;
-  font-size: 1.2rem;
 `;
 
-const HcpDetails = ({ selectedHcp: hcp, setShowHcpDetails }) => {
+const HcpDetails = ({ selectedHcp: hcp, setIsHcpDetailsShown }) => {
   const [hcpData, setHcpData] = useState(null);
 
   useEffect(() => {
@@ -21,49 +20,59 @@ const HcpDetails = ({ selectedHcp: hcp, setShowHcpDetails }) => {
     <div
       style={{
         position: "absolute",
-        top: "50%",
-        transform: "translateY(-50%)",
-        height: "fit-content",
-        maxHeight: "75%",
-        width: "320px",
-        overflowY: "scroll",
+        bottom: 0,
+        right: 0,
+        zIndex: 2000,
+        height: "75%",
+        width: "300px",
         background: "white",
-        border: "1px solid black",
-        boxShadow: "0 0 7px 0 rgba(0,0,0,0.5)",
-        borderRadius: "3px",
-        padding: "1rem",
-        color: "black",
-        zIndex: 1000,
-        right: "0",
         wordWrap: "break-word",
+        display: "flex",
+        flexDirection: "column",
+        background: "var(--color-offwhite)",
       }}
     >
-      <button
-        onClick={() => {
-          setShowHcpDetails(false);
-        }}
+      <div
         style={{
-          position: "fixed",
-          top: "1rem",
-          right: "1rem",
-          cursor: "pointer",
+          background: "var(--color-primary)",
+          color: "white",
+          fontSize: "var(--heading)",
+          display: "flex",
+          alignItems: "center",
+          padding: ".75rem",
+          justifyContent: "space-between",
+          fontWeight: "bold",
         }}
       >
-        X
-      </button>
-
-      {hcpData && (
-        <div>
-          <StyledDiv>
-            <b>Name </b>
-            {hcpData.first_name[0].toUpperCase() +
+        <div style={{ wordBreak: "break-word", width: "90%" }}>
+          {hcpData &&
+            hcpData.first_name[0].toUpperCase() +
               hcpData.first_name.slice(1).toLowerCase() +
               " " +
               hcpData.last_name[0].toUpperCase() +
               hcpData.last_name.slice(1).toLowerCase() +
               ", " +
               hcpData.credentials.map((el) => el.toUpperCase()).join(" ")}
-          </StyledDiv>
+        </div>
+
+        <button
+          style={{ color: "white" }}
+          onClick={() => {
+            setIsHcpDetailsShown(false);
+          }}
+        >
+          <i className="fa fa-times"></i>
+        </button>
+      </div>
+
+      {hcpData && (
+        <div
+          style={{
+            overflowY: "scroll",
+            flex: "1",
+            padding: ".75rem",
+          }}
+        >
           {hcpData.rank && (
             <StyledDiv>
               <b>Rank </b>
@@ -73,7 +82,10 @@ const HcpDetails = ({ selectedHcp: hcp, setShowHcpDetails }) => {
           {hcpData?.taxanomy_codes?.[0]?.specialization && (
             <StyledDiv>
               <b>Specialization </b>
-              {hcpData?.taxanomy_codes?.[0]?.specialization}
+              {hcpData?.taxanomy_codes?.[0]?.specialization
+                .split(" ")
+                .map((el) => el[0].toUpperCase() + el.slice(1))
+                .join(" ")}
             </StyledDiv>
           )}
 
@@ -125,10 +137,13 @@ const HcpDetails = ({ selectedHcp: hcp, setShowHcpDetails }) => {
                             .map((el) => el[0].toUpperCase() + el.slice(1))
                             .join(" ")
                     } -`}</div>
-                    <div key={el.doc_count}>{`Documents ${el.doc_count}`}</div>
-                    <div
-                      key={el.total_claims}
-                    >{`Total Claims ${el.total_claims}`}</div>
+                    <div key={el.doc_count}>
+                      {el?.doc_count ? `Documents ${el.doc_count}` : ""}
+                      {el?.doc_count && el?.total_claims && ", "}
+                      {el?.total_claims
+                        ? `Total Claims ${el.total_claims}`
+                        : ""}
+                    </div>
                   </div>
                 );
               })}
@@ -137,7 +152,7 @@ const HcpDetails = ({ selectedHcp: hcp, setShowHcpDetails }) => {
         </div>
       )}
 
-      {!hcpData && <b>Loading ...</b>}
+      {!hcpData && <div style={{ padding: ".5rem" }}>Loading ...</div>}
     </div>
   );
 };

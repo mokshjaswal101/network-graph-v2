@@ -11,7 +11,7 @@ const LegendsTop = () => {
       style={{
         display: "flex",
         flexWrap: "wrap",
-        gap: ".5rem",
+        gap: ".75rem",
         marginTop: ".5rem",
       }}
     >
@@ -41,7 +41,7 @@ const LegendsTop = () => {
           style={{
             width: "16px",
             height: "5px",
-            background: "rgba(3,169,244,0.3)",
+            background: "#00008B",
           }}
         ></div>
         <div>Co-Authorship</div>
@@ -61,7 +61,7 @@ const LegendsTop = () => {
           style={{
             width: "16px",
             height: "5px",
-            background: "pink",
+            background: "#008080",
           }}
         ></div>
         <div>Referral</div>

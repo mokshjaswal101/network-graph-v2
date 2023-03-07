@@ -12,15 +12,16 @@ const formatResponse = (
 ) => {
   let formattedData = { nodes: [], edges: [] };
 
-  let topHcps = [];
+  let topKols = [];
   let date = new Date();
   let count = 0;
 
   //coauthorship data
   formattedData.nodes = data?.nodes?.map((el) => {
+    let hcpNode = null;
     let zip = zipcodes.lookup(el.attributes.zipcode) || zipcodes.random();
     if (!el?.attributes?.zipcode && !el?.attributes?.state) count++;
-    let hcpNode = {
+    hcpNode = {
       key: el.key,
       attributes: {
         label: el.attributes.label
@@ -46,7 +47,7 @@ const formatResponse = (
       },
     };
 
-    if (el.attributes.kol) topHcps.push(hcpNode);
+    if (el.attributes.kol) topKols.push(hcpNode);
 
     return hcpNode;
   });
@@ -58,7 +59,7 @@ const formatResponse = (
       source: el.source,
       target: el.target,
       attributes: {
-        color: "rgba(3, 169, 244, 0.3)",
+        color: "#0047ab",
         size: el.attributes.weight || 0.1,
         label: el.attributes.label,
       },
@@ -67,52 +68,57 @@ const formatResponse = (
 
   //affiliations data
   affiliationsData?.nodes?.forEach((node) => {
-    if (!formattedData.nodes.find((el) => el.key === node.key)) {
-      let zip = zipcodes.lookup(node.attributes.zipcode) || zipcodes.random();
+    let hcpNode = null;
+    let zip = zipcodes.lookup(node.attributes.zipcode) || zipcodes.random();
 
-      if (!node?.attributes?.zipcode && !node?.attributes?.state) count++;
-      let hcpNode = {
-        key: node.key,
-        attributes: {
-          label: node.attributes.label
-            .split(" ")
-            .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
-            .join(" "),
-          color:
-            specializations[node.attributes.specialization] ||
-            specializations["other"],
-          state: zip?.state,
-          zipcode: node.attributes.zipcode,
-          icon: node.attributes.kol ? starred : null,
-          lat: parseFloat(zip?.latitude),
-          lng: parseFloat(zip?.longitude),
-          x: Math.random(),
-          y: Math.random(),
-          specialization: node.attributes.specialization,
-          rank: node.attributes.rank,
-          size: "4",
-          affiliation: node.attributes.affiliation,
-          credentials: node.attributes.credentials
-            .map((el) => el.toUpperCase())
-            .join(" "),
-        },
-      };
+    if (!node?.attributes?.zipcode && !node?.attributes?.state) count++;
+    hcpNode = {
+      key: node.key,
+      attributes: {
+        label: node.attributes.label
+          .split(" ")
+          .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
+          .join(" "),
+        color:
+          specializations[node.attributes.specialization] ||
+          specializations["other"],
+        state: zip?.state,
+        zipcode: node.attributes.zipcode,
+        icon: node.attributes.kol ? starred : null,
+        lat: parseFloat(zip?.latitude),
+        lng: parseFloat(zip?.longitude),
+        x: Math.random(),
+        y: Math.random(),
+        specialization: node.attributes.specialization,
+        rank: node.attributes.rank,
+        size: "4",
+        affiliation: node.attributes.affiliation,
+        credentials: node.attributes.credentials
+          .map((el) => el.toUpperCase())
+          .join(" "),
+      },
+    };
 
-      if (node.attributes.kol) topHcps.push(hcpNode);
-
+    if (!formattedData.nodes.find((el) => el.key === hcpNode.key)) {
       formattedData.nodes.push(hcpNode);
     }
+    if (
+      hcpNode &&
+      node.attributes.kol &&
+      !topKols.some((top) => top.key == hcpNode.key)
+    )
+      topKols.push(hcpNode);
   });
 
   affiliationsData?.edges?.forEach((el, index) => {
     let edge = {
-      key: formattedData.edges.length + index,
+      key: formattedData.edges.length + 1,
       type: "coaffiliation",
       source: el.source,
       target: el.target,
       attributes: {
         color: "orange",
-        size: el.attributes.weight || 0.1,
+        size: el.attributes.weight || 1,
         label: el.attributes.label,
       },
     };
@@ -122,46 +128,51 @@ const formatResponse = (
 
   //Citations Data
   citationsData?.nodes?.forEach((node) => {
-    if (!formattedData.nodes.find((el) => el.key === node.key)) {
-      let zip = zipcodes.lookup(node.attributes.zipcode) || zipcodes.random();
+    let hcpNode = null;
+    let zip = zipcodes.lookup(node.attributes.zipcode) || zipcodes.random();
 
-      if (!node?.attributes?.zipcode && !node?.attributes?.state) count++;
-      let hcpNode = {
-        key: node.key,
-        attributes: {
-          label: node.attributes.label
-            .split(" ")
-            .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
-            .join(" "),
-          color:
-            specializations[node.attributes.specialization] ||
-            specializations["other"],
-          state: zip?.state,
-          zipcode: node.attributes.zipcode,
-          icon: node.attributes.kol ? starred : null,
-          lat: parseFloat(zip?.latitude),
-          lng: parseFloat(zip?.longitude),
-          x: Math.random(),
-          y: Math.random(),
-          specialization: node.attributes.specialization,
-          rank: node.attributes.rank,
-          size: "4",
-          affiliation: node.attributes.affiliation,
-          credentials: node.attributes.credentials
-            .map((el) => el.toUpperCase())
-            .join(" "),
-        },
-      };
+    if (!node?.attributes?.zipcode && !node?.attributes?.state) count++;
+    hcpNode = {
+      key: node.key,
+      attributes: {
+        label: node.attributes.label
+          .split(" ")
+          .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
+          .join(" "),
+        color:
+          specializations[node.attributes.specialization] ||
+          specializations["other"],
+        state: zip?.state,
+        zipcode: node.attributes.zipcode,
+        icon: node.attributes.kol ? starred : null,
+        lat: parseFloat(zip?.latitude),
+        lng: parseFloat(zip?.longitude),
+        x: Math.random(),
+        y: Math.random(),
+        specialization: node.attributes.specialization,
+        rank: node.attributes.rank,
+        size: "4",
+        affiliation: node.attributes.affiliation,
+        credentials: node.attributes.credentials
+          .map((el) => el.toUpperCase())
+          .join(" "),
+      },
+    };
 
-      if (node.attributes.kol) topHcps.push(hcpNode);
-
+    if (!formattedData.nodes.find((el) => el.key === hcpNode.key)) {
       formattedData.nodes.push(hcpNode);
     }
+    if (
+      hcpNode &&
+      node.attributes.kol &&
+      !topKols.some((top) => top.key == hcpNode.key)
+    )
+      topKols.push(hcpNode);
   });
 
   citationsData?.edges?.forEach((el, index) => {
     let edge = {
-      key: formattedData.edges.length + index + 1,
+      key: formattedData.edges.length + 1,
       type: "citation",
       source: el.source,
       target: el.target,
@@ -178,52 +189,57 @@ const formatResponse = (
 
   //referral data
   referralData?.nodes?.forEach((node) => {
-    if (!formattedData.nodes.find((el) => el.key === node.key)) {
-      let zip = zipcodes.lookup(node.attributes.zipcode) || zipcodes.random();
+    let hcpNode = null;
+    let zip = zipcodes.lookup(node.attributes.zipcode) || zipcodes.random();
 
-      if (!node?.attributes?.zipcode && !node?.attributes?.state) count++;
-      let hcpNode = {
-        key: node.key,
-        attributes: {
-          label: node.attributes.label
-            .split(" ")
-            .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
-            .join(" "),
-          color:
-            specializations[node.attributes.specialization] ||
-            specializations["other"],
-          state: zip?.state,
-          zipcode: node.attributes.zipcode,
-          icon: node.attributes.kol ? starred : null,
-          lat: parseFloat(zip?.latitude),
-          lng: parseFloat(zip?.longitude),
-          x: Math.random(),
-          y: Math.random(),
-          specialization: node.attributes.specialization,
-          rank: node.attributes.rank,
-          size: "4",
-          affiliation: node.attributes.affiliation,
-          credentials: node?.attributes?.credentials
-            ?.map((el) => el.toUpperCase())
-            .join(" "),
-        },
-      };
+    if (!node?.attributes?.zipcode && !node?.attributes?.state) count++;
+    hcpNode = {
+      key: node.key,
+      attributes: {
+        label: node.attributes.label
+          .split(" ")
+          .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
+          .join(" "),
+        color:
+          specializations[node.attributes.specialization] ||
+          specializations["other"],
+        state: zip?.state,
+        zipcode: node.attributes.zipcode,
+        icon: node.attributes.kol ? starred : null,
+        lat: parseFloat(zip?.latitude),
+        lng: parseFloat(zip?.longitude),
+        x: Math.random(),
+        y: Math.random(),
+        specialization: node.attributes.specialization,
+        rank: node.attributes.rank,
+        size: "4",
+        affiliation: node.attributes.affiliation,
+        credentials: node?.attributes?.credentials
+          ?.map((el) => el.toUpperCase())
+          .join(" "),
+      },
+    };
 
-      if (node.attributes.kol) topHcps.push(hcpNode);
-
+    if (!formattedData.nodes.find((el) => el.key === hcpNode.key)) {
       formattedData.nodes.push(hcpNode);
     }
+    if (
+      hcpNode &&
+      node.attributes.kol &&
+      !topKols.some((top) => top.key == hcpNode.key)
+    )
+      topKols.push(hcpNode);
   });
 
   referralData?.edges?.forEach((el, index) => {
     let edge = {
-      key: formattedData.edges.length + index + 1,
+      key: formattedData.edges.length + 1,
       type: "referral",
       source: el.source,
       target: el.target,
       attributes: {
-        color: "pink",
-        size: el.attributes.weight || 0.1,
+        color: "#008080",
+        size: el.attributes.weight || 1,
         label: el.attributes.label,
         type: "arrow",
       },
@@ -234,7 +250,8 @@ const formatResponse = (
 
   console.log("time for formatting: ", (new Date() - date) / 1000);
   console.log("Nodes without zip and state:", count);
-  return { formattedData, topHcps };
+  console.log("top kols:", topKols.length);
+  return { formattedData, topKols };
 };
 
 export default formatResponse;
