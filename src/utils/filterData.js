@@ -195,21 +195,22 @@ const filterBasedOnSelectedHcp = (
         if (influenceLevel == 2) {
           let extraNodes = [];
 
-          filteredData.edges.forEach((el) => {
-            if (
-              !newData.edges.some((e) => e.key == el.key) &&
-              (element.key == el.source || element.key == el.target) &&
-              influenceTypes.includes(el.type)
-            ) {
-              let tempEdge = structuredClone(el);
-              tempEdge.level = "second";
-              newData.edges.push(tempEdge);
-            }
-            if (element.key == el.source) {
-              extraNodes.push(el.target);
-            } else extraNodes.push(el.source);
+          newData.nodes.forEach((element) => {
+            filteredData.edges.forEach((el) => {
+              if (
+                influenceTypes.includes(el.type) &&
+                !newData.edges.some((e) => e.key == el.key) &&
+                (element.key == el.source || element.key == el.target)
+              ) {
+                let tempEdge = structuredClone(el);
+                tempEdge.level = "second";
+                newData.edges.push(tempEdge);
+              }
+              if (element.key == el.source) {
+                extraNodes.push(el.target);
+              } else extraNodes.push(el.source);
+            });
           });
-
           extraNodes.forEach((extraNode) => {
             if (!newData.nodes.some((el) => el.key == extraNode)) {
               let temp = filteredData.nodes.find((e) => e.key == extraNode);
