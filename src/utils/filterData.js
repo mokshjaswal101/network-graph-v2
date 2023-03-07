@@ -199,16 +199,17 @@ const filterBasedOnSelectedHcp = (
             filteredData.edges.forEach((el) => {
               if (
                 influenceTypes.includes(el.type) &&
-                !newData.edges.some((e) => e.key == el.key) &&
-                (element.key == el.source || element.key == el.target)
+                (element.key == el.source || element.key == el.target) &&
+                !newData.edges.some((e) => e.key == el.key)
               ) {
                 let tempEdge = structuredClone(el);
                 tempEdge.level = "second";
                 newData.edges.push(tempEdge);
+
+                if (element.key == el.source) {
+                  extraNodes.push(el.target);
+                } else extraNodes.push(el.source);
               }
-              if (element.key == el.source) {
-                extraNodes.push(el.target);
-              } else extraNodes.push(el.source);
             });
           });
           extraNodes.forEach((extraNode) => {
