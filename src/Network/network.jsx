@@ -5,7 +5,7 @@ import Graph from "../graph/graph";
 import Map from "../map/map";
 import Filters from "./filters";
 import HcpDetails from "./hcpDetails";
-import Legends from "./legends";
+import Legends from "./Legends/legends";
 import TopHcps from "./topHcps";
 import Loader from "./loader";
 
@@ -43,16 +43,6 @@ const Network = () => {
   const [selectedState, setSelectedState] = useState("");
   const [stateList, setStateList] = useState([]);
   const [specializationList, setSpecializationList] = useState([]);
-
-  //legends
-  const [legends, setLegends] = useState({
-    "internal medicine pediatrics": "#827ad5",
-    Neurology: "#63af34",
-    "Vascular Neurology": "#af2cb3",
-    "Neuromuscular Medicine": "#bfd247",
-    "Hematology & Oncology": "#27360b",
-    Psychiatry: "#60b6e2",
-  });
 
   //handle initial loading of data
   useEffect(() => {
@@ -168,7 +158,7 @@ const Network = () => {
         )}
       </div>
 
-      <Legends legends={legends} selectedHcp={selectedHcp} />
+      <Legends />
     </div>
   );
 };

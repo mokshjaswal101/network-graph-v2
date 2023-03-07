@@ -1,4 +1,4 @@
-const specializations = {
+const Specializations = {
   "internal medicine pediatrics": "#827ad5",
   Neurology: "#63af34",
   "Vascular Neurology": "#af2cb3",
@@ -8,4 +8,4 @@ const specializations = {
   other: "#275E40",
 };
 
-export default specializations;
+export default Specializations;
