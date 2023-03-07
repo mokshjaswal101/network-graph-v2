@@ -174,7 +174,7 @@ const Filters = ({
                 .classList.toggle("is-active")
             }
           >
-            Influence Types
+            Influence Level
             <ul className="dropdown-list" onClick={(e) => e.stopPropagation()}>
               <li>
                 <label
