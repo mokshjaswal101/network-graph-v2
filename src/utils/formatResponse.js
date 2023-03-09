@@ -102,11 +102,7 @@ const formatResponse = (
     if (!formattedData.nodes.find((el) => el.key === hcpNode.key)) {
       formattedData.nodes.push(hcpNode);
     }
-    if (
-      hcpNode &&
-      node.attributes.kol &&
-      !topKols.some((top) => top.key == hcpNode.key)
-    )
+    if (node.attributes.kol && !topKols.some((top) => top.key == hcpNode.key))
       topKols.push(hcpNode);
   });
 
@@ -162,11 +158,7 @@ const formatResponse = (
     if (!formattedData.nodes.find((el) => el.key === hcpNode.key)) {
       formattedData.nodes.push(hcpNode);
     }
-    if (
-      hcpNode &&
-      node.attributes.kol &&
-      !topKols.some((top) => top.key == hcpNode.key)
-    )
+    if (node.attributes.kol && !topKols.some((top) => top.key == hcpNode.key))
       topKols.push(hcpNode);
   });
 
@@ -223,11 +215,7 @@ const formatResponse = (
     if (!formattedData.nodes.find((el) => el.key === hcpNode.key)) {
       formattedData.nodes.push(hcpNode);
     }
-    if (
-      hcpNode &&
-      node.attributes.kol &&
-      !topKols.some((top) => top.key == hcpNode.key)
-    )
+    if (node.attributes.kol && !topKols.some((top) => top.key == hcpNode.key))
       topKols.push(hcpNode);
   });
 

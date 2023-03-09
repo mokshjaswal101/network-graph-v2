@@ -11,6 +11,8 @@ import {
   FeatureGroup,
 } from "react-leaflet";
 
+import getArrow from "./getArrows";
+
 import calculatePolyLines from "./polylines";
 import L from "leaflet";
 
@@ -130,18 +132,39 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
               {polylines?.length > 0 &&
                 polylines.map((poly, index) => {
                   return poly.level == "second" ? (
-                    <Polyline
-                      key={index}
-                      pathOptions={{ color: poly.cc, weight: poly.weight }}
-                      positions={poly.pointList}
-                      dashArray={"7, 7"}
-                    />
+                    <>
+                      <Polyline
+                        key={index}
+                        pathOptions={{ color: poly.cc, weight: poly.weight }}
+                        positions={poly.pointList}
+                        dashArray={"7, 7"}
+                      />
+
+                      {poly?.type == "arrow" ? (
+                        getArrow(
+                          [poly.pointList[1], poly.pointList[0]],
+                          poly.cc
+                        )
+                      ) : (
+                        <></>
+                      )}
+                    </>
                   ) : (
-                    <Polyline
-                      key={index}
-                      pathOptions={{ color: poly.cc, weight: poly.weight }}
-                      positions={poly.pointList}
-                    />
+                    <>
+                      <Polyline
+                        key={index}
+                        pathOptions={{ color: poly.cc, weight: poly.weight }}
+                        positions={poly.pointList}
+                      />
+                      {poly?.type == "arrow" ? (
+                        getArrow(
+                          [poly.pointList[1], poly.pointList[0]],
+                          poly.cc
+                        )
+                      ) : (
+                        <></>
+                      )}
+                    </>
                   );
                 })}
             </LayerGroup>

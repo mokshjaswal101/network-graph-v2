@@ -89,7 +89,7 @@ const filterBasedOnTopHcps = (data, KolsOffset, topKols) => {
   return formattedData;
 };
 
-const filterBasedOnInfluence = (data, influenceTypes, influenceLevel) => {
+const filterBasedOnInfluence = (data, influenceTypes) => {
   let filteredData = { nodes: [], edges: [] };
   let stateList = new Set();
   let specializationList = new Set();
@@ -180,8 +180,8 @@ const filterBasedOnSelectedHcp = (
     newData?.edges?.forEach((edge) => {
       if (
         element.key != selectedHcp.key &&
-        !newData.nodes.some((x) => x.key == element.key) &&
-        (element.key == edge.source || element.key == edge.target)
+        (element.key == edge.source || element.key == edge.target) &&
+        !newData.nodes.some((x) => x.key == element.key)
       ) {
         newData.nodes.push(element);
         stateList.add(element.attributes.state);
