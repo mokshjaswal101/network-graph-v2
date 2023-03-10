@@ -1,6 +1,7 @@
 import zipcodes from "zipcodes";
 
 import starred from "../assets/starred.png";
+import prescriber from "../assets/prescriber.png";
 
 import specializations from "../data/specializations";
 
@@ -10,14 +11,16 @@ const formatResponse = (
   citationsData,
   referralData
 ) => {
-  let formattedData = { nodes: [], edges: [] };
+  let kolData = { nodes: [], edges: [] };
+  let prescriberData = { nodes: [], edges: [] };
 
   let topKols = [];
+  let prescribers = [];
   let date = new Date();
   let count = 0;
 
   //coauthorship data
-  formattedData.nodes = data?.nodes?.map((el) => {
+  kolData.nodes = data?.nodes?.map((el) => {
     let hcpNode = null;
     let zip = zipcodes.lookup(el.attributes.zipcode) || zipcodes.random();
     if (!el?.attributes?.zipcode && !el?.attributes?.state) count++;
@@ -52,15 +55,15 @@ const formatResponse = (
     return hcpNode;
   });
 
-  formattedData.edges = data?.edges?.map((el, index) => {
+  kolData.edges = data?.edges?.map((el, index) => {
     return {
       key: index,
-      type: "coauthorship",
+      influence: "coauthorship",
       source: el.source,
       target: el.target,
       attributes: {
         color: "#0047ab",
-        size: el.attributes.weight || 0.1,
+        size: el.attributes?.weight > 7 ? 7 : el.attributes.weight || 0.1,
         label: el.attributes.label,
       },
     };
@@ -99,8 +102,8 @@ const formatResponse = (
       },
     };
 
-    if (!formattedData.nodes.find((el) => el.key === hcpNode.key)) {
-      formattedData.nodes.push(hcpNode);
+    if (!kolData.nodes.find((el) => el.key === hcpNode.key)) {
+      kolData.nodes.push(hcpNode);
     }
     if (node.attributes.kol && !topKols.some((top) => top.key == hcpNode.key))
       topKols.push(hcpNode);
@@ -108,18 +111,18 @@ const formatResponse = (
 
   affiliationsData?.edges?.forEach((el, index) => {
     let edge = {
-      key: formattedData.edges.length + 1,
-      type: "coaffiliation",
+      key: kolData.edges.length + 1,
+      influence: "coaffiliation",
       source: el.source,
       target: el.target,
       attributes: {
         color: "orange",
-        size: el.attributes.weight || 1,
+        size: el.attributes?.weight > 7 ? 7 : el.attributes.weight || 0.1,
         label: el.attributes.label,
       },
     };
 
-    formattedData.edges.push(edge);
+    kolData.edges.push(edge);
   });
 
   //Citations Data
@@ -155,8 +158,8 @@ const formatResponse = (
       },
     };
 
-    if (!formattedData.nodes.find((el) => el.key === hcpNode.key)) {
-      formattedData.nodes.push(hcpNode);
+    if (!kolData.nodes.find((el) => el.key === hcpNode.key)) {
+      kolData.nodes.push(hcpNode);
     }
     if (node.attributes.kol && !topKols.some((top) => top.key == hcpNode.key))
       topKols.push(hcpNode);
@@ -164,82 +167,84 @@ const formatResponse = (
 
   citationsData?.edges?.forEach((el, index) => {
     let edge = {
-      key: formattedData.edges.length + 1,
-      type: "citation",
+      key: kolData.edges.length + 1,
+      influence: "citation",
       source: el.source,
       target: el.target,
       attributes: {
         color: "rgba(80,00,88, 0.6)",
-        size: el.attributes.weight * 0.15 || 0.1,
+        size:
+          el.attributes?.weight * 0.15 > 7
+            ? 7
+            : el.attributes.weight * 0.15 || 0.15,
         label: el.attributes.label,
         type: "arrow",
       },
     };
 
-    formattedData.edges.push(edge);
+    kolData.edges.push(edge);
   });
 
   //referral data
-  referralData?.nodes?.forEach((node) => {
+  prescriberData.nodes = referralData?.nodes?.map((el) => {
     let hcpNode = null;
-    let zip = zipcodes.lookup(node.attributes.zipcode) || zipcodes.random();
-
-    if (!node?.attributes?.zipcode && !node?.attributes?.state) count++;
+    let zip = zipcodes.lookup(el.attributes.zipcode) || zipcodes.random();
+    if (!el?.attributes?.zipcode && !el?.attributes?.state) count++;
     hcpNode = {
-      key: node.key,
+      key: el.key,
       attributes: {
-        label: node.attributes.label
-          .split(" ")
+        label: el?.attributes?.label
+          ?.split(" ")
           .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
           .join(" "),
         color:
-          specializations[node.attributes.specialization] ||
+          specializations[el.attributes.specialization] ||
           specializations["other"],
         state: zip?.state,
-        zipcode: node.attributes.zipcode,
-        icon: node.attributes.kol ? starred : null,
+        zipcode: el.attributes.zipcode,
+        icon: el.attributes.prescriber ? prescriber : null,
         lat: parseFloat(zip?.latitude),
         lng: parseFloat(zip?.longitude),
         x: Math.random(),
         y: Math.random(),
-        specialization: node.attributes.specialization,
-        rank: node.attributes.rank,
+        specialization: el.attributes.specialization,
+        rank: el.attributes.rank,
         size: "4",
-        affiliation: node.attributes.affiliation,
-        credentials: node?.attributes?.credentials
-          ?.map((el) => el.toUpperCase())
-          .join(" "),
+        credentials:
+          el?.attributes?.credentials
+            ?.map((el) => el.toUpperCase())
+            .join(" ") || "",
       },
     };
 
-    if (!formattedData.nodes.find((el) => el.key === hcpNode.key)) {
-      formattedData.nodes.push(hcpNode);
-    }
-    if (node.attributes.kol && !topKols.some((top) => top.key == hcpNode.key))
-      topKols.push(hcpNode);
+    if (el.attributes.prescriber) prescribers.push(hcpNode);
+
+    return hcpNode;
   });
 
-  referralData?.edges?.forEach((el, index) => {
-    let edge = {
-      key: formattedData.edges.length + 1,
-      type: "referral",
+  prescriberData.edges = referralData?.edges?.map((el, index) => {
+    return {
+      key: index,
+      type: "curvedArrow",
+      influence: "referral",
       source: el.source,
       target: el.target,
       attributes: {
         color: "#008080",
-        size: el.attributes.weight || 1,
+        size:
+          el.attributes?.weight * 0.1 > 7
+            ? 7
+            : el.attributes.weight * 0.1 || 0.1,
         label: el.attributes.label,
         type: "arrow",
       },
     };
-
-    formattedData.edges.push(edge);
   });
 
   console.log("time for formatting: ", (new Date() - date) / 1000);
   console.log("Nodes without zip and state:", count);
   console.log("top kols:", topKols.length);
-  return { formattedData, topKols };
+  return { kolData, prescriberData, topKols, prescribers };
 };
 
 export default formatResponse;

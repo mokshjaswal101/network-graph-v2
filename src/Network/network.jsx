@@ -20,8 +20,16 @@ const Network = () => {
   const [isGraph, setIsGraph] = useState(false);
 
   //data variables
+  const [kolData, setKolData] = useState({ nodes: [], edges: [] });
+  const [prescriberData, setPrescriberData] = useState({
+    nodes: [],
+    edges: [],
+  });
   const [totalData, setTotalData] = useState({ nodes: [], edges: [] });
   const [data, setData] = useState({ nodes: [], edges: [] });
+
+  // show Kols or Prescribers
+  const [isPrescriberShown, setIsPrescriberShown] = useState(false);
 
   //which KOLs to display
   const [KolsOffset, setKolsOffset] = useState(0);
@@ -30,9 +38,11 @@ const Network = () => {
   const [selectedHcp, setSelectedHcp] = useState(null);
   const [isHcpDetailsShown, setIsHcpDetailsShown] = useState(false);
 
-  //top KOLs
-  const [showTopHcps, setShowTopHcps] = useState(true);
-  const [topKols, setTopHcps] = useState([]);
+  //top KOLs and prescribers
+  const [isTopHcpsShown, setIsTopHcpsShown] = useState(true);
+  const [kols, setKols] = useState([]);
+  const [prescribers, setPrescribers] = useState([]);
+  const [topKols, setTopKols] = useState([]);
 
   //influence variables
   const [influenceLevel, setInfluenceLevel] = useState(1);
@@ -55,7 +65,7 @@ const Network = () => {
       );
 
       filterData(
-        formattedResponse.formattedData,
+        formattedResponse.kolData,
         setData,
         influenceTypes,
         influenceLevel,
@@ -69,8 +79,12 @@ const Network = () => {
         KolsOffset,
         formattedResponse.topKols
       );
-      setTotalData(formattedResponse.formattedData);
-      setTopHcps(formattedResponse.topKols);
+      setTotalData(formattedResponse.kolData);
+      setKolData(formattedResponse.kolData);
+      setPrescriberData(formattedResponse.prescriberData);
+      setPrescribers(formattedResponse.prescribers);
+      setTopKols(formattedResponse.topKols);
+      setKols(formattedResponse.topKols);
     });
   }, []);
 
@@ -91,12 +105,26 @@ const Network = () => {
       KolsOffset,
       topKols
     );
-  }, [influenceLevel, influenceTypes, selectedHcp, KolsOffset]);
+  }, [influenceLevel, influenceTypes, selectedHcp, KolsOffset, topKols]);
 
   //display hcp details when selected hcp changes
   useEffect(() => {
     if (selectedHcp?.key) setIsHcpDetailsShown(true);
   }, [selectedHcp?.key]);
+
+  useEffect(() => {
+    if (isPrescriberShown) {
+      setInfluenceTypes(["referral"]);
+      setTotalData(prescriberData);
+      setTopKols(prescribers);
+      setSelectedHcp(null);
+    } else {
+      setInfluenceTypes(["coauthorship"]);
+      setTotalData(kolData);
+      setTopKols(kols);
+      setSelectedHcp(null);
+    }
+  }, [isPrescriberShown]);
 
   return (
     <div style={{ padding: "1rem", position: "relative" }}>
@@ -104,8 +132,8 @@ const Network = () => {
         setIsGraph={setIsGraph}
         isGraph={isGraph}
         setSelectedHcp={setSelectedHcp}
-        showTopHcps={showTopHcps}
-        setShowTopHcps={setShowTopHcps}
+        isTopHcpsShown={isTopHcpsShown}
+        setIsTopHcpsShown={setIsTopHcpsShown}
         totalData={totalData}
         setData={setData}
         specializationList={specializationList}
@@ -124,11 +152,14 @@ const Network = () => {
         KolsOffset={KolsOffset}
         topKols={topKols}
         data={data}
+        setIsPrescriberShown={setIsPrescriberShown}
+        isPrescriberShown={isPrescriberShown}
+        setKolsOffset={setKolsOffset}
       />
       <div style={{ width: "100%", height: "550px", position: "relative" }}>
         {totalData?.nodes?.length <= 0 && <Loader />}
 
-        {isHcpDetailsShown && selectedHcp?.key && (
+        {isHcpDetailsShown && !isPrescriberShown && selectedHcp?.key && (
           <HcpDetails
             selectedHcp={selectedHcp}
             setSelectedHcp={setSelectedHcp}
@@ -136,14 +167,15 @@ const Network = () => {
           />
         )}
 
-        {showTopHcps && (
+        {isTopHcpsShown && (
           <TopKols
             topKols={topKols}
             setSelectedHcp={setSelectedHcp}
-            setShowTopHcps={setShowTopHcps}
+            setIsTopHcpsShown={setIsTopHcpsShown}
             selectedHcp={selectedHcp}
             KolsOffset={KolsOffset}
             setKolsOffset={setKolsOffset}
+            isPrescriberShown={isPrescriberShown}
           />
         )}
 
@@ -159,7 +191,7 @@ const Network = () => {
         )}
       </div>
 
-      <Legends />
+      <Legends isPrescriberShown={isPrescriberShown} />
     </div>
   );
 };

@@ -1,18 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 
 const TopHcps = ({
   topKols,
   setSelectedHcp,
-  setShowTopHcps,
+  setIsTopHcpsShown,
   selectedHcp,
   KolsOffset,
   setKolsOffset,
+  isPrescriberShown,
 }) => {
   const handleKolClick = (hcp) => {
     if (selectedHcp?.key == hcp?.key) setSelectedHcp(null);
     else setSelectedHcp(hcp);
   };
+
+  useEffect(() => {
+    setKolsOffset(0);
+  }, []);
 
   return (
     topKols?.length > 0 && (
@@ -44,12 +49,14 @@ const TopHcps = ({
             fontWeight: "bold",
           }}
         >
-          <div style={{ wordBreak: "break-word", width: "90%" }}>Top KOLs</div>
+          <div style={{ wordBreak: "break-word", width: "90%" }}>
+            {isPrescriberShown ? "Prescribers" : "Top KOLs"}
+          </div>
 
           <button
             style={{ color: "white" }}
             onClick={() => {
-              setShowTopHcps(false);
+              setIsTopHcpsShown(false);
             }}
           >
             <i className="fa fa-times"></i>
@@ -76,13 +83,11 @@ const TopHcps = ({
                   },
                 }}
               >
-                {KolsOffset +
-                  index +
-                  1 +
-                  ". " +
-                  hcp.attributes.label +
-                  ", " +
-                  hcp.attributes.credentials}
+                {`${KolsOffset + index + 1} ${hcp.attributes.label}${
+                  hcp.attributes.credentials
+                    ? ", " + hcp.attributes.credentials
+                    : ""
+                }`}
               </div>
             );
           })}
@@ -115,6 +120,7 @@ const TopHcps = ({
               activeClassName="active"
               renderOnZeroPageCount={null}
               initialPage={KolsOffset / 10}
+              forcePage={KolsOffset / 10}
             />
           )}
         </div>

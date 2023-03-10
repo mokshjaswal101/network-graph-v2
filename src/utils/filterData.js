@@ -64,6 +64,7 @@ const filterData = (
   if (!specializationList.includes(selectedSpecialization))
     setSelectedSpecialization("");
   setStateList(stateList);
+
   setData(filteredData);
   setSpecializationList(specializationList);
   // console.log("Filter time: ", (new Date() - date) / 1000);
@@ -71,17 +72,19 @@ const filterData = (
 
 const filterBasedOnTopHcps = (data, KolsOffset, topKols) => {
   let formattedData = { nodes: [], edges: [] };
-
   topKols.slice(KolsOffset, KolsOffset + 10).forEach((kol) => {
     data.edges.forEach((edge) => {
       if (edge.source == kol.key || edge.target == kol.key) {
         if (!formattedData.edges.some((el) => el.key == edge.key))
           formattedData.edges.push(edge);
-      }
 
-      let nodeKey = edge.source == kol.key ? edge.target : edge.source;
-      if (!formattedData.nodes.some((node) => node.key == nodeKey)) {
-        formattedData.nodes.push(data.nodes.find((el) => el.key == nodeKey));
+        if (!formattedData.nodes.some((el) => el.key == kol.key))
+          formattedData.nodes.push(kol);
+
+        let nodeKey = edge.source == kol.key ? edge.target : edge.source;
+        if (!formattedData.nodes.some((node) => node.key == nodeKey)) {
+          formattedData.nodes.push(data.nodes.find((el) => el.key == nodeKey));
+        }
       }
     });
   });
@@ -95,7 +98,7 @@ const filterBasedOnInfluence = (data, influenceTypes) => {
   let specializationList = new Set();
 
   filteredData.edges = data.edges.filter((edge) => {
-    return influenceTypes.includes(edge.type);
+    return influenceTypes.includes(edge.influence);
   });
 
   filteredData.edges.forEach((edge) => [
@@ -159,7 +162,7 @@ const filterBasedOnSelectedHcp = (
   filteredData?.edges?.forEach((edge) => {
     if (
       (edge.source == selectedHcp.key || edge.target == selectedHcp.key) &&
-      influenceTypes.includes(edge.type)
+      influenceTypes.includes(edge.influence)
     ) {
       let newEdge = structuredClone(edge);
       newEdge.level = "first";

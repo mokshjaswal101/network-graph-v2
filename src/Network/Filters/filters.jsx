@@ -1,35 +1,23 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 
 //components
 import AdvancedFilters from "./advancedFilters";
 
 import filterData from "../../utils/filterData";
 
-const StyledSelect = styled.select`
-  height: 35px;
-  width: 175px;
-  border: 1px solid black;
-  background: white;
-  color: black;
-  padding: 4px 5px;
-  font-size: 14px;
-`;
-
 //data for influence type dropdown
 const typeFilters = [
   { value: "coauthorship", label: "Co-Authorship" },
   { value: "coaffiliation", label: "Co-Affiliation" },
   { value: "citation", label: "Citation" },
-  { value: "referral", label: "Referral" },
 ];
 
 const Filters = ({
   setIsGraph,
   isGraph,
   setSelectedHcp,
-  showTopHcps,
-  setShowTopHcps,
+  isTopHcpsShown,
+  setIsTopHcpsShown,
   totalData,
   setData,
   specializationList = [],
@@ -47,6 +35,9 @@ const Filters = ({
   influenceLevel,
   KolsOffset,
   topKols,
+  setIsPrescriberShown,
+  isPrescriberShown,
+  setKolsOffset,
 }) => {
   const handleResetFilters = () => {
     if (!selectedHcp || selectedHcp == "") {
@@ -97,21 +88,9 @@ const Filters = ({
           fontSize: "var(--heading)",
         }}
       >
-        <button
-          className="btn"
-          style={{
-            background: "var(--color-green)",
-          }}
-          onClick={() => {
-            setShowTopHcps(!showTopHcps);
-          }}
-        >
-          Top KOLs
-        </button>
-
-        {/* Influence type filter */}
+        {/* type of KOLs */}
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <span
+          {/* <span
             style={{
               fontSize: "var(--normal)",
               fontWeight: "bold",
@@ -119,8 +98,71 @@ const Filters = ({
               height: "fit-content",
             }}
           >
-            INFLUENCE TYPES
-          </span>
+            Top HCPs
+          </span> */}
+          <div
+            className="dropdown dropdown-kol"
+            style={{ zIndex: "2000" }}
+            onClick={() =>
+              document
+                .querySelector(".dropdown.dropdown-kol")
+                .classList.toggle("is-active")
+            }
+          >
+            Top HCPs
+            <ul className="dropdown-list" onClick={(e) => e.stopPropagation()}>
+              <li>
+                <label
+                  style={{
+                    background: !isPrescriberShown
+                      ? "var(--color-primary)"
+                      : "",
+                    color: !isPrescriberShown ? "white" : "",
+                  }}
+                  onClick={() => {
+                    if (isTopHcpsShown) {
+                      if (!isPrescriberShown) setIsTopHcpsShown(false);
+                      else {
+                        setIsPrescriberShown(false);
+                        setKolsOffset(0);
+                      }
+                    } else {
+                      setIsPrescriberShown(false);
+                      setIsTopHcpsShown(true);
+                    }
+                  }}
+                >
+                  KOLs
+                </label>
+              </li>
+              <li>
+                <label
+                  style={{
+                    background: isPrescriberShown ? "var(--color-primary)" : "",
+                    color: isPrescriberShown ? "white" : "",
+                  }}
+                  onClick={() => {
+                    if (isTopHcpsShown) {
+                      if (isPrescriberShown) setIsTopHcpsShown(false);
+                      else {
+                        setKolsOffset(0);
+                        setIsPrescriberShown(true);
+                      }
+                    } else {
+                      setIsPrescriberShown(true);
+                      setIsTopHcpsShown(true);
+                    }
+                  }}
+                >
+                  Top Prescribers
+                </label>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Influence type filter */}
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <div
             className="dropdown dropdown-type"
             style={{ zIndex: "2000" }}
@@ -132,39 +174,47 @@ const Filters = ({
           >
             Influence Types
             <ul className="dropdown-list" onClick={(e) => e.stopPropagation()}>
-              {typeFilters.map((filter, index) => (
-                <li key={index}>
+              {!isPrescriberShown ? (
+                typeFilters.map((filter, index) => (
+                  <li key={index}>
+                    <label>
+                      <input
+                        style={{ marginRight: ".5rem" }}
+                        onChange={(e) => {
+                          handleTypeFilterChange(e.target.value);
+                        }}
+                        checked={influenceTypes.includes(filter.value)}
+                        type="checkbox"
+                        value={filter.value}
+                        name={filter.value}
+                      />
+                      {filter.label}
+                    </label>
+                  </li>
+                ))
+              ) : (
+                <li>
                   <label>
                     <input
                       style={{ marginRight: ".5rem" }}
                       onChange={(e) => {
-                        handleTypeFilterChange(e.target.value);
+                        handleTypeFilterChange("referral");
                       }}
-                      checked={influenceTypes.includes(filter.value)}
+                      checked={influenceTypes.includes("referral")}
                       type="checkbox"
-                      value={filter.value}
-                      name={filter.value}
+                      value={"referral"}
+                      name={"referral"}
                     />
-                    {filter.label}
+                    Referral
                   </label>
                 </li>
-              ))}
+              )}
             </ul>
           </div>
         </div>
 
         {/* Influence Level Filter */}
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <span
-            style={{
-              fontSize: "var(--normal)",
-              fontWeight: "bold",
-              marginBottom: "5px",
-              height: "fit-content",
-            }}
-          >
-            INFLUENCE LEVEL
-          </span>
           <div
             className="dropdown dropdown-level"
             style={{ zIndex: "2000" }}
@@ -243,7 +293,7 @@ const Filters = ({
         </button>
         <button
           className="btn"
-          style={{ background: isGraph ? "red" : "green" }}
+          style={{ background: isGraph ? "red" : "var(--color-green)" }}
           onClick={() => {
             setIsGraph(!isGraph);
           }}

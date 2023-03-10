@@ -4,10 +4,10 @@ import React from "react";
 import LegendsTop from "./legendsTop";
 import LegendsBottom from "./legendsBottom";
 
-const Legends = ({ legends = {} }) => {
+const Legends = ({ isPrescriberShown }) => {
   return (
     <>
-      <LegendsTop />
+      <LegendsTop isPrescriberShown={isPrescriberShown} />
       <hr
         style={{
           height: "1px",

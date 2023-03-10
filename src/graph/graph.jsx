@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MultiDirectedGraph } from "graphology";
 import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
+
 import {
   LayoutForceAtlas2Control,
   useLayoutForceAtlas2,
@@ -84,12 +85,12 @@ const Graph = ({ data }) => {
       settings={{
         nodeProgramClasses: { image: getNodeProgramImage() },
         defaultNodeType: "image",
-        defaultEdgeTyp: "edge",
         renderEdgeLabels: true,
         minEdgeSize: 1,
         maxEdgeSize: 1000,
         maxIterations: 100,
         defaultNodeColor: "#3388AA",
+        maxEdgeSize: 20,
       }}
     >
       <ControlsContainer position={"bottom-right"}>

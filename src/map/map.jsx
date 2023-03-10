@@ -142,7 +142,9 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
 
                       {poly?.type == "arrow" ? (
                         getArrow(
-                          [poly.pointList[1], poly.pointList[0]],
+                          poly.influence == "referral"
+                            ? [poly.pointList[0], poly.pointList[1]]
+                            : [poly.pointList[1], poly.pointList[0]],
                           poly.cc
                         )
                       ) : (
@@ -158,7 +160,9 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
                       />
                       {poly?.type == "arrow" ? (
                         getArrow(
-                          [poly.pointList[1], poly.pointList[0]],
+                          poly.influence == "referral"
+                            ? [poly.pointList[0], poly.pointList[1]]
+                            : [poly.pointList[1], poly.pointList[0]],
                           poly.cc
                         )
                       ) : (

@@ -26,6 +26,7 @@ const calculatePolyLines = (data) => {
       level: edge.level,
       weight: edge.attributes.size,
       type: edge.attributes.type,
+      influence: edge.influence,
     };
   });
 
