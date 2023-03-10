@@ -105,7 +105,7 @@ const Network = () => {
       KolsOffset,
       topKols
     );
-  }, [influenceLevel, influenceTypes, selectedHcp, KolsOffset, topKols]);
+  }, [influenceLevel, influenceTypes, selectedHcp?.key, KolsOffset, topKols]);
 
   //display hcp details when selected hcp changes
   useEffect(() => {
@@ -159,11 +159,12 @@ const Network = () => {
       <div style={{ width: "100%", height: "550px", position: "relative" }}>
         {totalData?.nodes?.length <= 0 && <Loader />}
 
-        {isHcpDetailsShown && !isPrescriberShown && selectedHcp?.key && (
+        {isHcpDetailsShown && selectedHcp?.key && (
           <HcpDetails
             selectedHcp={selectedHcp}
             setSelectedHcp={setSelectedHcp}
             setIsHcpDetailsShown={setIsHcpDetailsShown}
+            isPrescriberShown={isPrescriberShown}
           />
         )}
 

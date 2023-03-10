@@ -7,7 +7,11 @@ const StyledDiv = styled.div`
   margin-bottom: 0.5rem;
 `;
 
-const HcpDetails = ({ selectedHcp: hcp, setIsHcpDetailsShown }) => {
+const HcpDetails = ({
+  selectedHcp: hcp,
+  setIsHcpDetailsShown,
+  isPrescriberShown,
+}) => {
   const [hcpData, setHcpData] = useState(null);
 
   useEffect(() => {
@@ -23,7 +27,9 @@ const HcpDetails = ({ selectedHcp: hcp, setIsHcpDetailsShown }) => {
         bottom: 0,
         right: 0,
         zIndex: 2000,
-        height: "75%",
+        maxHeight: "75%",
+
+        height: "fit-content",
         width: "300px",
         background: "white",
         wordWrap: "break-word",
@@ -45,16 +51,17 @@ const HcpDetails = ({ selectedHcp: hcp, setIsHcpDetailsShown }) => {
         }}
       >
         <div style={{ wordBreak: "break-word", width: "90%" }}>
-          {hcpData &&
-            hcpData.first_name[0].toUpperCase() +
-              hcpData.first_name.slice(1).toLowerCase() +
-              " " +
-              hcpData.last_name[0].toUpperCase() +
-              hcpData.last_name.slice(1).toLowerCase() +
-              ", " +
-              hcpData.credentials.map((el) => el.toUpperCase()).join(" ")}
+          {!isPrescriberShown
+            ? hcpData?.first_name &&
+              hcpData.first_name[0]?.toUpperCase() +
+                hcpData.first_name?.slice(1).toLowerCase() +
+                " " +
+                hcpData.last_name[0]?.toUpperCase() +
+                hcpData.last_name?.slice(1).toLowerCase() +
+                ", " +
+                hcpData.credentials?.map((el) => el.toUpperCase()).join(" ")
+            : hcp.attributes.label}
         </div>
-
         <button
           style={{ color: "white" }}
           onClick={() => {
@@ -65,7 +72,7 @@ const HcpDetails = ({ selectedHcp: hcp, setIsHcpDetailsShown }) => {
         </button>
       </div>
 
-      {hcpData && (
+      {hcpData && !isPrescriberShown && (
         <div
           style={{
             overflowY: "scroll",
@@ -152,7 +159,40 @@ const HcpDetails = ({ selectedHcp: hcp, setIsHcpDetailsShown }) => {
         </div>
       )}
 
-      {!hcpData && <div style={{ padding: ".5rem" }}>Loading ...</div>}
+      {isPrescriberShown && (
+        <div
+          style={{
+            overflowY: "scroll",
+            flex: "1",
+            padding: ".75rem",
+          }}
+        >
+          {hcp?.key && (
+            <StyledDiv>
+              <b>NPI </b>
+              {hcp.key}
+            </StyledDiv>
+          )}
+
+          {hcp.attributes.specialization && (
+            <StyledDiv>
+              <b>Specialization </b>
+              {hcp.attributes.specialization}
+            </StyledDiv>
+          )}
+
+          {hcp.attributes.state && (
+            <StyledDiv>
+              <b>State </b>
+              {hcp.attributes.state}
+            </StyledDiv>
+          )}
+        </div>
+      )}
+
+      {!hcpData && !isPrescriberShown && (
+        <div style={{ padding: ".5rem" }}>Loading ...</div>
+      )}
     </div>
   );
 };

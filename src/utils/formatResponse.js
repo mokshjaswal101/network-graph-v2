@@ -58,7 +58,7 @@ const formatResponse = (
   kolData.edges = data?.edges?.map((el, index) => {
     return {
       key: index,
-      influence: "coauthorship",
+      type: "coauthorship",
       source: el.source,
       target: el.target,
       attributes: {
@@ -112,7 +112,7 @@ const formatResponse = (
   affiliationsData?.edges?.forEach((el, index) => {
     let edge = {
       key: kolData.edges.length + 1,
-      influence: "coaffiliation",
+      type: "coaffiliation",
       source: el.source,
       target: el.target,
       attributes: {
@@ -168,7 +168,7 @@ const formatResponse = (
   citationsData?.edges?.forEach((el, index) => {
     let edge = {
       key: kolData.edges.length + 1,
-      influence: "citation",
+      type: "citation",
       source: el.source,
       target: el.target,
       attributes: {
@@ -207,7 +207,7 @@ const formatResponse = (
         lng: parseFloat(zip?.longitude),
         x: Math.random(),
         y: Math.random(),
-        specialization: el.attributes.specialization,
+        specialization: el.attributes.specilization,
         rank: el.attributes.rank,
         size: "4",
         credentials:
@@ -225,8 +225,7 @@ const formatResponse = (
   prescriberData.edges = referralData?.edges?.map((el, index) => {
     return {
       key: index,
-      type: "curvedArrow",
-      influence: "referral",
+      type: "referral",
       source: el.source,
       target: el.target,
       attributes: {
