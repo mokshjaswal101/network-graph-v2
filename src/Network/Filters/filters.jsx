@@ -247,7 +247,7 @@ const Filters = ({
                   }}
                   onClick={() => setInfluenceLevel(2)}
                 >
-                  second Level
+                  Second Level
                 </label>
               </li>
             </ul>
