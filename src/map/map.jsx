@@ -60,7 +60,6 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
               url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
             />
           </LayersControl.BaseLayer>
-
           <LayersControl.Overlay checked name="KOLs">
             <LayerGroup>
               {data?.nodes?.map((element, index) => {
@@ -84,19 +83,19 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
                             popupAnchor: [0, -12],
                             iconSize:
                               selectedHcp?.key == element?.key
-                                ? new L.point(35, 35)
-                                : new L.Point(20, 20),
+                                ? new L.point(25, 25)
+                                : new L.Point(16, 16),
                           })
                         : new L.divIcon({
                             className: "divMarkerLeaflet",
                             iconSize:
                               selectedHcp?.key == element?.key
-                                ? new L.point(20, 20)
-                                : new L.Point(10, 10),
+                                ? new L.point(14, 14)
+                                : new L.Point(7, 7),
                             html: `<div style=" background-color:${
                               element.attributes.color
                             };padding:${
-                              selectedHcp?.key == element?.key ? "10px" : "5px"
+                              selectedHcp?.key == element?.key ? "8px" : "4px"
                             };" ></div>`,
                             popupAnchor: [0, -5],
                           })
@@ -142,9 +141,7 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
 
                       {poly?.type == "arrow" ? (
                         getArrow(
-                          poly.influence == "referral"
-                            ? [poly.pointList[0], poly.pointList[1]]
-                            : [poly.pointList[1], poly.pointList[0]],
+                          [poly.pointList[0], poly.pointList[1]],
                           poly.cc
                         )
                       ) : (
@@ -160,9 +157,7 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
                       />
                       {poly?.type == "arrow" ? (
                         getArrow(
-                          poly.influence == "referral"
-                            ? [poly.pointList[0], poly.pointList[1]]
-                            : [poly.pointList[1], poly.pointList[0]],
+                          [poly.pointList[0], poly.pointList[1]],
                           poly.cc
                         )
                       ) : (

@@ -18,7 +18,7 @@ import {
   useRegisterEvents,
 } from "@react-sigma/core";
 
-const Events = () => {
+const Events = ({ setSelectedHcp, data }) => {
   const setSettings = useSetSettings();
   const sigma = useSigma();
   const registerEvents = useRegisterEvents();
@@ -29,6 +29,12 @@ const Events = () => {
     registerEvents({
       enterNode: (event) => setHoveredNode(event.node),
       leaveNode: () => setHoveredNode(null),
+      clickNode: (event) => {
+        let node = data.nodes.find((el) => el.key == event.node);
+        console.log(node);
+        setSelectedHcp(node, event.node);
+        setHoveredNode(null);
+      },
     });
   }, []);
 
@@ -64,7 +70,7 @@ const Events = () => {
   }, [hoveredNode, setSettings, sigma]);
 };
 
-const Graph = ({ data }) => {
+const Graph = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
   useEffect(() => {
     data.nodes.map((el) => {
       if (el.attributes.icon) {
@@ -93,7 +99,8 @@ const Graph = ({ data }) => {
         maxEdgeSize: 20,
       }}
     >
-      <ControlsContainer position={"bottom-right"}>
+      {/* <EdgeDisplayData default="tapered" /> */}
+      <ControlsContainer position={"top-left"}>
         <ZoomControl />
         <FullScreenControl />
         <LayoutForceAtlas2Control />
@@ -101,7 +108,7 @@ const Graph = ({ data }) => {
       <ControlsContainer position={"top-right"}>
         <SearchControl style={{ width: "200px" }} />
       </ControlsContainer>
-      <Events />
+      <Events setSelectedHcp={setSelectedHcp} data={data} />
     </SigmaContainer>
   );
 };

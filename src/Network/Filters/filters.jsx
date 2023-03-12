@@ -154,7 +154,7 @@ const Filters = ({
                     }
                   }}
                 >
-                  Top Prescribers
+                  Prescribers
                 </label>
               </li>
             </ul>

@@ -54,6 +54,9 @@ const Network = () => {
   const [stateList, setStateList] = useState([]);
   const [specializationList, setSpecializationList] = useState([]);
 
+  //loader
+  const [isLoading, setIsLoading] = useState(true);
+
   //handle initial loading of data
   useEffect(() => {
     fetchAllData().then((res) => {
@@ -79,12 +82,15 @@ const Network = () => {
         KolsOffset,
         formattedResponse.topKols
       );
+
       setTotalData(formattedResponse.kolData);
       setKolData(formattedResponse.kolData);
       setPrescriberData(formattedResponse.prescriberData);
       setPrescribers(formattedResponse.prescribers);
       setTopKols(formattedResponse.topKols);
       setKols(formattedResponse.topKols);
+
+      setIsLoading(false);
     });
   }, []);
 
@@ -157,7 +163,7 @@ const Network = () => {
         setKolsOffset={setKolsOffset}
       />
       <div style={{ width: "100%", height: "550px", position: "relative" }}>
-        {totalData?.nodes?.length <= 0 && <Loader />}
+        {isLoading && <Loader />}
 
         {isHcpDetailsShown && selectedHcp?.key && (
           <HcpDetails
@@ -181,7 +187,12 @@ const Network = () => {
         )}
 
         {isGraph ? (
-          <Graph data={data} />
+          <Graph
+            selectedHcp={selectedHcp}
+            data={data}
+            setSelectedHcp={setSelectedHcp}
+            setIsHcpDetailsShown={setIsHcpDetailsShown}
+          />
         ) : (
           <Map
             selectedHcp={selectedHcp}

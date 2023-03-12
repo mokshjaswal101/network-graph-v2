@@ -125,6 +125,8 @@ const formatResponse = (
     kolData.edges.push(edge);
   });
 
+  console.log(referralData);
+
   //Citations Data
   citationsData?.nodes?.forEach((node) => {
     let hcpNode = null;
@@ -224,7 +226,7 @@ const formatResponse = (
 
   prescriberData.edges = referralData?.edges?.map((el, index) => {
     return {
-      key: index,
+      key: kolData.edges.length + 1 + index,
       type: "referral",
       source: el.source,
       target: el.target,
