@@ -132,19 +132,12 @@ const HcpDetails = ({
               {hcpData.prescription_info.map((el, index) => {
                 return (
                   <div key={index}>
-                    <div key={el.key}>{`• ${
-                      el.key.slice(0, 5) == "Govt_" ||
-                      el.key.slice(0, 5) == "Comm_"
-                        ? el.key
-                            .slice(5)
-                            .split(" ")
-                            .map((el) => el[0].toUpperCase() + el.slice(1))
-                            .join(" ")
-                        : el.key
-                            .split(" ")
-                            .map((el) => el[0].toUpperCase() + el.slice(1))
-                            .join(" ")
-                    }${el?.total_claims ? ` - ${el.total_claims}` : ""}`}</div>
+                    <div key={el.key}>{`• ${el.key
+                      .split(" ")
+                      .map((el) => el[0].toUpperCase() + el.slice(1))
+                      .join(" ")}${
+                      el?.total_claims ? ` - ${el.total_claims}` : ""
+                    }`}</div>
                   </div>
                 );
               })}
