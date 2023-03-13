@@ -18,7 +18,7 @@ import {
   useRegisterEvents,
 } from "@react-sigma/core";
 
-const Events = ({ setSelectedHcp, data }) => {
+const Events = ({ setSelectedHcp, data, setIsHcpDetailsShown }) => {
   const setSettings = useSetSettings();
   const sigma = useSigma();
   const registerEvents = useRegisterEvents();
@@ -33,6 +33,7 @@ const Events = ({ setSelectedHcp, data }) => {
         let node = data.nodes.find((el) => el.key == event.node);
         console.log(node);
         setSelectedHcp(node, event.node);
+        setIsHcpDetailsShown(true);
         setHoveredNode(null);
       },
     });
@@ -109,7 +110,11 @@ const Graph = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
       <ControlsContainer position={"top-right"}>
         <SearchControl style={{ width: "200px" }} />
       </ControlsContainer>
-      <Events setSelectedHcp={setSelectedHcp} data={data} />
+      <Events
+        setSelectedHcp={setSelectedHcp}
+        data={data}
+        setIsHcpDetailsShown={setIsHcpDetailsShown}
+      />
     </SigmaContainer>
   );
 };
