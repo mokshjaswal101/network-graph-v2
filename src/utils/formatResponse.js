@@ -126,8 +126,6 @@ const formatResponse = (
     kolData.edges.push(edge);
   });
 
-  console.log(referralData);
-
   //Citations Data
   citationsData?.nodes?.forEach((node) => {
     let hcpNode = null;

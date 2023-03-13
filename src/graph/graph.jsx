@@ -18,70 +18,70 @@ import {
   useRegisterEvents,
 } from "@react-sigma/core";
 
-const Events = ({
-  setSelectedHcp,
-  data,
-  setIsHcpDetailsShown,
-  selectedHcp,
-}) => {
-  const setSettings = useSetSettings();
-  const sigma = useSigma();
-  const registerEvents = useRegisterEvents();
+const Graph = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
+  const Events = () => {
+    const setSettings = useSetSettings();
+    const sigma = useSigma();
+    const registerEvents = useRegisterEvents();
 
-  const [hoveredNode, setHoveredNode] = useState();
+    const [hoveredNode, setHoveredNode] = useState();
 
-  useEffect(() => {
-    registerEvents({
-      enterNode: (event) => setHoveredNode(event.node),
-      leaveNode: () => setHoveredNode(null),
-      clickNode: (event) => {
-        let node = data.nodes.find((el) => el.key == event.node);
-        console.log(node);
-        setSelectedHcp(node, event.node);
-        setIsHcpDetailsShown(true);
-        setHoveredNode(null);
-      },
-    });
-  }, []);
+    useEffect(() => {
+      console.log("data");
+      registerEvents({
+        enterNode: (event) => setHoveredNode(event.node),
+        leaveNode: () => setHoveredNode(null),
+        clickNode: (event) => {
+          let node = data.nodes.find((el) => el.key == event.node);
+          console.log(node);
+          setSelectedHcp(node);
+          setIsHcpDetailsShown(true);
+          setHoveredNode(null);
+        },
+      });
+    }, []);
 
-  useEffect(() => {
-    setSettings({
-      nodeReducer: (node, data) => {
-        const graph = sigma.getGraph();
-        const newData = { ...data, highlighted: data.highlighted || false };
+    useEffect(() => {
+      setSettings({
+        nodeReducer: (node, data) => {
+          const graph = sigma.getGraph();
+          const newData = { ...data, highlighted: data.highlighted || false };
 
-        if (hoveredNode) {
-          if (
-            node === hoveredNode ||
-            graph.neighbors(hoveredNode).includes(node)
-          ) {
-            // newData.highlighted = true;
-          } else {
-            newData.color = "#E2E2E2";
-            newData.highlighted = false;
+          if (hoveredNode) {
+            if (
+              node === hoveredNode ||
+              graph.neighbors(hoveredNode).includes(node)
+            ) {
+              // newData.highlighted = true;
+            } else {
+              newData.color = "#E2E2E2";
+              newData.highlighted = false;
+              newData.hidden = true;
+            }
+          } else if (selectedHcp?.key) {
+            if (node == selectedHcp?.key) {
+              newData.highlighted = true;
+            }
+          }
+          return newData;
+        },
+        edgeReducer: (edge, data) => {
+          const graph = sigma.getGraph();
+          const newData = { ...data, hidden: false };
+
+          if (hoveredNode && !graph.extremities(edge).includes(hoveredNode)) {
             newData.hidden = true;
           }
-        } else if (selectedHcp?.key) {
-          if (node == selectedHcp?.key) {
-            newData.highlighted = true;
-          }
-        }
-        return newData;
-      },
-      edgeReducer: (edge, data) => {
-        const graph = sigma.getGraph();
-        const newData = { ...data, hidden: false };
+          return newData;
+        },
+      });
+    }, [hoveredNode, setSettings, sigma]);
+  };
 
-        if (hoveredNode && !graph.extremities(edge).includes(hoveredNode)) {
-          newData.hidden = true;
-        }
-        return newData;
-      },
-    });
-  }, [hoveredNode, setSettings, sigma]);
-};
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
-const Graph = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
   useEffect(() => {
     data.nodes.map((el) => {
       if (el.attributes.icon) {

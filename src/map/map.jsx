@@ -24,8 +24,10 @@ const Map = ({
   setIsLoading,
   totalData,
   influenceTypes,
+  setData,
 }) => {
   const [polylines, setPolylines] = useState([]);
+  const [tempData, setTempData] = useState(null);
   const [secondLevelId, setSecondLevelId] = useState(null);
 
   useEffect(() => {
@@ -48,7 +50,53 @@ const Map = ({
   };
 
   const handleSecondLevelInfluence = (id) => {
-    influenceTypes = { influenceTypes };
+    if (selectedHcp?.key) {
+      if (secondLevelId != id) {
+        console.log("temp");
+        setSecondLevelId(id);
+        console.log(tempData);
+        let newData = { nodes: tempData?.nodes, edges: [] };
+        newData.edges = tempData.edges.filter(
+          (el) => el.source == id || el.target == id
+        );
+
+        let tempEdges = [];
+        let tempNodes = [];
+
+        totalData.edges.forEach((e) => {
+          if (
+            influenceTypes.includes(e.type) &&
+            (e.target == id || e.source == id) &&
+            !newData.edges.some((el) => el.key == e.key)
+          ) {
+            let temp = structuredClone(e);
+            temp.level = "second";
+            tempEdges.push(temp);
+          }
+        });
+
+        tempEdges.forEach((edge) => {
+          let extra;
+          if (edge.source == id) extra = edge.target;
+          else extra = edge.source;
+
+          if (
+            !newData.nodes.some((node) => node.key == extra) &&
+            !tempNodes.some((node) => node.key == extra)
+          ) {
+            tempNodes.push(totalData.nodes.find((node) => node.key == extra));
+          }
+        });
+
+        newData.nodes = [...newData.nodes, ...tempNodes];
+        newData.edges = [...newData.edges, ...tempEdges];
+
+        setData(structuredClone(newData));
+      } else {
+        setSecondLevelId(null);
+        setData(tempData);
+      }
+    }
   };
 
   return (
@@ -148,43 +196,54 @@ const Map = ({
           <LayersControl.Overlay checked name="Influence">
             <LayerGroup>
               {polylines?.length > 0 &&
-                polylines.map((poly, index) => {
-                  return poly.level == "second" ? (
-                    <>
+                polylines
+                  .filter((el) => el.level == "second")
+                  .map((poly, index) => {
+                    return (
                       <Polyline
                         key={index}
                         pathOptions={{ color: poly.cc, weight: poly.weight }}
                         positions={poly.pointList}
-                        dashArray={"7, 7"}
+                        dashArray={"10, 10"}
                       />
+                    );
 
-                      {poly?.type == "arrow" ? (
+                    {
+                      poly?.type == "arrow" ? (
                         getArrow(
                           [poly.pointList[0], poly.pointList[1]],
                           poly.cc
                         )
                       ) : (
                         <></>
-                      )}
-                    </>
-                  ) : (
-                    <>
+                      );
+                    }
+                  })}
+            </LayerGroup>
+            <LayerGroup>
+              {polylines?.length > 0 &&
+                polylines
+                  .filter((el) => el.level != "second")
+                  .map((poly, index) => {
+                    return (
                       <Polyline
                         key={index}
                         pathOptions={{ color: poly.cc, weight: poly.weight }}
                         positions={poly.pointList}
                       />
-                      {poly?.type == "arrow" ? (
+                    );
+
+                    {
+                      poly?.type == "arrow" ? (
                         getArrow(
                           [poly.pointList[0], poly.pointList[1]],
                           poly.cc
                         )
                       ) : (
                         <></>
-                      )}
-                    </>
-                  );
-                })}
+                      );
+                    }
+                  })}
             </LayerGroup>
           </LayersControl.Overlay>
         </LayersControl>

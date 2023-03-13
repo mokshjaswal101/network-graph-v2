@@ -132,12 +132,12 @@ const Network = () => {
       setInfluenceTypes(["referral"]);
       setTotalData(prescriberData);
       setTopKols(prescribers);
-      setSelectedHcp(null);
+      setSelectedHcp(prescribers?.[0]);
     } else {
       setInfluenceTypes(["coauthorship"]);
       setTotalData(kolData);
       setTopKols(kols);
-      setSelectedHcp(null);
+      setSelectedHcp(kols?.[0]);
     }
   }, [isPrescriberShown]);
 
@@ -211,6 +211,7 @@ const Network = () => {
             setIsLoading={setIsLoading}
             totalData={totalData}
             influenceTypes={influenceTypes}
+            setData={setData}
           />
         )}
       </div>

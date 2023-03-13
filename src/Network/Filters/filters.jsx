@@ -125,6 +125,7 @@ const Filters = ({
                       else {
                         setIsPrescriberShown(false);
                         setKolsOffset(0);
+                        setSelectedHcp();
                       }
                     } else {
                       setIsPrescriberShown(false);
@@ -214,7 +215,7 @@ const Filters = ({
         </div>
 
         {/* Influence Level Filter */}
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        {/* <div style={{ display: "flex", flexDirection: "column" }}>
           <div
             className="dropdown dropdown-level"
             style={{ zIndex: "2000" }}
@@ -252,7 +253,7 @@ const Filters = ({
               </li>
             </ul>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div
