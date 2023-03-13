@@ -242,6 +242,13 @@ const formatResponse = (
     };
   });
 
+  topKols.sort((a, b) => {
+    if (a.attributes.rank > b.attributes.rank) return 1;
+    else return -1;
+  });
+
+  console.log(topKols);
+
   console.log("time for formatting: ", (new Date() - date) / 1000);
   console.log("Nodes without zip and state:", count);
   console.log("top kols:", topKols.length);
