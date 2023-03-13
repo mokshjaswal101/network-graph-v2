@@ -24,7 +24,6 @@ const formatResponse = (
   kolData.nodes = data?.nodes?.map((el) => {
     let hcpNode = null;
     let zip = zipcodes.lookup(el.attributes.zipcode) || zipcodes.random();
-    if (!el?.attributes?.zipcode && !el?.attributes?.state) count++;
     hcpNode = {
       key: el.key,
       attributes: {
@@ -51,6 +50,7 @@ const formatResponse = (
       },
     };
 
+    if (!el?.attributes?.zipcode && !el?.attributes?.state) count++;
     if (el.attributes.kol) topKols.push(hcpNode);
 
     return hcpNode;
@@ -236,7 +236,9 @@ const formatResponse = (
           el.attributes?.weight * 0.1 > 7
             ? 7
             : el.attributes.weight * 0.1 || 0.1,
-        label: el.attributes.weight || "",
+        label: el?.attributes.weight
+          ? `Unique Patients referred : ${el.attributes.weight}`
+          : "",
         type: "arrow",
       },
     };

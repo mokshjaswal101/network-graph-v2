@@ -31,6 +31,10 @@ const Map = ({
   const [secondLevelId, setSecondLevelId] = useState(null);
 
   useEffect(() => {
+    setTempData(data);
+  }, []);
+
+  useEffect(() => {
     if (data?.edges) setPolylines(calculatePolyLines(data));
   }, [data?.nodes, data?.edges]);
 
@@ -49,52 +53,63 @@ const Map = ({
     return null;
   };
 
+  useEffect(() => {
+    setTempData(null);
+  }, [selectedHcp?.key]);
+
   const handleSecondLevelInfluence = (id) => {
     if (selectedHcp?.key) {
-      if (secondLevelId != id) {
-        console.log("temp");
-        setSecondLevelId(id);
-        console.log(tempData);
-        let newData = { nodes: tempData?.nodes, edges: [] };
-        newData.edges = tempData.edges.filter(
-          (el) => el.source == id || el.target == id
-        );
+      let baseData;
 
-        let tempEdges = [];
-        let tempNodes = [];
+      if (tempData?.nodes?.length > 0) {
+        baseData = tempData;
+      } else baseData = data;
 
-        totalData.edges.forEach((e) => {
-          if (
-            influenceTypes.includes(e.type) &&
-            (e.target == id || e.source == id) &&
-            !newData.edges.some((el) => el.key == e.key)
-          ) {
-            let temp = structuredClone(e);
-            temp.level = "second";
-            tempEdges.push(temp);
-          }
-        });
+      if (baseData.nodes.some((el) => el.key == id)) {
+        if (secondLevelId != id) {
+          if (!tempData?.nodes?.length) setTempData(data);
+          setSecondLevelId(id);
+          let newData = { nodes: baseData?.nodes, edges: [] };
+          newData.edges = baseData.edges.filter(
+            (el) => el.source == id || el.target == id
+          );
 
-        tempEdges.forEach((edge) => {
-          let extra;
-          if (edge.source == id) extra = edge.target;
-          else extra = edge.source;
+          let tempEdges = [];
+          let tempNodes = [];
 
-          if (
-            !newData.nodes.some((node) => node.key == extra) &&
-            !tempNodes.some((node) => node.key == extra)
-          ) {
-            tempNodes.push(totalData.nodes.find((node) => node.key == extra));
-          }
-        });
+          totalData.edges.forEach((e) => {
+            if (
+              influenceTypes.includes(e.type) &&
+              (e.target == id || e.source == id) &&
+              !newData.edges.some((el) => el.key == e.key)
+            ) {
+              let temp = structuredClone(e);
+              temp.level = "second";
+              tempEdges.push(temp);
+            }
+          });
 
-        newData.nodes = [...newData.nodes, ...tempNodes];
-        newData.edges = [...newData.edges, ...tempEdges];
+          tempEdges.forEach((edge) => {
+            let extra;
+            if (edge.source == id) extra = edge.target;
+            else extra = edge.source;
 
-        setData(structuredClone(newData));
-      } else {
-        setSecondLevelId(null);
-        setData(tempData);
+            if (
+              !newData.nodes.some((node) => node.key == extra) &&
+              !tempNodes.some((node) => node.key == extra)
+            ) {
+              tempNodes.push(totalData.nodes.find((node) => node.key == extra));
+            }
+          });
+
+          newData.nodes = [...newData.nodes, ...tempNodes];
+          newData.edges = [...newData.edges, ...tempEdges];
+
+          setData(structuredClone(newData));
+        } else {
+          setSecondLevelId(null);
+          setData(baseData);
+        }
       }
     }
   };
@@ -205,19 +220,17 @@ const Map = ({
                         pathOptions={{ color: poly.cc, weight: poly.weight }}
                         positions={poly.pointList}
                         dashArray={"10, 10"}
-                      />
+                      >
+                        {poly?.type == "arrow" ? (
+                          getArrow(
+                            [poly.pointList[0], poly.pointList[1]],
+                            poly.cc
+                          )
+                        ) : (
+                          <></>
+                        )}
+                      </Polyline>
                     );
-
-                    {
-                      poly?.type == "arrow" ? (
-                        getArrow(
-                          [poly.pointList[0], poly.pointList[1]],
-                          poly.cc
-                        )
-                      ) : (
-                        <></>
-                      );
-                    }
                   })}
             </LayerGroup>
             <LayerGroup>
@@ -230,19 +243,17 @@ const Map = ({
                         key={index}
                         pathOptions={{ color: poly.cc, weight: poly.weight }}
                         positions={poly.pointList}
-                      />
+                      >
+                        {poly?.type == "arrow" ? (
+                          getArrow(
+                            [poly.pointList[0], poly.pointList[1]],
+                            poly.cc
+                          )
+                        ) : (
+                          <></>
+                        )}
+                      </Polyline>
                     );
-
-                    {
-                      poly?.type == "arrow" ? (
-                        getArrow(
-                          [poly.pointList[0], poly.pointList[1]],
-                          poly.cc
-                        )
-                      ) : (
-                        <></>
-                      );
-                    }
                   })}
             </LayerGroup>
           </LayersControl.Overlay>
