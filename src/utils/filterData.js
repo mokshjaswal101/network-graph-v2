@@ -171,6 +171,7 @@ const filterBasedOnSelectedHcp = (
   });
 
   newData.nodes.push(selectedHcp);
+  specializationList.add(selectedHcp?.attributes?.specialization);
   stateList.add(selectedHcp.attributes.state);
   if (
     !Object.keys(specializations).includes(

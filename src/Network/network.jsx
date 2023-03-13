@@ -216,7 +216,10 @@ const Network = () => {
         )}
       </div>
 
-      <Legends isPrescriberShown={isPrescriberShown} />
+      <Legends
+        isPrescriberShown={isPrescriberShown}
+        specializationList={specializationList}
+      />
     </div>
   );
 };

@@ -44,7 +44,7 @@ const formatResponse = (
         specialization: el.attributes.specialization,
         rank: el.attributes.rank,
         size: "4",
-        credentials: el.attributes.credentials
+        credentials: el?.attributes?.credentials
           .map((el) => el.toUpperCase())
           .join(" "),
       },
@@ -97,7 +97,7 @@ const formatResponse = (
         rank: node.attributes.rank,
         size: "4",
         affiliation: node.attributes.affiliation,
-        credentials: node.attributes.credentials
+        credentials: node?.attributes?.credentials
           .map((el) => el.toUpperCase())
           .join(" "),
       },
@@ -153,7 +153,7 @@ const formatResponse = (
         rank: node.attributes.rank,
         size: "4",
         affiliation: node.attributes.affiliation,
-        credentials: node.attributes.credentials
+        credentials: node?.attributes?.credentials
           .map((el) => el.toUpperCase())
           .join(" "),
       },
