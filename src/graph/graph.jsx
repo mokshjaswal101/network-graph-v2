@@ -49,10 +49,11 @@ const Events = ({ setSelectedHcp, data }) => {
             node === hoveredNode ||
             graph.neighbors(hoveredNode).includes(node)
           ) {
-            newData.highlighted = true;
+            // newData.highlighted = true;
           } else {
             newData.color = "#E2E2E2";
             newData.highlighted = false;
+            newData.hidden = true;
           }
         }
         return newData;

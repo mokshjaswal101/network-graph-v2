@@ -57,6 +57,35 @@ const Network = () => {
   //loader
   const [isLoading, setIsLoading] = useState(true);
 
+  const setStateAsync = (state) => {
+    return new Promise((resolve) => {
+      setIsLoading(state);
+      resolve();
+    });
+  };
+
+  const handleFilters = async () => {
+    // await setStateAsync(true);
+
+    filterData(
+      totalData,
+      setData,
+      influenceTypes,
+      influenceLevel,
+      selectedHcp,
+      selectedSpecialization,
+      selectedState,
+      setStateList,
+      setSpecializationList,
+      setSelectedState,
+      setSelectedSpecialization,
+      KolsOffset,
+      topKols
+    );
+
+    // await setStateAsync(false);
+  };
+
   //handle initial loading of data
   useEffect(() => {
     fetchAllData().then((res) => {
@@ -96,21 +125,7 @@ const Network = () => {
 
   //filter data based on filter changes
   useEffect(() => {
-    filterData(
-      totalData,
-      setData,
-      influenceTypes,
-      influenceLevel,
-      selectedHcp,
-      selectedSpecialization,
-      selectedState,
-      setStateList,
-      setSpecializationList,
-      setSelectedState,
-      setSelectedSpecialization,
-      KolsOffset,
-      topKols
-    );
+    handleFilters();
   }, [influenceLevel, influenceTypes, selectedHcp?.key, KolsOffset, topKols]);
 
   //display hcp details when selected hcp changes

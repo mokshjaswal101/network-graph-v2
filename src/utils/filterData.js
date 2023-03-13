@@ -67,7 +67,7 @@ const filterData = (
 
   setData(filteredData);
   setSpecializationList(specializationList);
-  // console.log("Filter time: ", (new Date() - date) / 1000);
+  console.log("Filter time: ", (new Date() - date) / 1000);
 };
 
 const filterBasedOnTopHcps = (data, KolsOffset, topKols) => {

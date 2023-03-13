@@ -17,7 +17,7 @@ const getArrow = (arrLatlngs, color = "red", weight = 0.1) => {
       arrLatlngs[1],
       arrLatlngs[0],
       -1
-    )}rad) translateY(-40%);" ></div>`,
+    )}rad) translateY(-30%);" ></div>`,
   });
 
   return <Marker position={arrLatlngs[1]} icon={icon} />;

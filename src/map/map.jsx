@@ -65,7 +65,7 @@ const Map = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
               {data?.nodes?.map((element, index) => {
                 return (
                   <Marker
-                    key={index}
+                    key={element?.key}
                     id={element?.key}
                     position={[element.attributes.lat, element.attributes.lng]}
                     zIndexOffset={
