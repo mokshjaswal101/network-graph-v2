@@ -45,7 +45,7 @@ const formatResponse = (
         rank: el.attributes.rank,
         size: "4",
         credentials: el?.attributes?.credentials
-          .map((el) => el.toUpperCase())
+          ?.map((el) => el.toUpperCase())
           .join(" "),
       },
     };
@@ -98,7 +98,7 @@ const formatResponse = (
         size: "4",
         affiliation: node.attributes.affiliation,
         credentials: node?.attributes?.credentials
-          .map((el) => el.toUpperCase())
+          ?.map((el) => el.toUpperCase())
           .join(" "),
       },
     };
@@ -154,7 +154,7 @@ const formatResponse = (
         size: "4",
         affiliation: node.attributes.affiliation,
         credentials: node?.attributes?.credentials
-          .map((el) => el.toUpperCase())
+          ?.map((el) => el.toUpperCase())
           .join(" "),
       },
     };
