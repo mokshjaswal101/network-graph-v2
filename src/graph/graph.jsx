@@ -18,7 +18,12 @@ import {
   useRegisterEvents,
 } from "@react-sigma/core";
 
-const Events = ({ setSelectedHcp, data, setIsHcpDetailsShown }) => {
+const Events = ({
+  setSelectedHcp,
+  data,
+  setIsHcpDetailsShown,
+  selectedHcp,
+}) => {
   const setSettings = useSetSettings();
   const sigma = useSigma();
   const registerEvents = useRegisterEvents();
@@ -55,6 +60,10 @@ const Events = ({ setSelectedHcp, data, setIsHcpDetailsShown }) => {
             newData.color = "#E2E2E2";
             newData.highlighted = false;
             newData.hidden = true;
+          }
+        } else if (selectedHcp?.key) {
+          if (node == selectedHcp?.key) {
+            newData.highlighted = true;
           }
         }
         return newData;
@@ -114,6 +123,7 @@ const Graph = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
         setSelectedHcp={setSelectedHcp}
         data={data}
         setIsHcpDetailsShown={setIsHcpDetailsShown}
+        selectedHcp={selectedHcp}
       />
     </SigmaContainer>
   );
