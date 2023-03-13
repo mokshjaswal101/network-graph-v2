@@ -16,7 +16,13 @@ import getArrow from "./getArrows";
 import calculatePolyLines from "./polylines";
 import L from "leaflet";
 
-const Map = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
+const Map = ({
+  data,
+  setSelectedHcp,
+  selectedHcp,
+  setIsHcpDetailsShown,
+  setIsLoading,
+}) => {
   const [polylines, setPolylines] = useState([]);
 
   useEffect(() => {

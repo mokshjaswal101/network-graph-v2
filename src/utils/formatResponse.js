@@ -219,7 +219,8 @@ const formatResponse = (
       },
     };
 
-    if (el.attributes.prescriber) prescribers.push(hcpNode);
+    if (el.attributes.prescriber && el.attributes.label)
+      prescribers.push(hcpNode);
 
     return hcpNode;
   });
@@ -246,8 +247,6 @@ const formatResponse = (
     if (a.attributes.rank > b.attributes.rank) return 1;
     else return -1;
   });
-
-  console.log(topKols);
 
   console.log("time for formatting: ", (new Date() - date) / 1000);
   console.log("Nodes without zip and state:", count);

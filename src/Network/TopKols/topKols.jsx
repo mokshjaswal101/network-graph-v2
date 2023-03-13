@@ -83,7 +83,11 @@ const TopHcps = ({
                   },
                 }}
               >
-                {`${KolsOffset + index + 1} ${hcp.attributes.label}${
+                {`${
+                  isPrescriberShown
+                    ? KolsOffset + index + 1
+                    : hcp.attributes.rank
+                } ${hcp.attributes.label}${
                   hcp.attributes.credentials
                     ? ", " + hcp.attributes.credentials
                     : ""

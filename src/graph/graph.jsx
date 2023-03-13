@@ -91,6 +91,10 @@ const Graph = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
         el.attributes.color = "rgba(0, 0, 0, 0)";
       }
     });
+
+    data.edges.map((el) => {
+      el.type = "dotted";
+    });
   }, [data]);
 
   const graph = MultiDirectedGraph.from(data);

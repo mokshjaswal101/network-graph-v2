@@ -57,13 +57,6 @@ const Network = () => {
   //loader
   const [isLoading, setIsLoading] = useState(true);
 
-  const setStateAsync = (state) => {
-    return new Promise((resolve) => {
-      setIsLoading(state);
-      resolve();
-    });
-  };
-
   const handleFilters = async () => {
     // await setStateAsync(true);
 
@@ -214,6 +207,7 @@ const Network = () => {
             data={data}
             setSelectedHcp={setSelectedHcp}
             setIsHcpDetailsShown={setIsHcpDetailsShown}
+            setIsLoading={setIsLoading}
           />
         )}
       </div>
