@@ -9,7 +9,8 @@ const formatResponse = (
   data,
   affiliationsData,
   citationsData,
-  referralData
+  referralData,
+  setSelectedHcp
 ) => {
   let kolData = { nodes: [], edges: [] };
   let prescriberData = { nodes: [], edges: [] };
@@ -237,7 +238,7 @@ const formatResponse = (
           el.attributes?.weight * 0.1 > 7
             ? 7
             : el.attributes.weight * 0.1 || 0.1,
-        label: el.attributes.label,
+        label: el.attributes.weight || "",
         type: "arrow",
       },
     };
@@ -247,6 +248,8 @@ const formatResponse = (
     if (a.attributes.rank > b.attributes.rank) return 1;
     else return -1;
   });
+
+  setSelectedHcp(topKols?.[0]);
 
   console.log("time for formatting: ", (new Date() - date) / 1000);
   console.log("Nodes without zip and state:", count);

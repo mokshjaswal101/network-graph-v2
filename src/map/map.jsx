@@ -22,8 +22,11 @@ const Map = ({
   selectedHcp,
   setIsHcpDetailsShown,
   setIsLoading,
+  totalData,
+  influenceTypes,
 }) => {
   const [polylines, setPolylines] = useState([]);
+  const [secondLevelId, setSecondLevelId] = useState(null);
 
   useEffect(() => {
     if (data?.edges) setPolylines(calculatePolyLines(data));
@@ -42,6 +45,10 @@ const Map = ({
       map.setView(center);
     }
     return null;
+  };
+
+  const handleSecondLevelInfluence = (id) => {
+    influenceTypes = { influenceTypes };
   };
 
   return (
@@ -81,6 +88,7 @@ const Map = ({
                         ? 1000
                         : 0
                     }
+                    value={element}
                     icon={
                       element.attributes.icon != null
                         ? new L.Icon({
@@ -106,6 +114,11 @@ const Map = ({
                             popupAnchor: [0, -5],
                           })
                     }
+                    eventHandlers={{
+                      click: (e) => {
+                        handleSecondLevelInfluence(e?.target?.options?.id);
+                      },
+                    }}
                   >
                     <Popup closeOnClick>
                       {element.attributes.label}

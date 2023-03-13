@@ -86,7 +86,8 @@ const Network = () => {
         res.co_author,
         res.co_affiliation,
         res.citation,
-        res.referral
+        res.referral,
+        setSelectedHcp
       );
 
       filterData(
@@ -208,6 +209,8 @@ const Network = () => {
             setSelectedHcp={setSelectedHcp}
             setIsHcpDetailsShown={setIsHcpDetailsShown}
             setIsLoading={setIsLoading}
+            totalData={totalData}
+            influenceTypes={influenceTypes}
           />
         )}
       </div>
