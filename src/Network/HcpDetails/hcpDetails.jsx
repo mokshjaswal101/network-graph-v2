@@ -129,18 +129,53 @@ const HcpDetails = ({
             <StyledDiv>
               <b>Prescriptions </b>
               <br />
-              {hcpData.prescription_info.map((el, index) => {
-                return (
-                  <div key={index}>
-                    <div key={el.key}>{`• ${el.key
-                      .split(" ")
-                      .map((el) => el[0].toUpperCase() + el.slice(1))
-                      .join(" ")}${
-                      el?.total_claims ? ` - ${el.total_claims}` : ""
-                    }`}</div>
-                  </div>
-                );
-              })}
+
+              {hcpData.prescription_info.filter(
+                (el) => el.key.slice(0, 5) == "Govt_"
+              ).length > 0 ? (
+                <b>Government: </b>
+              ) : (
+                <></>
+              )}
+
+              {hcpData.prescription_info
+                .filter((el) => el.key.slice(0, 5) == "Govt_")
+                .map((el, index) => {
+                  return (
+                    <div key={index}>
+                      <div key={el.key}>{`• ${el.key
+                        .slice(5)
+                        .split(" ")
+                        .map((el) => el[0].toUpperCase() + el.slice(1))
+                        .join(" ")}${
+                        el?.total_claims ? ` - ${el.total_claims}` : ""
+                      }`}</div>
+                    </div>
+                  );
+                })}
+              {hcpData.prescription_info.filter(
+                (el) => el.key.slice(0, 5) == "Comm_"
+              ).length > 0 ? (
+                <b>Commercial: </b>
+              ) : (
+                <></>
+              )}
+
+              {hcpData.prescription_info
+                .filter((el) => el.key.slice(0, 5) == "Comm_")
+                .map((el, index) => {
+                  return (
+                    <div key={index}>
+                      <div key={el.key}>{`• ${el.key
+                        .slice(5)
+                        .split(" ")
+                        .map((el) => el[0].toUpperCase() + el.slice(1))
+                        .join(" ")}${
+                        el?.total_claims ? ` - ${el.total_claims}` : ""
+                      }`}</div>
+                    </div>
+                  );
+                })}
             </StyledDiv>
           )}
         </div>
