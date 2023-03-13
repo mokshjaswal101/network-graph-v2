@@ -133,7 +133,8 @@ const HcpDetails = ({
                 return (
                   <div key={index}>
                     <div key={el.key}>{`• ${
-                      el.key.slice(0, 5) == "Govt_"
+                      el.key.slice(0, 5) == "Govt_" ||
+                      el.key.slice(0, 5) == "Comm_"
                         ? el.key
                             .slice(5)
                             .split(" ")
@@ -143,14 +144,7 @@ const HcpDetails = ({
                             .split(" ")
                             .map((el) => el[0].toUpperCase() + el.slice(1))
                             .join(" ")
-                    } -`}</div>
-                    <div key={el.doc_count}>
-                      {el?.doc_count ? `Documents ${el.doc_count}` : ""}
-                      {el?.doc_count && el?.total_claims && ", "}
-                      {el?.total_claims
-                        ? `Total Claims ${el.total_claims}`
-                        : ""}
-                    </div>
+                    }${el?.total_claims ? ` - ${el.total_claims}` : ""}`}</div>
                   </div>
                 );
               })}
