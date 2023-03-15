@@ -208,18 +208,17 @@ const Map = ({
             </LayerGroup>
           </LayersControl.Overlay>
 
-          <LayersControl.Overlay checked name="Influence">
+          <LayersControl.Overlay checked name="First level Influence">
             <LayerGroup>
               {polylines?.length > 0 &&
                 polylines
-                  .filter((el) => el.level == "second")
+                  .filter((el) => el.level != "second")
                   .map((poly, index) => {
                     return (
                       <Polyline
                         key={index}
                         pathOptions={{ color: poly.cc, weight: poly.weight }}
                         positions={poly.pointList}
-                        dashArray={"10, 10"}
                       >
                         {poly?.type == "arrow" ? (
                           getArrow(
@@ -233,16 +232,20 @@ const Map = ({
                     );
                   })}
             </LayerGroup>
+          </LayersControl.Overlay>
+
+          <LayersControl.Overlay checked name="Second level Influence">
             <LayerGroup>
               {polylines?.length > 0 &&
                 polylines
-                  .filter((el) => el.level != "second")
+                  .filter((el) => el.level == "second")
                   .map((poly, index) => {
                     return (
                       <Polyline
                         key={index}
                         pathOptions={{ color: poly.cc, weight: poly.weight }}
                         positions={poly.pointList}
+                        dashArray={"10, 10"}
                       >
                         {poly?.type == "arrow" ? (
                           getArrow(
