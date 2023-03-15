@@ -79,6 +79,10 @@ const Network = () => {
     // await setStateAsync(false);
   };
 
+  useEffect(() => {
+    console.log(selectedHcp);
+  }, [selectedHcp?.key]);
+
   //handle initial loading of data
   useEffect(() => {
     fetchAllData().then((res) => {

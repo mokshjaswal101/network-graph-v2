@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { MultiDirectedGraph } from "graphology";
 import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
 
+import EdgeProgram from "sigma/rendering/webgl/programs/edge";
+
 import {
   LayoutForceAtlas2Control,
   useLayoutForceAtlas2,
@@ -91,10 +93,6 @@ const Graph = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
         el.attributes.color = "rgba(0, 0, 0, 0)";
       }
     });
-
-    data.edges.map((el) => {
-      el.type = "dotted";
-    });
   }, [data]);
 
   const graph = MultiDirectedGraph.from(data);
@@ -112,6 +110,7 @@ const Graph = ({ data, setSelectedHcp, selectedHcp, setIsHcpDetailsShown }) => {
         maxIterations: 100,
         defaultNodeColor: "#3388AA",
         maxEdgeSize: 20,
+        defaultEdgeType: "arrow",
       }}
     >
       {/* <EdgeDisplayData default="tapered" /> */}
