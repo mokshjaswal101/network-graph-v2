@@ -9,7 +9,7 @@ const client = axios.create({
 const fetchAllData = async () => {
   try {
     let response = await axios.get(
-      "https://network-graph-data.s3.us-east-2.amazonaws.com/project_id_1936e211-b997-11ed-8c61-52d672bc987d/network_graph.json"
+      "https://network-graph-data.s3.us-east-2.amazonaws.com/project_id_93b7de9b-758b-4ac4-97e1-3302457fd629/network_graph.json"
     );
     return response.data;
   } catch (err) {
