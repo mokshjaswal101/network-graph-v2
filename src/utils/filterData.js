@@ -75,14 +75,14 @@ const filterBasedOnTopHcps = (data, KolsOffset, topKols) => {
   topKols.slice(KolsOffset, KolsOffset + 10).forEach((kol) => {
     data.edges.forEach((edge) => {
       if (edge.source == kol.key || edge.target == kol.key) {
-        if (!formattedData.edges.some((el) => el.key == edge.key))
+        if (!formattedData.edges.some((el) => el?.key == edge.key))
           formattedData.edges.push(edge);
 
-        if (!formattedData.nodes.some((el) => el.key == kol.key))
+        if (!formattedData.nodes.some((el) => el?.key == kol.key))
           formattedData.nodes.push(kol);
 
         let nodeKey = edge.source == kol.key ? edge.target : edge.source;
-        if (!formattedData.nodes.some((node) => node.key == nodeKey)) {
+        if (!formattedData.nodes.some((node) => node?.key == nodeKey)) {
           formattedData.nodes.push(data.nodes.find((el) => el.key == nodeKey));
         }
       }

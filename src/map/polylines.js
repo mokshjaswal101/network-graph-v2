@@ -18,9 +18,6 @@ const calculatePolyLines = (data) => {
         return;
       }
     });
-
-    console.log(edge.level);
-
     return {
       pointList: [pointA, pointB],
       op: edge.attributes.opacity || 1,

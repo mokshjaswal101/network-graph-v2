@@ -79,9 +79,13 @@ const Network = () => {
     // await setStateAsync(false);
   };
 
+  // useEffect(() => {
+  //   console.log("selectedHcp", selectedHcp);
+  // }, [selectedHcp?.key]);
+
   useEffect(() => {
-    console.log(selectedHcp);
-  }, [selectedHcp?.key]);
+    console.log(data);
+  }, [data]);
 
   //handle initial loading of data
   useEffect(() => {
@@ -91,7 +95,8 @@ const Network = () => {
         res.co_affiliation,
         res.citation,
         res.referral,
-        setSelectedHcp
+        setSelectedHcp,
+        res.top_nodes
       );
 
       filterData(
@@ -99,7 +104,7 @@ const Network = () => {
         setData,
         influenceTypes,
         influenceLevel,
-        selectedHcp,
+        formattedResponse.topKols[0],
         selectedSpecialization,
         selectedState,
         setStateList,

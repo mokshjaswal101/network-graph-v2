@@ -79,16 +79,18 @@ const AdvancedFilters = ({
               value={selectedSpecialization}
             >
               <option value="">All</option>
-              {specializationList.map((el, index) => {
-                return (
-                  <option key={index} value={el}>
-                    {el
-                      ?.split(" ")
-                      .map((el) => el[0].toUpperCase() + el.slice(1))
-                      .join(" ")}
-                  </option>
-                );
-              })}
+              {specializationList
+                .filter((el) => el)
+                .map((el, index) => {
+                  return (
+                    <option key={index} value={el}>
+                      {el
+                        ?.split(" ")
+                        .map((el) => el[0]?.toUpperCase() + el.slice(1))
+                        .join(" ")}
+                    </option>
+                  );
+                })}
             </StyledSelect>
           </div>
 

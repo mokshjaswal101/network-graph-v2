@@ -10,12 +10,12 @@ const formatResponse = (
   affiliationsData,
   citationsData,
   referralData,
-  setSelectedHcp
+  setSelectedHcp,
+  topKols
 ) => {
   let kolData = { nodes: [], edges: [] };
   let prescriberData = { nodes: [], edges: [] };
 
-  let topKols = [];
   let prescribers = [];
   let date = new Date();
   let count = 0;
@@ -23,7 +23,8 @@ const formatResponse = (
   //coauthorship data
   kolData.nodes = data?.nodes?.map((el) => {
     let hcpNode = null;
-    let zip = zipcodes.lookup(el.attributes.zipcode) || zipcodes.random();
+    let zip =
+      zipcodes.lookup(el?.attributes?.location?.zipcode) || zipcodes.random();
     hcpNode = {
       key: el.key,
       attributes: {
@@ -35,7 +36,6 @@ const formatResponse = (
           specializations[el.attributes.specialization] ||
           specializations["other"],
         state: zip?.state,
-        zipcode: el.attributes.zipcode,
         icon: el.attributes.kol ? starred : null,
         lat: parseFloat(zip?.latitude),
         lng: parseFloat(zip?.longitude),
@@ -50,8 +50,7 @@ const formatResponse = (
       },
     };
 
-    if (!el?.attributes?.zipcode && !el?.attributes?.state) count++;
-    if (el.attributes.kol) topKols.push(hcpNode);
+    if (!el?.attributes?.location?.zipcode) count++;
 
     return hcpNode;
   });
@@ -73,9 +72,10 @@ const formatResponse = (
   //affiliations data
   affiliationsData?.nodes?.forEach((node) => {
     let hcpNode = null;
-    let zip = zipcodes.lookup(node.attributes.zipcode) || zipcodes.random();
+    let zip =
+      zipcodes.lookup(node?.attributes?.location?.zipcode) || zipcodes.random();
 
-    if (!node?.attributes?.zipcode && !node?.attributes?.state) count++;
+    if (!node?.attributes?.location?.zipcod) count++;
     hcpNode = {
       key: node.key,
       attributes: {
@@ -87,7 +87,6 @@ const formatResponse = (
           specializations[node.attributes.specialization] ||
           specializations["other"],
         state: zip?.state,
-        zipcode: node.attributes.zipcode,
         icon: node.attributes.kol ? starred : null,
         lat: parseFloat(zip?.latitude),
         lng: parseFloat(zip?.longitude),
@@ -106,8 +105,6 @@ const formatResponse = (
     if (!kolData.nodes.find((el) => el.key === hcpNode.key)) {
       kolData.nodes.push(hcpNode);
     }
-    if (node.attributes.kol && !topKols.some((top) => top.key == hcpNode.key))
-      topKols.push(hcpNode);
   });
 
   affiliationsData?.edges?.forEach((el, index) => {
@@ -129,9 +126,10 @@ const formatResponse = (
   //Citations Data
   citationsData?.nodes?.forEach((node) => {
     let hcpNode = null;
-    let zip = zipcodes.lookup(node.attributes.zipcode) || zipcodes.random();
+    let zip =
+      zipcodes.lookup(node?.attributes?.location?.zipcode) || zipcodes.random();
 
-    if (!node?.attributes?.zipcode && !node?.attributes?.state) count++;
+    if (!node?.attributes?.location?.zipcode) count++;
     hcpNode = {
       key: node.key,
       attributes: {
@@ -143,7 +141,6 @@ const formatResponse = (
           specializations[node.attributes.specialization] ||
           specializations["other"],
         state: zip?.state,
-        zipcode: node.attributes.zipcode,
         icon: node.attributes.kol ? starred : null,
         lat: parseFloat(zip?.latitude),
         lng: parseFloat(zip?.longitude),
@@ -162,8 +159,6 @@ const formatResponse = (
     if (!kolData.nodes.find((el) => el.key === hcpNode.key)) {
       kolData.nodes.push(hcpNode);
     }
-    if (node.attributes.kol && !topKols.some((top) => top.key == hcpNode.key))
-      topKols.push(hcpNode);
   });
 
   citationsData?.edges?.forEach((el, index) => {
@@ -189,8 +184,9 @@ const formatResponse = (
   //referral data
   prescriberData.nodes = referralData?.nodes?.map((el) => {
     let hcpNode = null;
-    let zip = zipcodes.lookup(el.attributes.zipcode) || zipcodes.random();
-    if (!el?.attributes?.zipcode && !el?.attributes?.state) count++;
+    let zip =
+      zipcodes.lookup(el?.attributes?.location?.zipcode) || zipcodes.random();
+    // if (!el?.attributes?.zipcode && !el?.attributes?.state) count++;
     hcpNode = {
       key: el.key,
       attributes: {
@@ -202,7 +198,6 @@ const formatResponse = (
           specializations[el.attributes.specialization] ||
           specializations["other"],
         state: zip?.state,
-        zipcode: el.attributes.zipcode,
         icon: el.attributes.prescriber ? prescriber : null,
         lat: parseFloat(zip?.latitude),
         lng: parseFloat(zip?.longitude),
@@ -244,16 +239,49 @@ const formatResponse = (
     };
   });
 
-  topKols.sort((a, b) => {
-    if (a.attributes.rank > b.attributes.rank) return 1;
-    else return -1;
+  topKols = topKols?.map((el) => {
+    let hcpNode = null;
+    let zip =
+      zipcodes.lookup(el?.attributes?.location?.zipcode) || zipcodes.random();
+    return (hcpNode = {
+      key: el.key,
+      attributes: {
+        label: el.attributes.label
+          .split(" ")
+          .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
+          .join(" "),
+        color:
+          specializations[el.attributes.specialization] ||
+          specializations["other"],
+        state: zip?.state,
+        icon: el.attributes.kol ? starred : null,
+        lat: parseFloat(zip?.latitude),
+        lng: parseFloat(zip?.longitude),
+        x: Math.random(),
+        y: Math.random(),
+        specialization: el.attributes.specialization,
+        rank: el.attributes.rank,
+        size: "4",
+        credentials: el?.attributes?.credentials
+          ?.map((el) => el.toUpperCase())
+          .join(" "),
+      },
+    });
+  });
+
+  kolData.nodes.forEach((el) => {
+    if (!el) console.log("error", el);
+  });
+  topKols.forEach((el) => {
+    if (!el) console.log("error", el);
   });
 
   setSelectedHcp(topKols?.[0]);
 
-  console.log("time for formatting: ", (new Date() - date) / 1000);
-  console.log("Nodes without zip and state:", count);
-  console.log("top kols:", topKols.length);
+  // console.log("time for formatting: ", (new Date() - date) / 1000);
+  // console.log("top kols:", topKols.length);
+
+  kolData.nodes = [...kolData.nodes, ...topKols];
   return { kolData, prescriberData, topKols, prescribers };
 };
 
