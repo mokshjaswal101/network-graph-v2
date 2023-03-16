@@ -40,23 +40,12 @@ const Filters = ({
   setKolsOffset,
 }) => {
   const handleResetFilters = () => {
-    if (!selectedHcp || selectedHcp == "") {
-      filterData(
-        totalData,
-        setData,
-        influenceTypes,
-        influenceLevel,
-        "",
-        "",
-        "",
-        setStateList,
-        setSpecializationList,
-        setSelectedState,
-        setSelectedSpecialization,
-        KolsOffset,
-        topKols
-      );
-    } else setSelectedHcp(null);
+    if (!isPrescriberShown) {
+      setInfluenceTypes(["coauthorship"]);
+    } else {
+      setInfluenceTypes(["referral"]);
+    }
+    setSelectedHcp(topKols[0]);
     setSelectedSpecialization("");
     setSelectedState("");
   };

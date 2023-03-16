@@ -83,10 +83,6 @@ const Network = () => {
   //   console.log("selectedHcp", selectedHcp);
   // }, [selectedHcp?.key]);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   //handle initial loading of data
   useEffect(() => {
     fetchAllData().then((res) => {
