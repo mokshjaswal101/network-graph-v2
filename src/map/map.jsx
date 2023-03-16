@@ -223,7 +223,8 @@ const Map = ({
                         {poly?.type == "arrow" ? (
                           getArrow(
                             [poly.pointList[0], poly.pointList[1]],
-                            poly.cc
+                            poly.cc,
+                            poly.weight
                           )
                         ) : (
                           <></>
@@ -250,7 +251,8 @@ const Map = ({
                         {poly?.type == "arrow" ? (
                           getArrow(
                             [poly.pointList[0], poly.pointList[1]],
-                            poly.cc
+                            poly.cc,
+                            poly.weight
                           )
                         ) : (
                           <></>

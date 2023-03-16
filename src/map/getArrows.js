@@ -1,7 +1,7 @@
 import L from "leaflet";
 import { Marker } from "react-leaflet";
 
-const getArrow = (arrLatlngs, color = "red", weight = 0.1) => {
+const getArrow = (arrLatlngs, color = "red", weight) => {
   if (!arrLatlngs || arrLatlngs.length < 2) return;
 
   if (
@@ -12,7 +12,6 @@ const getArrow = (arrLatlngs, color = "red", weight = 0.1) => {
 
   let icon = L.divIcon({
     className: "arrow-icon",
-    bgPos: [5, 5],
     html: `<div style="border: 6px solid transparent; border-top-color:${color} ;  transform: rotate(${getAngle(
       arrLatlngs[1],
       arrLatlngs[0],

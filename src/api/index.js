@@ -2,8 +2,9 @@ import axios from "axios";
 const client = axios.create({
   baseURL: "https://networkgraph-backend.pharmaacuity.com/",
 });
+
 //https://networkgraph-backend.pharmaacuity.com/
-// "http://pa-v2-api-nlb-3c27031a599085c6.elb.us-east-2.amazonaws.com:3000"
+//"http://pa-v2-api-nlb-3c27031a599085c6.elb.us-east-2.amazonaws.com:3000"
 
 const fetchAllData = async () => {
   try {

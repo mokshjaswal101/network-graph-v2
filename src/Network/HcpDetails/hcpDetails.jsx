@@ -129,6 +129,7 @@ const HcpDetails = ({
             <StyledDiv>
               <b>Prescriptions </b>
               <br />
+              <br />
 
               {hcpData.prescription_info.filter(
                 (el) => el.key.slice(0, 5) == "Govt_"
@@ -140,19 +141,31 @@ const HcpDetails = ({
 
               {hcpData.prescription_info
                 .filter((el) => el.key.slice(0, 5) == "Govt_")
+                .sort((a, b) => {
+                  if (a.total_claims <= b.total_claims) return 1;
+                  else return -1;
+                })
+                .slice(0, 5)
                 .map((el, index) => {
                   return (
                     <div key={index}>
                       <div key={el.key}>{`• ${el.key
                         .slice(5)
+                        .split("(")[0]
                         .split(" ")
-                        .map((el) => el[0].toUpperCase() + el.slice(1))
+                        .map(
+                          (el) =>
+                            el[0].toUpperCase() + el.slice(1).toLowerCase()
+                        )
                         .join(" ")}${
                         el?.total_claims ? ` - ${el.total_claims}` : ""
                       }`}</div>
                     </div>
                   );
                 })}
+
+              <br />
+
               {hcpData.prescription_info.filter(
                 (el) => el.key.slice(0, 5) == "Comm_"
               ).length > 0 ? (
@@ -163,6 +176,11 @@ const HcpDetails = ({
 
               {hcpData.prescription_info
                 .filter((el) => el.key.slice(0, 5) == "Comm_")
+                .sort((a, b) => {
+                  if (a.total_claims <= b.total_claims) return 1;
+                  else return -1;
+                })
+                .slice(0, 5)
                 .map((el, index) => {
                   return (
                     <div key={index}>

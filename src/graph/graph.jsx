@@ -2,13 +2,7 @@ import React, { useEffect, useState } from "react";
 import { MultiDirectedGraph } from "graphology";
 import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
 
-import EdgeProgram from "sigma/rendering/webgl/programs/edge";
-
-import {
-  LayoutForceAtlas2Control,
-  useLayoutForceAtlas2,
-  control,
-} from "@react-sigma/layout-forceatlas2";
+import { LayoutForceAtlas2Control } from "@react-sigma/layout-forceatlas2";
 import {
   SigmaContainer,
   ControlsContainer,

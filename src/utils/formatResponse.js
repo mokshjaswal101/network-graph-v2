@@ -6,7 +6,7 @@ import prescriber from "../assets/prescriber.png";
 import specializations from "../data/specializations";
 
 const formatResponse = (
-  data,
+  coauthorshipData,
   affiliationsData,
   citationsData,
   referralData,
@@ -20,8 +20,8 @@ const formatResponse = (
   let date = new Date();
   let count = 0;
 
-  //coauthorship data
-  kolData.nodes = data?.nodes?.map((el) => {
+  //coauthorship coauthorshipData
+  kolData.nodes = coauthorshipData?.nodes?.map((el) => {
     let hcpNode = null;
     let zip =
       zipcodes.lookup(el?.attributes?.location?.zipcode) || zipcodes.random();
@@ -55,7 +55,7 @@ const formatResponse = (
     return hcpNode;
   });
 
-  kolData.edges = data?.edges?.map((el, index) => {
+  kolData.edges = coauthorshipData?.edges?.map((el, index) => {
     return {
       key: index,
       type: "coauthorship",
@@ -69,7 +69,7 @@ const formatResponse = (
     };
   });
 
-  //affiliations data
+  //affiliations coauthorshipData
   affiliationsData?.nodes?.forEach((node) => {
     let hcpNode = null;
     let zip =
@@ -181,7 +181,7 @@ const formatResponse = (
     kolData.edges.push(edge);
   });
 
-  //referral data
+  //referral coauthorshipData
   prescriberData.nodes = referralData?.nodes?.map((el) => {
     let hcpNode = null;
     let zip =
