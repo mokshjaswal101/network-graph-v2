@@ -83,7 +83,7 @@ const HcpDetails = ({
           {hcpData.rank && (
             <StyledDiv>
               <b>Rank </b>
-              {hcpData.rank}
+              {hcp.attributes?.rank}
             </StyledDiv>
           )}
           {hcpData?.taxanomy_codes?.[0]?.specialization && (
