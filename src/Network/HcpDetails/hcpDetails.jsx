@@ -164,7 +164,13 @@ const HcpDetails = ({
                   );
                 })}
 
-              <br />
+              {hcpData.prescription_info.filter(
+                (el) => el.key.slice(0, 5) == "Govt_"
+              ).length > 0 ? (
+                <br />
+              ) : (
+                <></>
+              )}
 
               {hcpData.prescription_info.filter(
                 (el) => el.key.slice(0, 5) == "Comm_"
