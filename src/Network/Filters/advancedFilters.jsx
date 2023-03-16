@@ -110,13 +110,15 @@ const AdvancedFilters = ({
             >
               <option value="">All</option>
               {stateList?.length > 0 &&
-                stateList.map((el, index) => {
-                  return (
-                    <option key={index} value={el}>
-                      {el}
-                    </option>
-                  );
-                })}
+                stateList
+                  .filter((el) => el)
+                  .map((el, index) => {
+                    return (
+                      <option key={index} value={el}>
+                        {el}
+                      </option>
+                    );
+                  })}
             </StyledSelect>
           </div>
 

@@ -86,7 +86,7 @@ const formatResponse = (
         color:
           specializations[node.attributes.specialization] ||
           specializations["other"],
-        state: zip?.state,
+        state: zip?.state || node.attributes.state,
         icon: node.attributes.kol ? starred : null,
         lat: parseFloat(zip?.latitude),
         lng: parseFloat(zip?.longitude),
@@ -140,7 +140,7 @@ const formatResponse = (
         color:
           specializations[node.attributes.specialization] ||
           specializations["other"],
-        state: zip?.state,
+        state: zip?.state || node.attributes.state,
         icon: node.attributes.kol ? starred : null,
         lat: parseFloat(zip?.latitude),
         lng: parseFloat(zip?.longitude),
@@ -197,7 +197,7 @@ const formatResponse = (
         color:
           specializations[el.attributes.specialization] ||
           specializations["other"],
-        state: zip?.state,
+        state: zip?.state || el.attributes.state,
         icon: el.attributes.prescriber ? prescriber : null,
         lat: parseFloat(zip?.latitude),
         lng: parseFloat(zip?.longitude),
@@ -253,7 +253,7 @@ const formatResponse = (
         color:
           specializations[el.attributes.specialization] ||
           specializations["other"],
-        state: zip?.state,
+        state: zip?.state || el.attributes.state,
         icon: el.attributes.kol ? starred : null,
         lat: parseFloat(zip?.latitude),
         lng: parseFloat(zip?.longitude),

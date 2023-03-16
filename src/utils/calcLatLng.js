@@ -8,7 +8,11 @@ const calcLatLng = (location) => {
   if (zipcode) {
     let res = zipcodes.lookup(zipcode);
     if (res?.latitude && res?.longitude)
-      return { latitude: res.latitude, longitude: res.longitude };
+      return {
+        latitude: res.latitude,
+        longitude: res.longitude,
+        state: res.state,
+      };
   }
   if (city) {
     let res = City.getAllCities().find(
