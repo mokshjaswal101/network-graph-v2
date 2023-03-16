@@ -1,5 +1,6 @@
 import zipcodes from "zipcodes";
 
+import calcLatLng from "./calcLatLng";
 import starred from "../assets/starred.png";
 import prescriber from "../assets/prescriber.png";
 
@@ -15,7 +16,6 @@ const formatResponse = (
 ) => {
   let kolData = { nodes: [], edges: [] };
   let prescriberData = { nodes: [], edges: [] };
-
   let prescribers = [];
   let date = new Date();
   let count = 0;
@@ -23,10 +23,10 @@ const formatResponse = (
   //coauthorship coauthorshipData
   kolData.nodes = coauthorshipData?.nodes?.map((el) => {
     let hcpNode = null;
-    let zip =
-      zipcodes.lookup(el?.attributes?.location?.zipcode) || zipcodes.random();
+    let zip = calcLatLng(el.attributes.location);
     hcpNode = {
       key: el.key,
+      location: el.attributes.location,
       attributes: {
         label: el.attributes.label
           .split(" ")
@@ -72,12 +72,12 @@ const formatResponse = (
   //affiliations coauthorshipData
   affiliationsData?.nodes?.forEach((node) => {
     let hcpNode = null;
-    let zip =
-      zipcodes.lookup(node?.attributes?.location?.zipcode) || zipcodes.random();
+    let zip = calcLatLng(node.attributes.location);
 
     if (!node?.attributes?.location?.zipcod) count++;
     hcpNode = {
       key: node.key,
+      location: node.attributes.location,
       attributes: {
         label: node.attributes.label
           .split(" ")
@@ -126,12 +126,12 @@ const formatResponse = (
   //Citations Data
   citationsData?.nodes?.forEach((node) => {
     let hcpNode = null;
-    let zip =
-      zipcodes.lookup(node?.attributes?.location?.zipcode) || zipcodes.random();
+    let zip = calcLatLng(node.attributes.location);
 
     if (!node?.attributes?.location?.zipcode) count++;
     hcpNode = {
       key: node.key,
+      location: node.attributes.location,
       attributes: {
         label: node.attributes.label
           .split(" ")
@@ -241,10 +241,10 @@ const formatResponse = (
 
   topKols = topKols?.map((el) => {
     let hcpNode = null;
-    let zip =
-      zipcodes.lookup(el?.attributes?.location?.zipcode) || zipcodes.random();
+    let zip = calcLatLng(el.attributes.location);
     return (hcpNode = {
       key: el.key,
+      location: el.attributes.location,
       attributes: {
         label: el.attributes.label
           .split(" ")

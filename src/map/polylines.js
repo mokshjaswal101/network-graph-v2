@@ -1,5 +1,4 @@
 import L from "leaflet";
-
 const calculatePolyLines = (data) => {
   let p = data?.edges?.map((edge) => {
     let source = edge.source;
