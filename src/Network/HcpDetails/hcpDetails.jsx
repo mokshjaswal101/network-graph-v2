@@ -233,6 +233,43 @@ const HcpDetails = ({
               {hcp.attributes.state}
             </StyledDiv>
           )}
+
+          {hcp.attributes.currentPractice && (
+            <StyledDiv>
+              <b>Current Practice </b>
+              {hcp.attributes.currentPractice
+                .split(" ")
+                .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
+                .join(" ")}
+            </StyledDiv>
+          )}
+
+          {hcp.attributes.prescriptions && (
+            <>
+              <StyledDiv>
+                <b>Total claims </b>
+                {hcp.attributes.prescriptions.claimsCountTotal}
+              </StyledDiv>
+              <StyledDiv>
+                <b>Total patients </b>
+                {hcp.attributes.prescriptions.patientsCountTotal}
+              </StyledDiv>
+              {Object.entries(hcp.attributes.prescriptions.drugs).map(
+                ([name, values]) => {
+                  return (
+                    <StyledDiv>
+                      <b>
+                        {name[0].toUpperCase() + name.slice(1).toLowerCase()}
+                      </b>
+                      {` Claims ${values.claimsCount} Patients ${values.patientsCount}`}
+                    </StyledDiv>
+                  );
+                }
+              )}
+
+              <br />
+            </>
+          )}
         </div>
       )}
 

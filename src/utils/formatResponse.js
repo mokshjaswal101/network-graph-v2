@@ -8,8 +8,6 @@ import specializations from "../data/specializations";
 
 const formatResponse = (
   coauthorshipData,
-  affiliationsData,
-  citationsData,
   referralData,
   setSelectedHcp,
   topKols
@@ -17,13 +15,11 @@ const formatResponse = (
   let kolData = { nodes: [], edges: [] };
   let prescriberData = { nodes: [], edges: [] };
   let prescribers = [];
-  let date = new Date();
-  let count = 0;
 
   //coauthorship coauthorshipData
   kolData.nodes = coauthorshipData?.nodes?.map((el) => {
     let hcpNode = null;
-    let zip = calcLatLng(el.attributes.location);
+    let zip = calcLatLng(el.attributes.location, el);
     hcpNode = {
       key: el.key,
       location: el.attributes.location,
@@ -50,143 +46,42 @@ const formatResponse = (
       },
     };
 
-    if (!el?.attributes?.location?.zipcode) count++;
-
     return hcpNode;
   });
 
   kolData.edges = coauthorshipData?.edges?.map((el, index) => {
     return {
       key: index,
-      type: "coauthorship",
+      type:
+        el.attributes.label == "co_author"
+          ? "coauthorship"
+          : el.attributes.label == "citation"
+          ? "citation"
+          : "coaffiliation",
       source: el.source,
       target: el.target,
       attributes: {
-        color: "#0047ab",
-        size: el.attributes?.weight > 7 ? 7 : el.attributes.weight || 0.1,
-        label: el.attributes.label,
-      },
-    };
-  });
-
-  //affiliations coauthorshipData
-  affiliationsData?.nodes?.forEach((node) => {
-    let hcpNode = null;
-    let zip = calcLatLng(node.attributes.location);
-
-    if (!node?.attributes?.location?.zipcod) count++;
-    hcpNode = {
-      key: node.key,
-      location: node.attributes.location,
-      attributes: {
-        label: node.attributes.label
-          .split(" ")
-          .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
-          .join(" "),
         color:
-          specializations[node.attributes.specialization] ||
-          specializations["other"],
-        state: zip?.state || node.attributes.state,
-        icon: node.attributes.kol ? starred : null,
-        lat: parseFloat(zip?.latitude),
-        lng: parseFloat(zip?.longitude),
-        x: Math.random(),
-        y: Math.random(),
-        specialization: node.attributes.specialization,
-        rank: node.attributes.rank,
-        size: "4",
-        affiliation: node.attributes.affiliation,
-        credentials: node?.attributes?.credentials
-          ?.map((el) => el.toUpperCase())
-          .join(" "),
+          el.attributes.label == "co_author"
+            ? "#00008B"
+            : el.attributes.label == "citation"
+            ? "purple"
+            : "orange",
+        size: el.attributes.weight > 4 ? 4 : el.attributes.weight,
+        label:
+          (el.attributes.label == "co_author"
+            ? "Co-authored "
+            : el.attributes.label == "citation"
+            ? "Citation "
+            : "Affiliation ") + el.attributes.weight,
       },
     };
-
-    if (!kolData.nodes.find((el) => el.key === hcpNode.key)) {
-      kolData.nodes.push(hcpNode);
-    }
-  });
-
-  affiliationsData?.edges?.forEach((el, index) => {
-    let edge = {
-      key: kolData.edges.length + 1,
-      type: "coaffiliation",
-      source: el.source,
-      target: el.target,
-      attributes: {
-        color: "orange",
-        size: el.attributes?.weight > 7 ? 7 : el.attributes.weight || 0.1,
-        label: el.attributes.label,
-      },
-    };
-
-    kolData.edges.push(edge);
-  });
-
-  //Citations Data
-  citationsData?.nodes?.forEach((node) => {
-    let hcpNode = null;
-    let zip = calcLatLng(node.attributes.location);
-
-    if (!node?.attributes?.location?.zipcode) count++;
-    hcpNode = {
-      key: node.key,
-      location: node.attributes.location,
-      attributes: {
-        label: node.attributes.label
-          .split(" ")
-          .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
-          .join(" "),
-        color:
-          specializations[node.attributes.specialization] ||
-          specializations["other"],
-        state: zip?.state || node.attributes.state,
-        icon: node.attributes.kol ? starred : null,
-        lat: parseFloat(zip?.latitude),
-        lng: parseFloat(zip?.longitude),
-        x: Math.random(),
-        y: Math.random(),
-        specialization: node.attributes.specialization,
-        rank: node.attributes.rank,
-        size: "4",
-        affiliation: node.attributes.affiliation,
-        credentials: node?.attributes?.credentials
-          ?.map((el) => el.toUpperCase())
-          .join(" "),
-      },
-    };
-
-    if (!kolData.nodes.find((el) => el.key === hcpNode.key)) {
-      kolData.nodes.push(hcpNode);
-    }
-  });
-
-  citationsData?.edges?.forEach((el, index) => {
-    let edge = {
-      key: kolData.edges.length + 1,
-      type: "citation",
-      source: el.source,
-      target: el.target,
-      attributes: {
-        color: "rgba(80,00,88, 0.6)",
-        size:
-          el.attributes?.weight * 0.15 > 7
-            ? 7
-            : el.attributes.weight * 0.15 || 0.15,
-        label: el.attributes.label,
-        type: "arrow",
-      },
-    };
-
-    kolData.edges.push(edge);
   });
 
   //referral coauthorshipData
   prescriberData.nodes = referralData?.nodes?.map((el) => {
     let hcpNode = null;
-    let zip =
-      zipcodes.lookup(el?.attributes?.location?.zipcode) || zipcodes.random();
-    // if (!el?.attributes?.zipcode && !el?.attributes?.state) count++;
+    let zip = calcLatLng(el.attributes.location, el);
     hcpNode = {
       key: el.key,
       attributes: {
@@ -210,6 +105,8 @@ const formatResponse = (
           el?.attributes?.credentials
             ?.map((el) => el.toUpperCase())
             .join(" ") || "",
+        currentPractice: el.attributes.current_practice,
+        prescriptions: el.attributes.prescriptions,
       },
     };
 
@@ -228,8 +125,8 @@ const formatResponse = (
       attributes: {
         color: "#008080",
         size:
-          el.attributes?.weight * 0.1 > 7
-            ? 7
+          el.attributes?.weight * 0.1 > 6
+            ? 6
             : el.attributes.weight * 0.1 || 0.1,
         label: el?.attributes.weight
           ? `Unique Patients referred : ${el.attributes.weight}`
@@ -240,9 +137,8 @@ const formatResponse = (
   });
 
   topKols = topKols?.map((el) => {
-    let hcpNode = null;
-    let zip = calcLatLng(el.attributes.location);
-    return (hcpNode = {
+    let zip = calcLatLng(el.attributes.location, el);
+    return {
       key: el.key,
       location: el.attributes.location,
       attributes: {
@@ -266,14 +162,7 @@ const formatResponse = (
           ?.map((el) => el.toUpperCase())
           .join(" "),
       },
-    });
-  });
-
-  kolData.nodes.forEach((el) => {
-    if (!el) console.log("error", el);
-  });
-  topKols.forEach((el) => {
-    if (!el) console.log("error", el);
+    };
   });
 
   setSelectedHcp(topKols?.[0]);

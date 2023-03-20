@@ -2,7 +2,7 @@ import { Country, State, City } from "country-state-city";
 import zipcodes from "zipcodes";
 import countries from "../data/countries";
 
-const calcLatLng = (location) => {
+const calcLatLng = (location, node) => {
   let { zipcode, city, state, country } = location;
 
   if (zipcode) {
@@ -36,6 +36,16 @@ const calcLatLng = (location) => {
         longitude: res.longitude + Math.random(),
       };
     }
+
+    res = State.getAllStates().find(
+      (el) =>
+        el.isoCode.toLowerCase() == state.trim().toLowerCase() &&
+        countries.includes(
+          Country.getCountryByCode(el.countryCode).name.toLowerCase()
+        )
+    );
+
+    if (state == "MA") console.log(res);
   }
   if (country) {
     if (country == "USA" || country == "usa") country = "us";
@@ -55,7 +65,10 @@ const calcLatLng = (location) => {
     }
   }
 
-  console.log(location);
+  console.log(node);
+  // console.log(State.getAllStates().filter((el) => el.isoCode == "MA"));
+
+  // console.log(Country.getCountryByCode("US"));
 
   return { latitude: 0, longitude: 0 };
 };

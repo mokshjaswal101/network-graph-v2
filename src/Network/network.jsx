@@ -9,6 +9,8 @@ import Legends from "./Legends/legends";
 import TopKols from "./TopKols/topKols";
 import Loader from "./loader";
 
+import DummyData from "../data/network_graph.json";
+
 //apis to fetch data
 import { fetchAllData, fetchAffiliations, fetchCitations } from "../api";
 
@@ -87,9 +89,7 @@ const Network = () => {
   useEffect(() => {
     fetchAllData().then((res) => {
       let formattedResponse = formatResponse(
-        res.co_author,
-        res.co_affiliation,
-        res.citation,
+        res.kol_graph,
         res.referral,
         setSelectedHcp,
         res.top_nodes
