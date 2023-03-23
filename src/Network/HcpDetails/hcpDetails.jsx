@@ -113,7 +113,13 @@ const HcpDetails = ({
           {hcpData.current_affiliation && (
             <StyledDiv>
               <b>Recent Affiliation </b>
-              {hcpData.current_affiliation}
+              {hcpData.current_affiliation.split(" ")
+                .map(
+                  (affiliation) =>
+                    affiliation[0].toUpperCase() +
+                    affiliation.slice(1).toLowerCase()
+                )
+                .join(" ")}
             </StyledDiv>
           )}
 
