@@ -10,6 +10,7 @@ import TopKols from "./TopKols/topKols";
 import Loader from "./loader";
 
 import DummyData from "../data/network_graph.json";
+import DummyReferralData from "../data/network_graph_temp.json";
 
 //apis to fetch data
 import { fetchAllData, fetchAffiliations, fetchCitations } from "../api";

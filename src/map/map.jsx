@@ -160,8 +160,8 @@ const Map = ({
                             popupAnchor: [0, -12],
                             iconSize:
                               selectedHcp?.key == element?.key
-                                ? new L.point(25, 25)
-                                : new L.Point(16, 16),
+                                ? new L.point(20, 20)
+                                : new L.Point(14, 14),
                           })
                         : new L.divIcon({
                             className: "divMarkerLeaflet",
