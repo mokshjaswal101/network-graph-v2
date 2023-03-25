@@ -12,7 +12,7 @@ const getArrow = (arrLatlngs, color = "red", weight) => {
 
   let icon = L.divIcon({
     className: "arrow-icon",
-    html: `<div style="border: 6px solid transparent; border-top-color:${color} ;  transform: rotate(${getAngle(
+    html: `<div style="border: 8px solid transparent; border-top-color:${color} ;  transform: rotate(${getAngle(
       arrLatlngs[1],
       arrLatlngs[0],
       -1

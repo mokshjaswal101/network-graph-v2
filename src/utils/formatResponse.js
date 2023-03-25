@@ -74,6 +74,7 @@ const formatResponse = (
             : el.attributes.label == "citation"
             ? "Citation "
             : "Affiliation ") + el.attributes.weight,
+        type: el.attributes.label == "citation" ? "arrow" : "",
       },
     };
   });

@@ -11,6 +11,8 @@ import {
   FeatureGroup,
 } from "react-leaflet";
 
+import starred from "../assets/starred.png";
+
 import getArrow from "./getArrows";
 
 import calculatePolyLines from "./polylines";
@@ -160,7 +162,9 @@ const Map = ({
                             popupAnchor: [0, -12],
                             iconSize:
                               selectedHcp?.key == element?.key
-                                ? new L.point(20, 20)
+                                ? element.attributes.icon == starred
+                                  ? new L.point(22, 22)
+                                  : new L.point(16, 16)
                                 : new L.Point(14, 14),
                           })
                         : new L.divIcon({
