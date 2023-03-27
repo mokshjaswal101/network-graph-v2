@@ -39,6 +39,8 @@ const Filters = ({
   setIsPrescriberShown,
   isPrescriberShown,
   setKolsOffset,
+  kolData,
+  prescriberData,
 }) => {
   const handleResetFilters = () => {
     if (!isPrescriberShown) {
@@ -80,51 +82,55 @@ const Filters = ({
       >
         {/* type of KOLs */}
         <Dropdown label={"Top HCPs"}>
-          <li>
-            <label
-              style={{
-                background: !isPrescriberShown ? "var(--color-primary)" : "",
-                color: !isPrescriberShown ? "white" : "",
-              }}
-              onClick={() => {
-                if (isTopHcpsShown) {
-                  if (!isPrescriberShown) setIsTopHcpsShown(false);
-                  else {
+          {kolData?.nodes?.length > 0 && (
+            <li>
+              <label
+                style={{
+                  background: !isPrescriberShown ? "var(--color-primary)" : "",
+                  color: !isPrescriberShown ? "white" : "",
+                }}
+                onClick={() => {
+                  if (isTopHcpsShown) {
+                    if (!isPrescriberShown) setIsTopHcpsShown(false);
+                    else {
+                      setIsPrescriberShown(false);
+                      setKolsOffset(0);
+                      setSelectedHcp();
+                    }
+                  } else {
                     setIsPrescriberShown(false);
-                    setKolsOffset(0);
-                    setSelectedHcp();
+                    setIsTopHcpsShown(true);
                   }
-                } else {
-                  setIsPrescriberShown(false);
-                  setIsTopHcpsShown(true);
-                }
-              }}
-            >
-              KOLs
-            </label>
-          </li>
-          <li>
-            <label
-              style={{
-                background: isPrescriberShown ? "var(--color-primary)" : "",
-                color: isPrescriberShown ? "white" : "",
-              }}
-              onClick={() => {
-                if (isTopHcpsShown) {
-                  if (isPrescriberShown) setIsTopHcpsShown(false);
-                  else {
-                    setKolsOffset(0);
+                }}
+              >
+                KOLs
+              </label>
+            </li>
+          )}
+          {prescriberData?.nodes?.length > 0 && (
+            <li>
+              <label
+                style={{
+                  background: isPrescriberShown ? "var(--color-primary)" : "",
+                  color: isPrescriberShown ? "white" : "",
+                }}
+                onClick={() => {
+                  if (isTopHcpsShown) {
+                    if (isPrescriberShown) setIsTopHcpsShown(false);
+                    else {
+                      setKolsOffset(0);
+                      setIsPrescriberShown(true);
+                    }
+                  } else {
                     setIsPrescriberShown(true);
+                    setIsTopHcpsShown(true);
                   }
-                } else {
-                  setIsPrescriberShown(true);
-                  setIsTopHcpsShown(true);
-                }
-              }}
-            >
-              Prescribers
-            </label>
-          </li>
+                }}
+              >
+                Prescribers
+              </label>
+            </li>
+          )}
         </Dropdown>
 
         {/* Influence type filter */}

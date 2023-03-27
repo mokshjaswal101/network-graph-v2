@@ -80,7 +80,7 @@ const HcpDetails = ({
             padding: ".75rem",
           }}
         >
-          {hcpData.rank && (
+          {hcpData?.rank && (
             <StyledDiv>
               <b>Rank </b>
               {hcp.attributes?.rank}
@@ -113,7 +113,8 @@ const HcpDetails = ({
           {hcpData.current_affiliation && (
             <StyledDiv>
               <b>Recent Affiliation </b>
-              {hcpData.current_affiliation.split(" ")
+              {hcpData.current_affiliation
+                .split(" ")
                 .map(
                   (affiliation) =>
                     affiliation[0].toUpperCase() +

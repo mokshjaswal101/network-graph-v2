@@ -8,7 +8,7 @@ import specializations from "../data/specializations";
 
 const formatResponse = (
   coauthorshipData,
-  referralData,
+  referralData = { nodes: [], edges: [], topPrescribers: [] },
   setSelectedHcp,
   topKols
 ) => {
@@ -24,6 +24,7 @@ const formatResponse = (
       key: el.key,
       location: el.attributes.location,
       attributes: {
+        kol: el.attributes.kol,
         label: el.attributes.label
           .split(" ")
           .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
@@ -43,6 +44,7 @@ const formatResponse = (
         credentials: el?.attributes?.credentials
           ?.map((el) => el.toUpperCase())
           .join(" "),
+        currentAffiliation: el.attributes.current_affiliation,
       },
     };
 
@@ -85,6 +87,7 @@ const formatResponse = (
       key: el.key,
       location: el.attributes.location,
       attributes: {
+        kol: el.attributes.kol,
         label: el.attributes.label
           .split(" ")
           .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
@@ -104,88 +107,8 @@ const formatResponse = (
         credentials: el?.attributes?.credentials
           ?.map((el) => el.toUpperCase())
           .join(" "),
-      },
-    };
-  });
-
-  prescribers = referralData.topPrescribers.map((el) => {
-    let zip = calcLatLng(el.attributes.location, el);
-    return {
-      key: el.key,
-      attributes: {
-        label: el?.attributes?.label
-          ?.split(" ")
-          .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
-          .join(" "),
-        color:
-          specializations[el.attributes.specialization] ||
-          specializations["other"],
-        state: zip?.state || el.attributes.state,
-        icon: el.attributes.prescriber ? prescriber : null,
-        lat: parseFloat(zip?.latitude),
-        lng: parseFloat(zip?.longitude),
-        x: Math.random(),
-        y: Math.random(),
-        specialization: el.attributes.specialization,
-        rank: el.attributes.rank,
-        size: "4",
-        credentials:
-          el?.attributes?.credentials
-            ?.map((el) => el.toUpperCase())
-            .join(" ") || "",
-        currentPractice: el.attributes.current_practice,
-        prescriptions: el.attributes.prescriptions,
-      },
-    };
-  });
-
-  //referral coauthorshipData
-  prescriberData.nodes = referralData?.nodes?.map((el) => {
-    let hcpNode = null;
-    let zip = calcLatLng(el.attributes.location, el);
-    hcpNode = {
-      key: el.key,
-      attributes: {
-        label: el?.attributes?.label
-          ?.split(" ")
-          .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
-          .join(" "),
-        color:
-          specializations[el.attributes.specialization] ||
-          specializations["other"],
-        state: zip?.state || el.attributes.state,
-        icon: el.attributes.prescriber ? prescriber : null,
-        lat: parseFloat(zip?.latitude),
-        lng: parseFloat(zip?.longitude),
-        x: Math.random(),
-        y: Math.random(),
-        specialization: el.attributes.specialization,
-        rank: el.attributes.rank,
-        size: "4",
-        credentials:
-          el?.attributes?.credentials
-            ?.map((el) => el.toUpperCase())
-            .join(" ") || "",
-        currentPractice: el.attributes.current_practice,
-        prescriptions: el.attributes.prescriptions,
-      },
-    };
-    return hcpNode;
-  });
-
-  prescriberData.edges = referralData?.edges?.map((el, index) => {
-    return {
-      key: kolData.edges.length + 1 + index,
-      type: "referral",
-      source: el.source,
-      target: el.target,
-      attributes: {
-        color: "#008080",
-        size: el.attributes?.weight * 0.1 > 6 ? 6 : el.attributes.weight,
-        label: el?.attributes.weight
-          ? `Unique Patients referred : ${el.attributes.weight}`
-          : "",
-        type: "arrow",
+        currentAffiliation: el.attributes.current_affiliation,
+        email: el.attributes.email,
       },
     };
   });
@@ -195,7 +118,6 @@ const formatResponse = (
   // console.log("time for formatting: ", (new Date() - date) / 1000);
   // console.log("top kols:", topKols.length);
 
-  prescriberData.nodes = [...prescriberData.nodes, ...prescribers];
   kolData.nodes = [...kolData.nodes, ...topKols];
   return { kolData, prescriberData, topKols, prescribers };
 };

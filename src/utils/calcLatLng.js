@@ -54,6 +54,7 @@ const calcLatLng = (location, node) => {
   }
   if (country) {
     if (country == "USA" || country == "usa") country = "us";
+    if (country == "uk" || country == "UK") country = "gb";
     let res = Country.getAllCountries().find(
       (el) =>
         el.isoCode?.toLowerCase() == country.trim().toLowerCase() ||
@@ -71,7 +72,7 @@ const calcLatLng = (location, node) => {
   }
 
   console.log(node, location);
-  console.log(State.getAllStates().filter((el) => el.isoCode == "NJ"));
+  console.log(Country.getAllCountries());
 
   // console.log(Country.getCountryByCode("US"));
 

@@ -176,6 +176,8 @@ const Network = () => {
         setIsPrescriberShown={setIsPrescriberShown}
         isPrescriberShown={isPrescriberShown}
         setKolsOffset={setKolsOffset}
+        kolData={kolData}
+        prescriberData={prescriberData}
       />
       <div style={{ width: "100%", height: "550px", position: "relative" }}>
         {isLoading && <Loader />}
