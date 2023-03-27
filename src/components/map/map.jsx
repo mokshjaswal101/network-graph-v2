@@ -151,7 +151,7 @@ const Map = ({
                         ? 2000
                         : element.attributes.icon
                         ? 1000
-                        : 0
+                        : 500
                     }
                     value={element}
                     icon={
