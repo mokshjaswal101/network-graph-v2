@@ -80,12 +80,6 @@ const HcpDetails = ({
             padding: ".75rem",
           }}
         >
-          {hcpData?.rank && (
-            <StyledDiv>
-              <b>Rank </b>
-              {hcp.attributes?.rank}
-            </StyledDiv>
-          )}
           {hcpData?.taxanomy_codes?.[0]?.specialization && (
             <StyledDiv>
               <b>Specialization </b>
