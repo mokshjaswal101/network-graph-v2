@@ -45,7 +45,12 @@ const calcLatLng = (location, node) => {
         )
     );
 
-    if (state == "MA") console.log(res);
+    if (res?.latitude && res?.longitude) {
+      return {
+        latitude: res.latitude + Math.random(),
+        longitude: res.longitude + Math.random(),
+      };
+    }
   }
   if (country) {
     if (country == "USA" || country == "usa") country = "us";
@@ -65,8 +70,8 @@ const calcLatLng = (location, node) => {
     }
   }
 
-  console.log(node);
-  // console.log(State.getAllStates().filter((el) => el.isoCode == "MA"));
+  console.log(node, location);
+  console.log(State.getAllStates().filter((el) => el.isoCode == "NJ"));
 
   // console.log(Country.getCountryByCode("US"));
 

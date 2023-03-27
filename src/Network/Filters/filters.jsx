@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 //components
 import AdvancedFilters from "./advancedFilters";
+import Dropdown from "../../components/dropdown/dropdown";
 
 import filterData from "../../utils/filterData";
 
@@ -78,130 +79,92 @@ const Filters = ({
         }}
       >
         {/* type of KOLs */}
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          {/* <span
-            style={{
-              fontSize: "var(--normal)",
-              fontWeight: "bold",
-              marginBottom: "5px",
-              height: "fit-content",
-            }}
-          >
-            Top HCPs
-          </span> */}
-          <div
-            className="dropdown dropdown-kol"
-            style={{ zIndex: "2000" }}
-            onClick={() =>
-              document
-                .querySelector(".dropdown.dropdown-kol")
-                .classList.toggle("is-active")
-            }
-          >
-            Top HCPs
-            <ul className="dropdown-list" onClick={(e) => e.stopPropagation()}>
-              <li>
-                <label
-                  style={{
-                    background: !isPrescriberShown
-                      ? "var(--color-primary)"
-                      : "",
-                    color: !isPrescriberShown ? "white" : "",
-                  }}
-                  onClick={() => {
-                    if (isTopHcpsShown) {
-                      if (!isPrescriberShown) setIsTopHcpsShown(false);
-                      else {
-                        setIsPrescriberShown(false);
-                        setKolsOffset(0);
-                        setSelectedHcp();
-                      }
-                    } else {
-                      setIsPrescriberShown(false);
-                      setIsTopHcpsShown(true);
-                    }
-                  }}
-                >
-                  KOLs
-                </label>
-              </li>
-              <li>
-                <label
-                  style={{
-                    background: isPrescriberShown ? "var(--color-primary)" : "",
-                    color: isPrescriberShown ? "white" : "",
-                  }}
-                  onClick={() => {
-                    if (isTopHcpsShown) {
-                      if (isPrescriberShown) setIsTopHcpsShown(false);
-                      else {
-                        setKolsOffset(0);
-                        setIsPrescriberShown(true);
-                      }
-                    } else {
-                      setIsPrescriberShown(true);
-                      setIsTopHcpsShown(true);
-                    }
-                  }}
-                >
-                  Prescribers
-                </label>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <Dropdown label={"Top HCPs"}>
+          <li>
+            <label
+              style={{
+                background: !isPrescriberShown ? "var(--color-primary)" : "",
+                color: !isPrescriberShown ? "white" : "",
+              }}
+              onClick={() => {
+                if (isTopHcpsShown) {
+                  if (!isPrescriberShown) setIsTopHcpsShown(false);
+                  else {
+                    setIsPrescriberShown(false);
+                    setKolsOffset(0);
+                    setSelectedHcp();
+                  }
+                } else {
+                  setIsPrescriberShown(false);
+                  setIsTopHcpsShown(true);
+                }
+              }}
+            >
+              KOLs
+            </label>
+          </li>
+          <li>
+            <label
+              style={{
+                background: isPrescriberShown ? "var(--color-primary)" : "",
+                color: isPrescriberShown ? "white" : "",
+              }}
+              onClick={() => {
+                if (isTopHcpsShown) {
+                  if (isPrescriberShown) setIsTopHcpsShown(false);
+                  else {
+                    setKolsOffset(0);
+                    setIsPrescriberShown(true);
+                  }
+                } else {
+                  setIsPrescriberShown(true);
+                  setIsTopHcpsShown(true);
+                }
+              }}
+            >
+              Prescribers
+            </label>
+          </li>
+        </Dropdown>
 
         {/* Influence type filter */}
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div
-            className="dropdown dropdown-type"
-            style={{ zIndex: "2000" }}
-            onClick={() =>
-              document
-                .querySelector(".dropdown.dropdown-type")
-                .classList.toggle("is-active")
-            }
-          >
-            Influence Types
-            <ul className="dropdown-list" onClick={(e) => e.stopPropagation()}>
-              {!isPrescriberShown ? (
-                typeFilters.map((filter, index) => (
-                  <li key={index}>
-                    <label>
-                      <input
-                        style={{ marginRight: ".5rem" }}
-                        onChange={(e) => {
-                          handleTypeFilterChange(e.target.value);
-                        }}
-                        checked={influenceTypes.includes(filter.value)}
-                        type="checkbox"
-                        value={filter.value}
-                        name={filter.value}
-                      />
-                      {filter.label}
-                    </label>
-                  </li>
-                ))
-              ) : (
-                <li>
-                  <label>
-                    <input
-                      style={{ marginRight: ".5rem" }}
-                      onChange={(e) => {
-                        handleTypeFilterChange("referral");
-                      }}
-                      checked={influenceTypes.includes("referral")}
-                      type="checkbox"
-                      value={"referral"}
-                      name={"referral"}
-                    />
-                    Referral
-                  </label>
-                </li>
-              )}
-            </ul>
-          </div>
-        </div>
+        <Dropdown label={"Influence Types"}>
+          {!isPrescriberShown ? (
+            typeFilters.map((filter, index) => (
+              <li key={index}>
+                <label>
+                  <input
+                    style={{ marginRight: ".5rem" }}
+                    onChange={(e) => {
+                      handleTypeFilterChange(e.target.value);
+                    }}
+                    checked={influenceTypes.includes(filter.value)}
+                    type="checkbox"
+                    value={filter.value}
+                    name={filter.value}
+                  />
+                  {filter.label}
+                </label>
+              </li>
+            ))
+          ) : (
+            <li>
+              <label>
+                <input
+                  style={{ marginRight: ".5rem" }}
+                  onChange={(e) => {
+                    handleTypeFilterChange("referral");
+                  }}
+                  checked={influenceTypes.includes("referral")}
+                  type="checkbox"
+                  value={"referral"}
+                  name={"referral"}
+                />
+                Referral
+              </label>
+            </li>
+          )}
+        </Dropdown>
 
         {/* Influence Level Filter */}
         {/* <div style={{ display: "flex", flexDirection: "column" }}>
