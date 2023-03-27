@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 //components
-import Graph from "../graph/graph";
-import Map from "../map/map";
+import Graph from "../components/graph/graph";
+import Map from "../components/map/map";
 import Filters from "./Filters/filters";
 import HcpDetails from "./HcpDetails/hcpDetails";
 import Legends from "./Legends/legends";

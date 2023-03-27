@@ -11,7 +11,7 @@ import {
   FeatureGroup,
 } from "react-leaflet";
 
-import starred from "../assets/starred.png";
+import starred from "../../assets/starred.png";
 
 import getArrow from "./getArrows";
 
