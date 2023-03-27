@@ -19,7 +19,9 @@ const fetchAllData = async () => {
 
 const fetchHcpDetails = async (id) => {
   try {
-    let response = await client.get(`elastic/getone?uuid=${id}`);
+    let response = await client.get(
+      `elastic/getone?uuid=${id}&project_id=1936e211-b997-11ed-8c61-52d672bc987d`
+    );
 
     return response.data;
   } catch (err) {
