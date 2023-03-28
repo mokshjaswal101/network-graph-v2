@@ -91,20 +91,18 @@ const HcpDetails = ({
             </StyledDiv>
           )}
 
-          {hcpData.emails?.length > 0 && (
             <StyledDiv>
               <b>Email </b>
-              <br />
-              {hcpData.emails.map((el, index) => {
+              {hcpData.emails?.length > 0 && <br />}
+              {hcpData.emails?.length > 0  ? (hcpData.emails.map((el, index) => {
                 return (
                   <div
                     style={{ wordWrap: "break-word" }}
                     key={index}
                   >{`• ${el}`}</div>
-                );
-              })}
+                )
+              })): "N.A." }
             </StyledDiv>
-          )}
           {hcpData.current_affiliation && (
             <StyledDiv>
               <b>Recent Affiliation </b>
