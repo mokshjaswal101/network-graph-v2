@@ -68,12 +68,7 @@ const formatResponse = (
             ? "purple"
             : "orange",
         size: el.attributes.weight > 4 ? 4 : el.attributes.weight,
-        label:
-          (el.attributes.label == "co_author"
-            ? "Co-authored "
-            : el.attributes.label == "citation"
-            ? "Citation "
-            : "Affiliation ") + el.attributes.weight,
+        label: el.attributes.weight,
         type: el.attributes.label == "citation" ? "arrow" : "",
       },
     };
