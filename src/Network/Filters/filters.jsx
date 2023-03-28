@@ -81,7 +81,7 @@ const Filters = ({
         }}
       >
         {/* type of KOLs */}
-        <Dropdown label={"Top HCPs"}>
+        <Dropdown label={ isPrescriberShown ? "Prescribers" : "KOLs"}>
           {kolData?.nodes?.length > 0 && (
             <li>
               <label
@@ -91,7 +91,7 @@ const Filters = ({
                 }}
                 onClick={() => {
                   if (isTopHcpsShown) {
-                    if (!isPrescriberShown) setIsTopHcpsShown(false);
+                    if (!isPrescriberShown);
                     else {
                       setIsPrescriberShown(false);
                       setKolsOffset(0);
@@ -116,7 +116,7 @@ const Filters = ({
                 }}
                 onClick={() => {
                   if (isTopHcpsShown) {
-                    if (isPrescriberShown) setIsTopHcpsShown(false);
+                    if (isPrescriberShown);
                     else {
                       setKolsOffset(0);
                       setIsPrescriberShown(true);
