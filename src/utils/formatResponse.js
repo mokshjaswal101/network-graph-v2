@@ -43,7 +43,7 @@ const formatResponse = (
         size: "4",
         credentials: el?.attributes?.credentials
           ?.map((el) => el.toUpperCase())
-          .join(" "),
+          .join(" ") || "",
         currentAffiliation: el.attributes.current_affiliation,
       },
     };
@@ -101,7 +101,7 @@ const formatResponse = (
         size: "4",
         credentials: el?.attributes?.credentials
           ?.map((el) => el.toUpperCase())
-          .join(" "),
+          .join(" ") || "",
         currentAffiliation: el.attributes.current_affiliation,
         email: el.attributes.email,
       },

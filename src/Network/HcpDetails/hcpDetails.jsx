@@ -57,9 +57,10 @@ const HcpDetails = ({
                 hcpData.first_name?.slice(1).toLowerCase() +
                 " " +
                 hcpData.last_name[0]?.toUpperCase() +
-                hcpData.last_name?.slice(1).toLowerCase() +
-                ", " +
-                hcpData.credentials?.map((el) => el.toUpperCase()).join(" ")
+                hcpData.last_name?.slice(1).toLowerCase() 
+                + (
+                  hcpData.credentials ?  ", " +
+                  hcpData.credentials?.map((el) => el.toUpperCase()).join(" ") : "")
             : hcp.attributes.label}
         </div>
         <button
