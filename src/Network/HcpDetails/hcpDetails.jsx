@@ -99,7 +99,7 @@ const HcpDetails = ({
             </StyledDiv>
           )}
 
-          {hcpData.emails && (
+          {hcpData.emails?.length > 0 && (
             <StyledDiv>
               <b>Email </b>
               <br />
