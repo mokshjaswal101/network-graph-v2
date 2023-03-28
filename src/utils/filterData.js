@@ -24,22 +24,22 @@ const filterData = (
   let specializationList = new Set();
 
   let date = new Date();
-  filteredData = filterBasedOnTopHcps(data, KolsOffset, topKols);
+  // filteredData = filterBasedOnTopHcps(data, KolsOffset, topKols);
 
   //filter based on influence filters
-  let res = filterBasedOnInfluence(
-    filteredData,
-    influenceTypes,
-    influenceLevel,
-    stateList
-  );
-  filteredData = res.filteredData;
-  stateList = res.stateList;
-  specializationList = res.specializationList;
+  // let res = filterBasedOnInfluence(
+  //   filteredData,
+  //   influenceTypes,
+  //   influenceLevel,
+  //   stateList
+  // );
+  // filteredData = res.filteredData;
+  // stateList = res.stateList;
+  // specializationList = res.specializationList;
 
   //filter data based on selected hcp
   if (selectedHcp?.key) {
-    res = filterBasedOnSelectedHcp(
+    let res = filterBasedOnSelectedHcp(
       data,
       selectedHcp,
       influenceLevel,
@@ -48,8 +48,10 @@ const filterData = (
     filteredData = res.filteredData;
     stateList = res.stateList;
     specializationList = res.specializationList;
+  } else {
+    setData({ nodes: [], edges: [] });
+    return;
   }
-
   //filter data based on advanced filters
   filteredData = filterBasedOnAdvancedFilters(
     filteredData,
