@@ -11,9 +11,10 @@ const TopHcps = ({
   isPrescriberShown,
 }) => {
   const handleKolClick = (hcp) => {
-    if (selectedHcp?.key == hcp?.key) setSelectedHcp(null);
-    else setSelectedHcp(hcp);
+    if (selectedHcp?.key != hcp?.key) setSelectedHcp(hcp);
+    
   };
+
 
   useEffect(() => {
     setKolsOffset(0);
