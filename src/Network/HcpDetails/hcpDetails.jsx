@@ -101,7 +101,7 @@ const HcpDetails = ({
                     key={index}
                   >{`• ${el}`}</div>
                 )
-              })): "N.A." }
+              })): "NA" }
             </StyledDiv>
           {hcpData.current_affiliation && (
             <StyledDiv>
