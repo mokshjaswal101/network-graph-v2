@@ -6,20 +6,26 @@ import Map from "../components/map/map";
 import Filters from "./Filters/filters";
 import HcpDetails from "./HcpDetails/hcpDetails";
 import Legends from "./Legends/legends";
-import TopKols from "./TopKols/topKols";
-import Loader from "./loader";
+import TopHcps from "./TopHcps/topHcps";
+import Loader from "../components/Loader/loader";
 
+// dummy data for testing
 import DummyData from "../data/network_graph.json";
 import DummyReferralData from "../data/network_graph_temp.json";
+import DummyDataHalozyme from "../data/network_graph_holozyme.json";
 
 //apis to fetch data
-import { fetchAllData, fetchAffiliations, fetchCitations } from "../api";
+import { fetchAllData } from "../api";
 
 //utils
 import formatResponse from "../utils/formatResponse";
 import filterData from "../utils/filterData";
 
+//configs
+import configJson from "../config/config.json";
+
 const Network = () => {
+  //flag to show either map or graph
   const [isGraph, setIsGraph] = useState(false);
 
   //data variables
@@ -31,11 +37,8 @@ const Network = () => {
   const [totalData, setTotalData] = useState({ nodes: [], edges: [] });
   const [data, setData] = useState({ nodes: [], edges: [] });
 
-  // show Kols or Prescribers
+  //flag to show either Kols or Prescribers
   const [isPrescriberShown, setIsPrescriberShown] = useState(false);
-
-  //which KOLs to display
-  const [KolsOffset, setKolsOffset] = useState(0);
 
   //hcp details
   const [selectedHcp, setSelectedHcp] = useState(null);
@@ -45,10 +48,12 @@ const Network = () => {
   const [isTopHcpsShown, setIsTopHcpsShown] = useState(true);
   const [kols, setKols] = useState([]);
   const [prescribers, setPrescribers] = useState([]);
-  const [topKols, setTopKols] = useState([]);
+  const [topHcps, setTopHcps] = useState([]);
+
+  //which KOLs to display in HCP List
+  const [KolsOffset, setKolsOffset] = useState(0);
 
   //influence variables
-  const [influenceLevel, setInfluenceLevel] = useState(1);
   const [influenceTypes, setInfluenceTypes] = useState(["coauthorship"]);
 
   //advanced Filter variables
@@ -60,64 +65,55 @@ const Network = () => {
   //loader
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleFilters = async () => {
-    // await setStateAsync(true);
 
-    filterData(
-      totalData,
-      setData,
-      influenceTypes,
-      influenceLevel,
-      selectedHcp,
-      selectedSpecialization,
-      selectedState,
-      setStateList,
-      setSpecializationList,
-      setSelectedState,
-      setSelectedSpecialization,
-      KolsOffset,
-      topKols
-    );
-
-    // await setStateAsync(false);
-  };
-
-  // useEffect(() => {
-  //   console.log("selectedHcp", selectedHcp);
-  // }, [selectedHcp?.key]);
+  const [projectId, setProjectId] = useState("");
+  const [config, setConfig] = useState();
 
   //handle initial loading of data
   useEffect(() => {
-    fetchAllData().then((res) => {
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    let project = urlParams.get('projectId')
+
+    if(!project) project = "ad1a626d-7279-4d17-a1ea-8ebab6531a5f";
+
+    let conf = configJson[project];
+    setProjectId(project)
+    setConfig(conf);
+
+    fetchAllData(project).then((res) => {
+      //format the response based on requirements for map and graph
       let formattedResponse = formatResponse(
         res.kol_graph,
         res.referral,
-        setSelectedHcp,
-        res.top_nodes
+        res.top_nodes,
+        conf.specializationsOfInterest,
+        conf.countriesOfInterest
       );
 
+      //handle intital filtering of data on component mount
       filterData(
         formattedResponse.kolData,
         setData,
         influenceTypes,
-        influenceLevel,
-        formattedResponse.topKols[0],
+        formattedResponse.kols[0],
         selectedSpecialization,
         selectedState,
         setStateList,
         setSpecializationList,
         setSelectedState,
         setSelectedSpecialization,
-        KolsOffset,
-        formattedResponse.topKols
+        conf?.unlockedNodes
       );
 
+      setSelectedHcp(formattedResponse.kols[0]);
       setTotalData(formattedResponse.kolData);
       setKolData(formattedResponse.kolData);
       setPrescriberData(formattedResponse.prescriberData);
       setPrescribers(formattedResponse.prescribers);
-      setTopKols(formattedResponse.topKols);
-      setKols(formattedResponse.topKols);
+      setTopHcps(formattedResponse.kols);
+      setKols(formattedResponse.kols);
 
       setIsLoading(false);
     });
@@ -125,8 +121,20 @@ const Network = () => {
 
   //filter data based on filter changes
   useEffect(() => {
-    handleFilters();
-  }, [influenceLevel, influenceTypes, selectedHcp?.key, KolsOffset, topKols]);
+    filterData(
+      totalData,
+      setData,
+      influenceTypes,
+      selectedHcp,
+      selectedSpecialization,
+      selectedState,
+      setStateList,
+      setSpecializationList,
+      setSelectedState,
+      setSelectedSpecialization,
+      config?.unlockedNodes
+    );
+  }, [influenceTypes, selectedHcp?.key, KolsOffset, topHcps]);
 
   //display hcp details when selected hcp changes
   useEffect(() => {
@@ -137,12 +145,12 @@ const Network = () => {
     if (isPrescriberShown) {
       setInfluenceTypes(["referral"]);
       setTotalData(prescriberData);
-      setTopKols(prescribers);
+      setTopHcps(prescribers);
       setSelectedHcp(prescribers?.[0]);
     } else {
       setInfluenceTypes(["coauthorship"]);
       setTotalData(kolData);
-      setTopKols(kols);
+      setTopHcps(kols);
       setSelectedHcp(kols?.[0]);
     }
   }, [isPrescriberShown]);
@@ -159,8 +167,6 @@ const Network = () => {
         setData={setData}
         specializationList={specializationList}
         selectedHcp={selectedHcp}
-        influenceLevel={influenceLevel}
-        setInfluenceLevel={setInfluenceLevel}
         stateList={stateList}
         influenceTypes={influenceTypes}
         setInfluenceTypes={setInfluenceTypes}
@@ -170,20 +176,21 @@ const Network = () => {
         setSelectedState={setSelectedState}
         setStateList={setStateList}
         setSpecializationList={setSpecializationList}
-        KolsOffset={KolsOffset}
-        topKols={topKols}
         data={data}
         setIsPrescriberShown={setIsPrescriberShown}
         isPrescriberShown={isPrescriberShown}
         setKolsOffset={setKolsOffset}
         kolData={kolData}
         prescriberData={prescriberData}
+        config={config}
+        topHcps={topHcps}
       />
       <div style={{ width: "100%", height: "550px", position: "relative" }}>
         {isLoading && <Loader />}
 
         {isHcpDetailsShown && selectedHcp?.key && (
           <HcpDetails
+            projectId={projectId}
             selectedHcp={selectedHcp}
             setSelectedHcp={setSelectedHcp}
             setIsHcpDetailsShown={setIsHcpDetailsShown}
@@ -192,8 +199,8 @@ const Network = () => {
         )}
 
         {isTopHcpsShown && (
-          <TopKols
-            topKols={topKols}
+          <TopHcps
+            topHcps={topHcps}
             setSelectedHcp={setSelectedHcp}
             setIsTopHcpsShown={setIsTopHcpsShown}
             selectedHcp={selectedHcp}
@@ -209,6 +216,7 @@ const Network = () => {
             data={data}
             setSelectedHcp={setSelectedHcp}
             setIsHcpDetailsShown={setIsHcpDetailsShown}
+            unlockedNodes={config.unlockedNodes}
           />
         ) : (
           <Map
@@ -220,6 +228,7 @@ const Network = () => {
             totalData={totalData}
             influenceTypes={influenceTypes}
             setData={setData}
+            unlockedNodes={config?.unlockedNodes}
           />
         )}
       </div>
@@ -227,6 +236,7 @@ const Network = () => {
       <Legends
         isPrescriberShown={isPrescriberShown}
         specializationList={specializationList}
+        specializationsOfInterest={config?.specializationsOfInterest}
       />
     </div>
   );

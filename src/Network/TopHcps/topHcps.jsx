@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import ReactPaginate from "react-paginate";
 
 const TopHcps = ({
-  topKols,
+  topHcps,
+  selectedHcp,
   setSelectedHcp,
   setIsTopHcpsShown,
-  selectedHcp,
   KolsOffset,
   setKolsOffset,
   isPrescriberShown,
 }) => {
-  const handleKolClick = (hcp) => {
+  // function to select hcp from the HCP List
+  const handleHcpClick = (hcp) => {
     if (selectedHcp?.key != hcp?.key) setSelectedHcp(hcp);
-    
   };
 
-
+  // by default, set the page and starting HCP to starting
   useEffect(() => {
     setKolsOffset(0);
   }, []);
 
   return (
-    topKols?.length > 0 && (
+    topHcps?.length > 0 && (
       <div
         style={{
           position: "absolute",
@@ -31,13 +31,13 @@ const TopHcps = ({
           height: "fit-content",
           maxHeight: "75%",
           width: "220px",
-          background: "white",
           wordWrap: "break-word",
           display: "flex",
           flexDirection: "column",
           background: "var(--color-offwhite)",
         }}
       >
+        {/* Heading of the HCP List */}
         <div
           style={{
             background: "var(--color-primary)",
@@ -50,9 +50,9 @@ const TopHcps = ({
             fontWeight: "bold",
           }}
         >
-          <div style={{ wordBreak: "break-word", width: "90%" }}>
+          <span style={{ wordBreak: "break-word", width: "90%" }}>
             {isPrescriberShown ? "Prescribers" : "Top KOLs"}
-          </div>
+          </span>
 
           <button
             style={{ color: "white" }}
@@ -64,12 +64,13 @@ const TopHcps = ({
           </button>
         </div>
 
+        {/* HCP List */}
         <div style={{ flex: 1, padding: ".5rem" }}>
-          {topKols.slice(KolsOffset, KolsOffset + 10).map((hcp, index) => {
+          {topHcps.slice(KolsOffset, KolsOffset + 10).map((hcp, index) => {
             return (
               <div
                 key={index}
-                onClick={() => handleKolClick(hcp)}
+                onClick={() => handleHcpClick(hcp)}
                 className="topKolItem"
                 style={{
                   padding: ".rem 0",
@@ -78,10 +79,6 @@ const TopHcps = ({
                   color: hcp?.key == selectedHcp?.key ? "white" : "",
                   background:
                     hcp?.key == selectedHcp?.key ? "var(--color-primary)" : "",
-
-                  _hover: {
-                    display: "none",
-                  },
                 }}
               >
                 {`${!isPrescriberShown ? hcp.attributes.rank + "." : ""} ${
@@ -95,6 +92,8 @@ const TopHcps = ({
             );
           })}
         </div>
+
+        {/* Pagination */}
         <div
           style={{
             display: "flex",
@@ -102,12 +101,12 @@ const TopHcps = ({
             justifyContent: "center",
           }}
         >
-          {Math.ceil(topKols.length / 10) > 1 && (
+          {Math.ceil(topHcps.length / 10) > 1 && (
             <ReactPaginate
               onPageChange={(e) => setKolsOffset(e.selected * 10)}
               pageRangeDisplayed={2}
               marginPagesDisplayed={1}
-              pageCount={Math.ceil(topKols.length / 10)}
+              pageCount={Math.ceil(topHcps.length / 10)}
               previousLabel={<i className="fa fa-caret-left"></i>}
               nextLabel={<i className="fa fa-caret-right"></i>}
               pageClassName="page-item"
