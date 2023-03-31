@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 //components
 import AdvancedFilters from "./advancedFilters";
 import Dropdown from "../../components/dropdown/dropdown";
-
-import filterData from "../../utils/filterData";
 
 //data for influence type dropdown
 const typeFilters = [
@@ -23,7 +21,6 @@ const Filters = ({
   setData,
   specializationList = [],
   stateList,
-  setInfluenceLevel,
   influenceTypes,
   setInfluenceTypes,
   selectedHcp,
@@ -33,27 +30,27 @@ const Filters = ({
   setSelectedState,
   setSpecializationList,
   setStateList,
-  influenceLevel,
-  KolsOffset,
-  topKols,
   setIsPrescriberShown,
   isPrescriberShown,
-  setKolsOffset,
   kolData,
   prescriberData,
+  config,
+  topHcps,
+  setKolsOffset,
 }) => {
+  // function to reset all the filters
   const handleResetFilters = () => {
     if (!isPrescriberShown) {
       setInfluenceTypes(["coauthorship"]);
     } else {
       setInfluenceTypes(["referral"]);
     }
-    setSelectedHcp(topKols[0]);
+    setSelectedHcp(topHcps[0]);
     setSelectedSpecialization("");
     setSelectedState("");
   };
 
-  //change influence type state based on options selected
+  //add or remove influence type based based on checkbox and state variable
   const handleTypeFilterChange = (type) => {
     if (influenceTypes.includes(type)) {
       setInfluenceTypes(influenceTypes.filter((item) => item !== type));
@@ -69,19 +66,17 @@ const Filters = ({
         justifyContent: "space-between",
         marginBottom: ".5rem",
         position: "relative",
-        alignItems: "flex-end",
       }}
     >
       <div
         style={{
           display: "flex",
-          alignItems: "flex-end",
           gap: "1rem",
           fontSize: "var(--heading)",
         }}
       >
         {/* type of KOLs */}
-        <Dropdown label={ isPrescriberShown ? "Prescribers" : "KOLs"}>
+        <Dropdown label={isPrescriberShown ? "Prescribers" : "KOLs"}>
           {kolData?.nodes?.length > 0 && (
             <li>
               <label
@@ -171,47 +166,6 @@ const Filters = ({
             </li>
           )}
         </Dropdown>
-
-        {/* Influence Level Filter */}
-        {/* <div style={{ display: "flex", flexDirection: "column" }}>
-          <div
-            className="dropdown dropdown-level"
-            style={{ zIndex: "2000" }}
-            onClick={() =>
-              document
-                .querySelector(".dropdown.dropdown-level")
-                .classList.toggle("is-active")
-            }
-          >
-            Influence Level
-            <ul className="dropdown-list" onClick={(e) => e.stopPropagation()}>
-              <li>
-                <label
-                  style={{
-                    background:
-                      influenceLevel == 1 ? "var(--color-primary)" : "",
-                    color: influenceLevel == 1 ? "white" : "",
-                  }}
-                  onClick={() => setInfluenceLevel(1)}
-                >
-                  First Level
-                </label>
-              </li>
-              <li>
-                <label
-                  style={{
-                    background:
-                      influenceLevel == 2 ? "var(--color-primary)" : "",
-                    color: influenceLevel == 2 ? "white" : "",
-                  }}
-                  onClick={() => setInfluenceLevel(2)}
-                >
-                  Second Level
-                </label>
-              </li>
-            </ul>
-          </div>
-        </div> */}
       </div>
 
       <div
@@ -235,14 +189,12 @@ const Filters = ({
           setSelectedState={setSelectedState}
           setSpecializationList={setSpecializationList}
           setStateList={setStateList}
-          influenceLevel={influenceLevel}
-          KolsOffset={KolsOffset}
-          topKols={topKols}
+          config={config}
         />
         <button
           className="btn"
           style={{
-            background: "#0079fb",
+            background: "var(--color-primary)",
           }}
           onClick={() => {
             handleResetFilters();

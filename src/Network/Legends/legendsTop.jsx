@@ -1,10 +1,12 @@
 import React from "react";
 
+//components
+import LegendItem from "./legendItem";
+
 //icons
 import starred from "../../assets/starred.png";
 import prescriber from "../../assets/prescriber.png";
 import diamondblue from "../../assets/diamondblue.png";
-// import bluestar from "../../assets/bluestar.png";
 
 const LegendsTop = ({ isPrescriberShown }) => {
   return (
@@ -17,26 +19,26 @@ const LegendsTop = ({ isPrescriberShown }) => {
       }}
     >
       {/* Icon Legends */}
-      <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
+      <LegendItem>
         <img src={diamondblue} style={{ height: "16px" }} />
-        <div>Filtered Hcps</div>
-      </div>
+        Filtered Hcps
+      </LegendItem>
       {!isPrescriberShown ? (
-        <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
+        <LegendItem>
           <img src={starred} style={{ height: "16px" }} />
-          <div>Top KOLs</div>
-        </div>
+          Top KOLs
+        </LegendItem>
       ) : (
-        <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
+        <LegendItem>
           <img src={prescriber} style={{ height: "16px" }} />
-          <div>Prescribers</div>
-        </div>
+          Prescribers
+        </LegendItem>
       )}
 
-      {/* Level of influence */}
+      {/* Type of influence */}
       {!isPrescriberShown ? (
         <>
-          <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
+          <LegendItem>
             <div
               style={{
                 width: "16px",
@@ -45,8 +47,8 @@ const LegendsTop = ({ isPrescriberShown }) => {
               }}
             ></div>
             <div>Affiliations</div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
+          </LegendItem>
+          <LegendItem>
             <div
               style={{
                 width: "16px",
@@ -55,8 +57,8 @@ const LegendsTop = ({ isPrescriberShown }) => {
               }}
             ></div>
             <div>Co-Authorship</div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
+          </LegendItem>
+          <LegendItem>
             <div
               style={{
                 width: "16px",
@@ -65,10 +67,10 @@ const LegendsTop = ({ isPrescriberShown }) => {
               }}
             ></div>
             <div>Citations</div>
-          </div>
+          </LegendItem>
         </>
       ) : (
-        <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
+        <LegendItem>
           <div
             style={{
               width: "16px",
@@ -77,11 +79,11 @@ const LegendsTop = ({ isPrescriberShown }) => {
             }}
           ></div>
           <div>Referral</div>
-        </div>
+        </LegendItem>
       )}
 
       {/* Level of Influeunces */}
-      <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
+      <LegendItem>
         <div
           style={{
             width: "16px",
@@ -90,8 +92,8 @@ const LegendsTop = ({ isPrescriberShown }) => {
           }}
         ></div>
         <div>First Level Influence</div>
-      </div>
-      <div style={{ display: "flex", alignItems: "center", gap: ".3rem" }}>
+      </LegendItem>
+      <LegendItem>
         <div
           style={{
             display: "flex",
@@ -123,7 +125,7 @@ const LegendsTop = ({ isPrescriberShown }) => {
           ></div>
         </div>
         <div>Second Level Influence</div>
-      </div>
+      </LegendItem>
     </div>
   );
 };

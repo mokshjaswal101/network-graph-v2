@@ -1,9 +1,15 @@
 import React from "react";
 
-//Legends data
-import Specializations from "../../data/specializations";
+//components
+import LegendItem from "./legendItem";
 
-const LegendsBottom = ({ specializationList }) => {
+//utils
+import capitalizeWords from "../../utils/capitalizeWords";
+
+const LegendsBottom = ({
+  specializationList,
+  specializationsOfInterest = {},
+}) => {
   return (
     <div
       style={{
@@ -12,19 +18,11 @@ const LegendsBottom = ({ specializationList }) => {
         gap: ".75rem",
       }}
     >
-      {Object.entries(Specializations)
+      {Object.entries(specializationsOfInterest)
         .filter((el) => specializationList.includes(el[0]) || el[0] == "other")
         ?.map((el, index) => {
           return (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: ".3rem",
-                wrap: "wrap",
-              }}
-            >
+            <LegendItem key={index}>
               <div
                 style={{
                   width: "16px",
@@ -32,13 +30,8 @@ const LegendsBottom = ({ specializationList }) => {
                   background: `${el[1]}`,
                 }}
               ></div>
-              <div>
-                {el[0]
-                  .split(" ")
-                  .map((el) => el[0].toUpperCase() + el.slice(1))
-                  .join(" ")}
-              </div>
-            </div>
+              <div>{capitalizeWords(el[0])}</div>
+            </LegendItem>
           );
         })}
     </div>
