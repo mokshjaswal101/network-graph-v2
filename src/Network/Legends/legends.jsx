@@ -4,11 +4,7 @@ import React from "react";
 import LegendsTop from "./legendsTop";
 import LegendsBottom from "./legendsBottom";
 
-const Legends = ({
-  isPrescriberShown,
-  specializationList,
-  specializationsOfInterest,
-}) => {
+const Legends = ({ isPrescriberShown, specializationList }) => {
   return (
     <>
       <LegendsTop isPrescriberShown={isPrescriberShown} />
@@ -19,10 +15,7 @@ const Legends = ({
           border: "none",
         }}
       />
-      <LegendsBottom
-        specializationList={specializationList}
-        specializationsOfInterest={specializationsOfInterest}
-      />
+      <LegendsBottom specializationList={specializationList} />
     </>
   );
 };

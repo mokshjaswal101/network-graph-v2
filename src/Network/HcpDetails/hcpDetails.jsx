@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-//components
-import HcpDetailItem from "./hcpDetailItem";
-
-//api to fetch details of hcp
 import { fetchHcpDetails } from "../../api";
 
-//utils
-import capitalizeWords from "../../utils/capitalizeWords";
+const StyledDiv = styled.div`
+  margin-bottom: 0.5rem;
+`;
 
 const HcpDetails = ({
-  projectId,
   selectedHcp: hcp,
   setIsHcpDetailsShown,
   isPrescriberShown,
@@ -19,11 +15,9 @@ const HcpDetails = ({
   const [hcpData, setHcpData] = useState(null);
 
   useEffect(() => {
-    if (!isPrescriberShown) {
-      fetchHcpDetails(hcp.key, projectId).then((res) => {
-        setHcpData(res);
-      });
-    }
+    fetchHcpDetails(hcp.key).then((res) => {
+      setHcpData(res);
+    });
   }, [hcp]);
 
   return (
@@ -34,15 +28,16 @@ const HcpDetails = ({
         right: 0,
         zIndex: 2000,
         maxHeight: "75%",
+
         height: "fit-content",
         width: "300px",
+        background: "white",
         wordWrap: "break-word",
         display: "flex",
         flexDirection: "column",
         background: "var(--color-offwhite)",
       }}
     >
-      {/* Heading of Hcp Details Card */}
       <div
         style={{
           background: "var(--color-primary)",
@@ -55,12 +50,19 @@ const HcpDetails = ({
           fontWeight: "bold",
         }}
       >
-        <span style={{ wordBreak: "break-word", width: "90%" }}>
-          {hcp.attributes.label +
-            (hcp.attributes.credentials
-              ? ", " + hcp.attributes.credentials
-              : "")}
-        </span>
+        <div style={{ wordBreak: "break-word", width: "90%" }}>
+          {!isPrescriberShown
+            ? hcpData?.first_name &&
+              hcpData.first_name[0]?.toUpperCase() +
+                hcpData.first_name?.slice(1).toLowerCase() +
+                " " +
+                hcpData.last_name[0]?.toUpperCase() +
+                hcpData.last_name?.slice(1).toLowerCase() 
+                + (
+                  hcpData.credentials ?  ", " +
+                  hcpData.credentials?.map((el) => el.toUpperCase()).join(" ") : "")
+            : hcp.attributes.label}
+        </div>
         <button
           style={{ color: "white" }}
           onClick={() => {
@@ -79,59 +81,63 @@ const HcpDetails = ({
             padding: ".75rem",
           }}
         >
-          {hcpData.rank && (
-            <HcpDetailItem>
-              <b>Rank </b>
-              {hcp.attributes?.rank}
-            </HcpDetailItem>
-          )}
-
           {hcpData?.taxanomy_codes?.[0]?.specialization && (
-            <HcpDetailItem>
+            <StyledDiv>
               <b>Specialization </b>
-              {capitalizeWords(hcpData?.taxanomy_codes?.[0]?.specialization)}
-            </HcpDetailItem>
+              {hcpData?.taxanomy_codes?.[0]?.specialization
+                .split(" ")
+                .map((el) => el[0].toUpperCase() + el.slice(1))
+                .join(" ")}
+            </StyledDiv>
           )}
 
-          <HcpDetailItem>
-            <b>Email </b>
-            {hcpData.emails?.length > 0 && <br />}
-            {hcpData.emails?.length > 0
-              ? hcpData.emails.map((el, index) => {
-                  return (
-                    <div
-                      style={{ wordWrap: "break-word" }}
-                      key={index}
-                    >{`• ${el}`}</div>
-                  );
-                })
-              : "NA"}
-          </HcpDetailItem>
-
+            <StyledDiv>
+              <b>Email </b>
+              {hcpData.emails?.length > 0 && <br />}
+              {hcpData.emails?.length > 0  ? (hcpData.emails.map((el, index) => {
+                return (
+                  <div
+                    style={{ wordWrap: "break-word" }}
+                    key={index}
+                  >{`• ${el}`}</div>
+                )
+              })): "NA" }
+            </StyledDiv>
           {hcpData.current_affiliation && (
-            <HcpDetailItem>
+            <StyledDiv>
               <b>Recent Affiliation </b>
-              {capitalizeWords(hcpData.current_affiliation)}
-            </HcpDetailItem>
+              {hcpData.current_affiliation
+                .split(" ")
+                .map(
+                  (affiliation) =>
+                    affiliation[0].toUpperCase() +
+                    affiliation.slice(1).toLowerCase()
+                )
+                .join(" ")}
+            </StyledDiv>
           )}
 
           {(hcpData?.clinical_trial_counts == 0 ||
             hcpData.clinical_trial_counts) && (
-            <HcpDetailItem>
+            <StyledDiv>
               <b>Clinical Trials </b>
               {hcpData.clinical_trial_counts}
-            </HcpDetailItem>
+            </StyledDiv>
           )}
 
           {hcpData.prescription_info && (
-            <HcpDetailItem>
+            <StyledDiv>
               <b>Prescriptions </b>
               <br />
               <br />
 
               {hcpData.prescription_info.filter(
                 (el) => el.key.slice(0, 5) == "Govt_"
-              ).length > 0 && <b>Government </b>}
+              ).length > 0 ? (
+                <b>Government: </b>
+              ) : (
+                <></>
+              )}
 
               {hcpData.prescription_info
                 .filter((el) => el.key.slice(0, 5) == "Govt_")
@@ -143,9 +149,15 @@ const HcpDetails = ({
                 .map((el, index) => {
                   return (
                     <div key={index}>
-                      <div key={el.key}>{`• ${capitalizeWords(
-                        el.key.slice(5).split("(")[0]
-                      )}${
+                      <div key={el.key}>{`• ${el.key
+                        .slice(5)
+                        .split("(")[0]
+                        .split(" ")
+                        .map(
+                          (el) =>
+                            el[0].toUpperCase() + el.slice(1).toLowerCase()
+                        )
+                        .join(" ")}${
                         el?.total_claims ? ` - ${el.total_claims}` : ""
                       }`}</div>
                     </div>
@@ -154,11 +166,19 @@ const HcpDetails = ({
 
               {hcpData.prescription_info.filter(
                 (el) => el.key.slice(0, 5) == "Govt_"
-              ).length > 0 && <br />}
+              ).length > 0 ? (
+                <br />
+              ) : (
+                <></>
+              )}
 
               {hcpData.prescription_info.filter(
                 (el) => el.key.slice(0, 5) == "Comm_"
-              ).length > 0 && <b>Commercial </b>}
+              ).length > 0 ? (
+                <b>Commercial: </b>
+              ) : (
+                <></>
+              )}
 
               {hcpData.prescription_info
                 .filter((el) => el.key.slice(0, 5) == "Comm_")
@@ -170,15 +190,17 @@ const HcpDetails = ({
                 .map((el, index) => {
                   return (
                     <div key={index}>
-                      <div key={el.key}>{`• ${capitalizeWords(
-                        el.key.slice(5)
-                      )}${
+                      <div key={el.key}>{`• ${el.key
+                        .slice(5)
+                        .split(" ")
+                        .map((el) => el[0].toUpperCase() + el.slice(1))
+                        .join(" ")}${
                         el?.total_claims ? ` - ${el.total_claims}` : ""
                       }`}</div>
                     </div>
                   );
                 })}
-            </HcpDetailItem>
+            </StyledDiv>
           )}
         </div>
       )}
@@ -192,53 +214,60 @@ const HcpDetails = ({
           }}
         >
           {hcp?.key && (
-            <HcpDetailItem>
+            <StyledDiv>
               <b>NPI </b>
               {hcp.key}
-            </HcpDetailItem>
+            </StyledDiv>
           )}
 
           {hcp.attributes.specialization && (
-            <HcpDetailItem>
+            <StyledDiv>
               <b>Specialization </b>
               {hcp.attributes.specialization}
-            </HcpDetailItem>
+            </StyledDiv>
           )}
 
           {hcp.attributes.state && (
-            <HcpDetailItem>
+            <StyledDiv>
               <b>State </b>
               {hcp.attributes.state}
-            </HcpDetailItem>
+            </StyledDiv>
           )}
 
           {hcp.attributes.currentPractice && (
-            <HcpDetailItem>
+            <StyledDiv>
               <b>Current Practice </b>
-              {hcp.attributes.currentPractice}
-            </HcpDetailItem>
+              {hcp.attributes.currentPractice
+                .split(" ")
+                .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
+                .join(" ")}
+            </StyledDiv>
           )}
 
           {hcp.attributes.prescriptions && (
             <>
-              <HcpDetailItem>
+              <StyledDiv>
                 <b>Total claims </b>
                 {hcp.attributes.prescriptions.claimsCountTotal}
-              </HcpDetailItem>
-              <HcpDetailItem>
+              </StyledDiv>
+              <StyledDiv>
                 <b>Total patients </b>
                 {hcp.attributes.prescriptions.patientsCountTotal}
-              </HcpDetailItem>
+              </StyledDiv>
               {Object.entries(hcp.attributes.prescriptions.drugs).map(
                 ([name, values]) => {
                   return (
-                    <HcpDetailItem>
-                      <b>{capitalizeWords(name)}</b>
+                    <StyledDiv>
+                      <b>
+                        {name[0].toUpperCase() + name.slice(1).toLowerCase()}
+                      </b>
                       {` Claims ${values.claimsCount} Patients ${values.patientsCount}`}
-                    </HcpDetailItem>
+                    </StyledDiv>
                   );
                 }
               )}
+
+              <br />
             </>
           )}
         </div>

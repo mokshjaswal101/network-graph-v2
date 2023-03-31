@@ -8,6 +8,7 @@ import {
   Marker,
   Popup,
   useMap,
+  FeatureGroup,
 } from "react-leaflet";
 
 import starred from "../../assets/starred.png";
@@ -22,10 +23,10 @@ const Map = ({
   setSelectedHcp,
   selectedHcp,
   setIsHcpDetailsShown,
+  setIsLoading,
   totalData,
   influenceTypes,
   setData,
-  unlockedNodes,
 }) => {
   const [polylines, setPolylines] = useState([]);
   const [tempData, setTempData] = useState(null);
@@ -139,7 +140,7 @@ const Map = ({
           </LayersControl.BaseLayer>
           <LayersControl.Overlay checked name="KOLs">
             <LayerGroup>
-              {data?.nodes?.map((element) => {
+              {data?.nodes?.map((element, index) => {
                 return (
                   <Marker
                     key={element?.key}
@@ -148,8 +149,6 @@ const Map = ({
                     zIndexOffset={
                       selectedHcp?.key == element?.key
                         ? 2000
-                        : element.attributes.isVisible > unlockedNodes
-                        ? 100
                         : element.attributes.icon
                         ? 1000
                         : 500
@@ -184,48 +183,29 @@ const Map = ({
                     }
                     eventHandlers={{
                       click: (e) => {
-                        if (
-                          e?.target?.options?.value?.attributes?.isVisible <=
-                          unlockedNodes
-                        ) {
-                          handleSecondLevelInfluence(e?.target?.options?.id);
-                        }
+                        handleSecondLevelInfluence(e?.target?.options?.id);
                       },
                     }}
                   >
-                    {unlockedNodes == -1 ||
-                    element.attributes.isVisible <= unlockedNodes ||
-                    element.key == selectedHcp.key ? (
-                      <Popup closeOnClick>
-                        {element.attributes.label}
-                        {element?.attributes?.credentials
-                          ? ", " + element.attributes.credentials
-                          : ""}
-                        <button
-                          style={{
-                            marginLeft: ".5rem",
-                            border: "1px solid black",
-                            padding: ".2rem .5rem",
-                          }}
-                          onClick={() => {
-                            setSelectedHcp(element);
-                          }}
-                        >
-                          <i className="fa fa-info"></i>
-                        </button>
-                      </Popup>
-                    ) : (
-                      <Popup closeOnClick>
-                        Locked
-                        <button
-                          style={{
-                            padding: ".2rem .5rem",
-                          }}
-                        >
-                          <i className="fa fa-lock"></i>
-                        </button>
-                      </Popup>
-                    )}
+                    <Popup closeOnClick>
+                      {element.attributes.label}
+                      {element?.attributes?.credentials
+                        ? ", " + element.attributes.credentials
+                        : ""}
+                      <button
+                        style={{
+                          marginLeft: ".5rem",
+                          border: "1px solid black",
+                          padding: ".2rem .5rem",
+                        }}
+                        onClick={() => {
+                          setSelectedHcp(element);
+                          setIsHcpDetailsShown(true);
+                        }}
+                      >
+                        <i className="fa fa-info"></i>
+                      </button>
+                    </Popup>
                   </Marker>
                 );
               })}

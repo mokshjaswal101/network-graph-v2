@@ -1,193 +1,120 @@
-//utils
-import calcLatLng from "./calcLatLng";
-import capitalizeWords from "./capitalizeWords";
+import zipcodes from "zipcodes";
 
-//icons
+import calcLatLng from "./calcLatLng";
 import starred from "../assets/starred.png";
 import prescriber from "../assets/prescriber.png";
 
+import specializations from "../data/specializations";
+
 const formatResponse = (
-  kolData = { nodes: [], edges: [] },
-  prescriberData = { nodes: [], edges: [], topPrescribers: [] },
-  kols = [],
-  specializationsOfInterest,
-  countriesOfInterest
+  coauthorshipData,
+  referralData = { nodes: [], edges: [], topPrescribers: [] },
+  setSelectedHcp,
+  topKols
 ) => {
+  let kolData = { nodes: [], edges: [] };
+  let prescriberData = { nodes: [], edges: [] };
   let prescribers = [];
 
-  //format nodes of KOL data
-  kolData.nodes = kolData?.nodes?.map((node) => {
-    let zip = calcLatLng(node.attributes.location, node, countriesOfInterest);
-
-    return {
-      key: node.key,
+  //coauthorship coauthorshipData
+  kolData.nodes = coauthorshipData?.nodes?.map((el) => {
+    let hcpNode = null;
+    let zip = calcLatLng(el.attributes.location, el);
+    hcpNode = {
+      key: el.key,
+      location: el.attributes.location,
       attributes: {
-        label: capitalizeWords(node.attributes.label),
+        kol: el.attributes.kol,
+        label: el.attributes.label
+          .split(" ")
+          .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
+          .join(" "),
         color:
-          specializationsOfInterest[node.attributes.specialization] ||
-          specializationsOfInterest["other"],
-        state: zip?.state || node.attributes.state,
-        icon: null,
-        lat: parseFloat(zip?.latitude) + (Math.random() * 0.1),
-        lng: parseFloat(zip?.longitude) +  (Math.random() * 0.1),
+          specializations[el.attributes.specialization] ||
+          specializations["other"],
+        state: zip?.state,
+        icon: el.attributes.kol ? starred : null,
+        lat: parseFloat(zip?.latitude),
+        lng: parseFloat(zip?.longitude),
         x: Math.random(),
         y: Math.random(),
-        specialization: node.attributes.specialization,
-        rank: node.attributes.rank,
+        specialization: el.attributes.specialization,
+        rank: el.attributes.rank,
         size: "4",
-        credentials: node?.attributes?.credentials
-          ?.map((node) => node.toUpperCase())
-          .join(" "),
-        location: node.attributes.location,
+        credentials: el?.attributes?.credentials
+          ?.map((el) => el.toUpperCase())
+          .join(" ") || "",
+        currentAffiliation: el.attributes.current_affiliation,
       },
     };
+
+    return hcpNode;
   });
 
-  // format edges of KOL data
-  kolData.edges = kolData?.edges?.map((edge, index) => {
+  kolData.edges = coauthorshipData?.edges?.map((el, index) => {
     return {
       key: index,
       type:
-        edge.attributes.label == "co_author"
+        el.attributes.label == "co_author"
           ? "coauthorship"
-          : edge.attributes.label == "citation"
+          : el.attributes.label == "citation"
           ? "citation"
           : "coaffiliation",
-      source: edge.source,
-      target: edge.target,
+      source: el.source,
+      target: el.target,
       attributes: {
         color:
-          edge.attributes.label == "co_author"
+          el.attributes.label == "co_author"
             ? "#00008B"
-            : edge.attributes.label == "citation"
+            : el.attributes.label == "citation"
             ? "purple"
             : "orange",
-        size: edge.attributes.weight > 4 ? 4 : edge.attributes.weight,
-        label: edge.attributes.weight,
-        type: edge.attributes.label == "citation" ? "arrow" : "",
-        isVisible: edge?.attributes?.isVisible || 1,
+        size: el.attributes.weight > 4 ? 4 : el.attributes.weight,
+        label: el.attributes.weight,
+        type: el.attributes.label == "citation" ? "arrow" : "",
       },
     };
   });
 
-  // format top KOLs
-  kols =
-    kols?.map((node) => {
-      let zip = calcLatLng(node.attributes.location, node, countriesOfInterest);
-      return {
-        key: node.key,
-        attributes: {
-          label: capitalizeWords(node.attributes.label),
-          color:
-            specializationsOfInterest[node.attributes.specialization] ||
-            specializationsOfInterest["other"],
-          state: zip?.state || node.attributes.state,
-          icon: starred,
-          lat: parseFloat(zip?.latitude),
-          lng: parseFloat(zip?.longitude),
-          x: Math.random(),
-          y: Math.random(),
-          specialization: node.attributes.specialization,
-          rank: node.attributes.rank,
-          size: "4",
-          credentials: node?.attributes?.credentials
-            ?.map((node) => node.toUpperCase())
-            .join(" "),
-          location: node.attributes.location,
-        },
-      };
-    }) || [];
+  topKols = topKols?.map((el) => {
+    let zip = calcLatLng(el.attributes.location, el);
+    return {
+      key: el.key,
+      location: el.attributes.location,
+      attributes: {
+        kol: el.attributes.kol,
+        label: el.attributes.label
+          .split(" ")
+          .map((el) => el[0].toUpperCase() + el.slice(1).toLowerCase())
+          .join(" "),
+        color:
+          specializations[el.attributes.specialization] ||
+          specializations["other"],
+        state: zip?.state || el.attributes.state,
+        icon: el.attributes.kol ? starred : null,
+        lat: parseFloat(zip?.latitude),
+        lng: parseFloat(zip?.longitude),
+        x: Math.random(),
+        y: Math.random(),
+        specialization: el.attributes.specialization,
+        rank: el.attributes.rank,
+        size: "4",
+        credentials: el?.attributes?.credentials
+          ?.map((el) => el.toUpperCase())
+          .join(" ") || "",
+        currentAffiliation: el.attributes.current_affiliation,
+        email: el.attributes.email,
+      },
+    };
+  });
 
-  // format top prescribers
-  prescribers =
-    prescriberData?.topPrescribers?.map((node) => {
-      let zip = calcLatLng(node.attributes.location, node, countriesOfInterest);
-      return {
-        key: node.key,
-        attributes: {
-          label: capitalizeWords(node?.attributes?.label),
-          color:
-            specializationsOfInterest[node.attributes.specialization] ||
-            specializationsOfInterest["other"],
-          state: zip?.state || node.attributes.state,
-          icon: prescriber,
-          lat: parseFloat(zip?.latitude),
-          lng: parseFloat(zip?.longitude),
-          x: Math.random(),
-          y: Math.random(),
-          specialization: node.attributes.specialization,
-          rank: node.attributes.rank,
-          size: "4",
-          credentials:
-            node?.attributes?.credentials
-              ?.map((node) => node.toUpperCase())
-              .join(" ") || "",
-          currentPractice: node.attributes.currentPractice
-            ? capitalizeWords(node.attributes.current_practice)
-            : "",
-          prescriptions: node.attributes.prescriptions,
-          location: node.attributes.location,
-        },
-      };
-    }) || [];
-
-  //format nodes of referral data
-  prescriberData.nodes =
-    prescriberData?.nodes?.map((node) => {
-      let zip = calcLatLng(node.attributes.location, node, countriesOfInterest);
-      return {
-        key: node.key,
-        attributes: {
-          label: capitalizeWords(node?.attributes?.label),
-          color:
-            specializationsOfInterest[node.attributes.specialization] ||
-            specializationsOfInterest["other"],
-          state: zip?.state || node.attributes.state,
-          icon: null,
-          lat: parseFloat(zip?.latitude),
-          lng: parseFloat(zip?.longitude),
-          x: Math.random(),
-          y: Math.random(),
-          specialization: node.attributes.specialization,
-          rank: node.attributes.rank,
-          size: "4",
-          credentials:
-            node?.attributes?.credentials
-              ?.map((node) => node.toUpperCase())
-              .join(" ") || "",
-          currentPractice: node.attributes.current_practice,
-          prescriptions: node.attributes.prescriptions,
-          location: node.attributes.location,
-        },
-      };
-    }) || [];
-
-  //format edges of referral data
-  prescriberData.edges =
-    prescriberData?.edges?.map((edge, index) => {
-      return {
-        key: kolData.edges.length + 1 + index,
-        type: "referral",
-        source: edge.source,
-        target: edge.target,
-        attributes: {
-          color: "#008080",
-          size: edge.attributes?.weight * 0.1 > 6 ? 6 : edge.attributes.weight,
-          label: edge?.attributes.weight
-            ? `Unique Patients referred : ${edge.attributes.weight}`
-            : "",
-          type: "arrow",
-          isVisible: edge?.attributes?.isVisible || 1,
-        },
-      };
-    }) || [];
+  setSelectedHcp(topKols?.[0]);
 
   // console.log("time for formatting: ", (new Date() - date) / 1000);
-  // console.log("top kols:", kols.length);
+  // console.log("top kols:", topKols.length);
 
-  prescriberData.nodes = [...prescriberData.nodes, ...prescribers];
-  kolData.nodes = [...kolData.nodes, ...kols];
-  return { kolData, prescriberData, kols, prescribers };
+  kolData.nodes = [...kolData.nodes, ...topKols];
+  return { kolData, prescriberData, topKols, prescribers };
 };
 
 export default formatResponse;
