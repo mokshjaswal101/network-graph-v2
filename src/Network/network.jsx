@@ -76,7 +76,7 @@ const Network = () => {
     const urlParams = new URLSearchParams(queryString);
     let project = urlParams.get('projectId')
 
-    if(!project) project = "ad1a626d-7279-4d17-a1ea-8ebab6531a5f";
+    // if(!project) project = "ad1a626d-7279-4d17-a1ea-8ebab6531a5f";
 
     let conf = configJson[project];
     setProjectId(project)
