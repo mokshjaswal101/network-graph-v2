@@ -76,7 +76,7 @@ const Network = () => {
     const urlParams = new URLSearchParams(queryString);
     let project = urlParams.get('projectId')
 
-    if(!project) project = "a0d3c6ec-e30e-4ccb-925d-7327f1c58031";
+    if(!project) project = "ad1a626d-7279-4d17-a1ea-8ebab6531a5f";
 
     let conf = configJson[project];
     setProjectId(project)
@@ -85,11 +85,11 @@ const Network = () => {
     fetchAllData(project).then((res) => {
       //format the response based on requirements for map and graph
       let formattedResponse = formatResponse(
-        res.kol_graph,
-        res.referral,
-        res.top_nodes,
-        conf.specializationsOfInterest,
-        conf.countriesOfInterest
+        res?.kol_graph,
+        res?.referral,
+        res?.top_nodes,
+        conf?.specializationsOfInterest,
+        conf?.countriesOfInterest
       );
 
       //handle intital filtering of data on component mount
@@ -216,7 +216,7 @@ const Network = () => {
             data={data}
             setSelectedHcp={setSelectedHcp}
             setIsHcpDetailsShown={setIsHcpDetailsShown}
-            unlockedNodes={config.unlockedNodes}
+            unlockedNodes={config?.unlockedNodes}
           />
         ) : (
           <Map

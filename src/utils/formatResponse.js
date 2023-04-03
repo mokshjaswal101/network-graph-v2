@@ -18,7 +18,6 @@ const formatResponse = (
   //format nodes of KOL data
   kolData.nodes = kolData?.nodes?.map((node) => {
     let zip = calcLatLng(node.attributes.location, node, countriesOfInterest);
-    if(!node?.attributes?.label) console.log(node)
     return {
       key: node.key,
       attributes: {

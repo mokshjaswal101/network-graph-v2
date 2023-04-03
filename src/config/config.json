@@ -60,14 +60,13 @@
     "projectName": "TED v2",
     "unlockedNodes": -1,
     "specializationsOfInterest": {
-      "Neurology": "#63af34",
-      "Neuromuscular Medicine": "#bfd247",
-      "internal medicine pediatrics": "#827ad5",
-      "Clinical Neurophysiology": "#af2cb3",
-      "Psychiatry": "#ADD8E6",
-      "Vascular Neurology": "#454B1B",
-      "Sleep Medicine": "#00FFFF",
-      "Neurocritical Care": "#90EE90",
+      "Endocrinology, Diabetes & Metabolism": "#63af34",
+      "Ophthalmic Plastic And Reconstructive Surgery": "#bfd247",
+      "retina specialist": "#827ad5",
+      "neuro-ophthalmology": "#af2cb3",
+      "cornea and external diseases specialist": "#ADD8E6",
+      "glaucoma specialist": "#454B1B",
+      "ophthalmology": "#00FFFF",
       "other": "#275E40"
     },
     "countriesOfInterest": [

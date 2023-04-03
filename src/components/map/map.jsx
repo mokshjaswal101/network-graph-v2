@@ -185,7 +185,7 @@ const Map = ({
                     eventHandlers={{
                       click: (e) => {
                         if (
-                          e?.target?.options?.value?.attributes?.isVisible <=
+                          unlockedNodes == -1 || e?.target?.options?.value?.attributes?.isVisible <=
                           unlockedNodes
                         ) {
                           handleSecondLevelInfluence(e?.target?.options?.id);
