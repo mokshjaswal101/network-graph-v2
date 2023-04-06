@@ -37,6 +37,8 @@ const Filters = ({
   config,
   topHcps,
   setKolsOffset,
+  setIsLegendsShown,
+  isLegendsShown,
 }) => {
   // function to reset all the filters
   const handleResetFilters = () => {
@@ -202,6 +204,17 @@ const Filters = ({
         >
           Reset Filters
         </button>
+
+        <button
+          className="btn"
+          style={{ background: isLegendsShown ? "red" : "var(--color-green)" }}
+          onClick={() => {
+            setIsLegendsShown(!isLegendsShown);
+          }}
+        >
+          {isLegendsShown ? "Hide Legends" : "Show Legends"}
+        </button>
+
         <button
           className="btn"
           style={{ background: isGraph ? "red" : "var(--color-green)" }}
