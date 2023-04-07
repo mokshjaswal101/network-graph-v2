@@ -39,6 +39,7 @@ const Filters = ({
   setKolsOffset,
   setIsLegendsShown,
   isLegendsShown,
+  isMedicalUser
 }) => {
   // function to reset all the filters
   const handleResetFilters = () => {
@@ -104,7 +105,7 @@ const Filters = ({
               </label>
             </li>
           )}
-          {prescriberData?.nodes?.length > 0 && (
+          {prescriberData?.nodes?.length > 0 && !isMedicalUser && (
             <li>
               <label
                 style={{

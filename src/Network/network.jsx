@@ -71,17 +71,19 @@ const Network = () => {
   //config
   const [projectId, setProjectId] = useState("");
   const [config, setConfig] = useState();
+  const [isMedicalUser, setIsMedicalUser] = useState(false);
 
   //handle initial loading of data
   useEffect(() => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     let project = urlParams.get("projectId");
-
+    
     // if (!project) project = "1936e211-b997-11ed-8c61-52d672bc987d";
 
     let conf = configJson[project];
     setProjectId(project);
+    setIsMedicalUser(urlParams.get("isMedicalUser") == 'true');
     setConfig(conf);
 
     fetchAllData(project).then((res) => {
@@ -188,6 +190,7 @@ const Network = () => {
         topHcps={topHcps}
         isLegendsShown={isLegendsShown}
         setIsLegendsShown={setIsLegendsShown}
+        isMedicalUser={isMedicalUser}
       />
       <div style={{ width: "100%", height: "550px", position: "relative" }}>
         {isLoading && <Loader />}
