@@ -89,9 +89,9 @@ const Network = () => {
     fetchAllData(project).then((res) => {
       //format the response based on requirements for map and graph
       let formattedResponse = formatResponse(
-        DummyData?.kol_graph,
-        DummyData?.referral,
-        DummyData?.top_nodes,
+        res?.kol_graph,
+        res?.referral,
+        res?.top_nodes,
         conf?.specializationsOfInterest,
         conf?.countriesOfInterest
       );
