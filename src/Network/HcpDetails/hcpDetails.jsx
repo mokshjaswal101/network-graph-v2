@@ -144,7 +144,7 @@ const HcpDetails = ({
                   return (
                     <div key={index}>
                       <div key={el.key}>{`• ${capitalizeWords(
-                        el.key.slice(5).split("(")[0]
+                        el.key.slice(5)
                       )}${
                         el?.total_claims ? ` - ${el.total_claims}` : ""
                       }`}</div>

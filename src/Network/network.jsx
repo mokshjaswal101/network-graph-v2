@@ -78,12 +78,12 @@ const Network = () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     let project = urlParams.get("projectId");
-    
-    // if (!project) project = "1936e211-b997-11ed-8c61-52d672bc987d";
+
+    // if (!project) project = "ad1a626d-7279-4d17-a1ea-8ebab6531a5f";
 
     let conf = configJson[project];
     setProjectId(project);
-    setIsMedicalUser(urlParams.get("isMedicalUser") == 'true');
+    setIsMedicalUser(urlParams.get("isMedicalUser") == "true");
     setConfig(conf);
 
     fetchAllData(project).then((res) => {
