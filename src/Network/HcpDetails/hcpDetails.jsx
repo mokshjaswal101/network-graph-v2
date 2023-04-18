@@ -40,7 +40,7 @@ const HcpDetails = ({
         display: "flex",
         flexDirection: "column",
         background: "var(--color-offwhite)",
-        flex: 1,
+        flex: "1 0 auto",
       }}
     >
       {/* Heading of Hcp Details Card */}
