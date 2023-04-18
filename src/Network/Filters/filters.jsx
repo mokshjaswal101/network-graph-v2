@@ -21,6 +21,7 @@ const Filters = ({
   setData,
   specializationList = [],
   stateList,
+  countryList,
   influenceTypes,
   setInfluenceTypes,
   selectedHcp,
@@ -28,6 +29,9 @@ const Filters = ({
   setSelectedSpecialization,
   selectedState,
   setSelectedState,
+  selectedCountry,
+  setSelectedCountry,
+  setCountryList,
   setSpecializationList,
   setStateList,
   setIsPrescriberShown,
@@ -39,7 +43,7 @@ const Filters = ({
   setKolsOffset,
   setIsLegendsShown,
   isLegendsShown,
-  isMedicalUser
+  isMedicalUser,
 }) => {
   // function to reset all the filters
   const handleResetFilters = () => {
@@ -51,6 +55,7 @@ const Filters = ({
     setSelectedHcp(topHcps[0]);
     setSelectedSpecialization("");
     setSelectedState("");
+    setSelectedCountry("");
   };
 
   //add or remove influence type based based on checkbox and state variable
@@ -184,12 +189,16 @@ const Filters = ({
           setData={setData}
           specializationList={specializationList}
           stateList={stateList}
+          countryList={countryList}
           influenceTypes={influenceTypes}
           selectedHcp={selectedHcp}
           selectedSpecialization={selectedSpecialization}
           setSelectedSpecialization={setSelectedSpecialization}
           selectedState={selectedState}
           setSelectedState={setSelectedState}
+          selectedCountry={selectedCountry}
+          setSelectedCountry={setSelectedCountry}
+          setCountryList={setCountryList}
           setSpecializationList={setSpecializationList}
           setStateList={setStateList}
           config={config}

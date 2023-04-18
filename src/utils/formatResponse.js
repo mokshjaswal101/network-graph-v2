@@ -25,7 +25,8 @@ const formatResponse = (
         color:
           specializationsOfInterest[node.attributes.specialization] ||
           specializationsOfInterest["other"],
-        state: zip?.state || node.attributes.state,
+        state: zip?.state || node.attributes.location.state,
+        country: zip?.country || node.attributes.location.country,
         icon: null,
         lat: parseFloat(zip?.latitude) + Math.random() * 0.1,
         lng: parseFloat(zip?.longitude) + Math.random() * 0.1,
@@ -80,7 +81,8 @@ const formatResponse = (
           color:
             specializationsOfInterest[node.attributes.specialization] ||
             specializationsOfInterest["other"],
-          state: zip?.state || node.attributes.state,
+          state: zip?.state || node.attributes.location.state,
+          country: zip?.country || node.attributes.location.country,
           icon: starred,
           lat: parseFloat(zip?.latitude),
           lng: parseFloat(zip?.longitude),
@@ -108,7 +110,8 @@ const formatResponse = (
           color:
             specializationsOfInterest[node.attributes.specialization] ||
             specializationsOfInterest["other"],
-          state: zip?.state || node.attributes.state,
+          state: zip?.state || node.attributes.location.state,
+          country: zip?.country || node.attributes.location.country,
           icon: prescriber,
           lat: parseFloat(zip?.latitude),
           lng: parseFloat(zip?.longitude),
@@ -141,7 +144,8 @@ const formatResponse = (
           color:
             specializationsOfInterest[node.attributes.specialization] ||
             specializationsOfInterest["other"],
-          state: zip?.state || node.attributes.state,
+          state: zip?.state || node.attributes.location.state,
+          country: zip?.country || node.attributes.location.country,
           icon: null,
           lat: parseFloat(zip?.latitude),
           lng: parseFloat(zip?.longitude),

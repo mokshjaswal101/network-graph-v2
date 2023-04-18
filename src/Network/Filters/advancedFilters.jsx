@@ -20,12 +20,16 @@ const AdvancedFilters = ({
   setData,
   specializationList = [],
   stateList,
+  countryList,
   influenceTypes,
   selectedHcp,
   selectedSpecialization,
   setSelectedSpecialization,
   selectedState,
   setSelectedState,
+  selectedCountry,
+  setSelectedCountry,
+  setCountryList,
   setSpecializationList,
   setStateList,
   config,
@@ -117,6 +121,34 @@ const AdvancedFilters = ({
             </StyledSelect>
           </div>
 
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                marginBottom: "5px",
+              }}
+            >
+              COUNTRY
+            </span>
+            <StyledSelect
+              onChange={(e) => setSelectedCountry(e.target.value)}
+              value={selectedCountry}
+            >
+              <option value="">All</option>
+              {countryList?.length > 0 &&
+                countryList
+                  .filter((el) => el)
+                  .map((el, index) => {
+                    return (
+                      <option key={index} value={el}>
+                        {capitalizeWords(el)}
+                      </option>
+                    );
+                  })}
+            </StyledSelect>
+          </div>
+
           <button
             className="btn"
             style={{
@@ -130,10 +162,13 @@ const AdvancedFilters = ({
                 selectedHcp,
                 selectedSpecialization,
                 selectedState,
+                selectedCountry,
                 setStateList,
                 setSpecializationList,
+                setCountryList,
                 setSelectedState,
                 setSelectedSpecialization,
+                setSelectedCountry,
                 config?.unlockedNodes
               );
             }}

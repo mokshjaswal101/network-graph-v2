@@ -12,6 +12,7 @@ const calcLatLng = (location, node, countriesOfInterest) => {
         latitude: res.latitude,
         longitude: res.longitude,
         state: res.state,
+        country: res.country,
       };
   }
 
@@ -29,6 +30,7 @@ const calcLatLng = (location, node, countriesOfInterest) => {
         latitude: res.latitude,
         longitude: res.longitude,
         state: state,
+        country: Country.getCountryByCode(res.countryCode).name,
       };
     }
   }
@@ -43,6 +45,7 @@ const calcLatLng = (location, node, countriesOfInterest) => {
         latitude: res.latitude + Math.random(),
         longitude: res.longitude + Math.random(),
         state: state,
+        country: res.countryCode,
       };
     }
 
@@ -59,6 +62,7 @@ const calcLatLng = (location, node, countriesOfInterest) => {
         latitude: res.latitude + Math.random(),
         longitude: res.longitude + Math.random(),
         state: state,
+        country: res.countryCode,
       };
     }
   }
@@ -80,6 +84,7 @@ const calcLatLng = (location, node, countriesOfInterest) => {
           latitude: res.latitude + Math.random(),
           longitude: res.longitude + Math.random(),
           state: state,
+          country: res.countryCode,
         };
       }
     }

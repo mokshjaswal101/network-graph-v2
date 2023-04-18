@@ -11,15 +11,19 @@ const filterData = (
   selectedHcp,
   selectedSpecialization = "",
   selectedState = "",
+  selectedCountry = "",
   setStateList,
   setSpecializationList,
+  setCountryList,
   setSelectedState,
   setSelectedSpecialization,
+  setSelectedCountry,
   unlockedNodes = -1
 ) => {
   let filteredData = { nodes: [], edges: [] };
   let stateList = [];
-  let specializationList = new Set();
+  let specializationList = [];
+  let countryList = [];
 
   //filter data based on selected hcp
   if (selectedHcp?.key) {
@@ -39,6 +43,7 @@ const filterData = (
     filteredData = res.newData;
     stateList = res.stateList;
     specializationList = res.specializationList;
+    countryList = res.countryList;
   } else {
     setData({ nodes: [], edges: [] });
     return;
@@ -50,20 +55,25 @@ const filterData = (
     !specializationList.includes(selectedSpecialization)
       ? ""
       : selectedSpecialization,
-    !stateList.includes(selectedState) ? "" : selectedState
+    !stateList.includes(selectedState) ? "" : selectedState,
+    !countryList.includes(selectedCountry) ? "" : selectedCountry
   );
 
-  //On changing filters and selected hcp, if the new state list and specializations list do not contain the selected state or specialization, set them to default all
+  //On changing filters and selected hcp, if the  lists do not contain the selected item, set them to default all
   if (!stateList.includes(selectedState)) {
     setSelectedState("");
   }
   if (!specializationList.includes(selectedSpecialization)) {
     setSelectedSpecialization("");
   }
+  if (!countryList.includes(selectedCountry)) {
+    setSelectedCountry("");
+  }
 
-  //Set the new state list and specializations list
+  //Set the new state, specializations and country list
   setStateList(stateList);
   setSpecializationList(specializationList);
+  setCountryList(countryList);
 
   //set new filtered data
   setData(filteredData);
@@ -79,6 +89,7 @@ const filterBasedOnSelectedHcp = (
   let newData = { nodes: [], edges: [] };
   let stateList = new Set();
   let specializationList = new Set();
+  let countryList = new Set();
 
   // filter edges if selected hcp is equal to either source or target
   data?.edges?.forEach((edge) => {
@@ -93,6 +104,7 @@ const filterBasedOnSelectedHcp = (
   newData.nodes.push(selectedHcp);
   specializationList.add(selectedHcp?.attributes?.specialization);
   stateList.add(selectedHcp.attributes.state);
+  countryList.add(selectedHcp.attributes.country);
 
   // get nodes based on the edges filtered
   data?.nodes?.forEach((node) => {
@@ -116,21 +128,24 @@ const filterBasedOnSelectedHcp = (
         newData.nodes.push(newNode);
         stateList.add(node.attributes.state);
         specializationList.add(node.attributes.specialization);
+        countryList.add(node.attributes.country);
       }
     });
   });
 
   stateList = Array.from(stateList);
   specializationList = Array.from(specializationList);
+  countryList = Array.from(countryList);
   newData = structuredClone(newData);
-  return { newData, stateList, specializationList };
+  return { newData, stateList, specializationList, countryList };
 };
 
 //filter data based on the advanced filters
 const filterBasedOnAdvancedFilters = (
   data,
   selectedSpecialization,
-  selectedState
+  selectedState,
+  selectedCountry
 ) => {
   let displayData = structuredClone(data);
 
@@ -174,13 +189,13 @@ const filterBasedOnAdvancedFilters = (
 
     {
       !selectedState &&
+        !selectedCountry &&
         filteredData.nodes.forEach((node) => {
-          if(node.attributes.icon != lock) {
+          if (node.attributes.icon != lock) {
             if (node?.attributes?.icon == starred)
-            node.attributes.icon = starBlue;
-          else node.attributes.icon = diamondBlue;
+              node.attributes.icon = starBlue;
+            else node.attributes.icon = diamondBlue;
           }
-         
         });
     }
 
@@ -224,12 +239,62 @@ const filterBasedOnAdvancedFilters = (
     });
 
     {
+      !selectedCountry &&
+        filteredData.nodes.forEach((node) => {
+          if (node.attributes.icon != lock) {
+            if (node?.attributes?.icon == starred)
+              node.attributes.icon = starBlue;
+            else node.attributes.icon = diamondBlue;
+          }
+        });
+    }
+
+    extraNodes.forEach((node) => {
+      if (!filteredData.nodes.some((el) => el.key == node.key))
+        filteredData.nodes.push(node);
+    });
+
+    displayData = filteredData;
+  }
+
+  //filtering based on Country
+  if (selectedCountry && selectedCountry != "") {
+    let filteredData = { nodes: [], edges: [] };
+
+    displayData.nodes.forEach((node) =>
+      node.attributes.country === selectedCountry
+        ? filteredData.nodes.push(structuredClone(node))
+        : null
+    );
+
+    let extraNodes = [];
+
+    displayData.edges.forEach((edge) => {
+      let source = filteredData.nodes.find((node) => node.key === edge.source);
+      let target = filteredData.nodes.find((node) => node.key === edge.target);
+
+      if (source && target) {
+        filteredData.edges.push(edge);
+      } else if (source || target) {
+        if (source) {
+          extraNodes.push(data.nodes.find((node) => node.key === edge.target));
+        }
+        if (target) {
+          extraNodes.push(data.nodes.find((node) => node.key === edge.source));
+        }
+
+        filteredData.edges.push(edge);
+      }
+      return false;
+    });
+
+    {
       filteredData.nodes.forEach((node) => {
-        if(node.attributes.icon != lock){
-          if (node?.attributes?.icon == starred) node.attributes.icon = starBlue;
+        if (node.attributes.icon != lock) {
+          if (node?.attributes?.icon == starred)
+            node.attributes.icon = starBlue;
           else node.attributes.icon = diamondBlue;
         }
-       
       });
     }
 

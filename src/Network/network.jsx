@@ -61,6 +61,8 @@ const Network = () => {
   const [selectedState, setSelectedState] = useState("");
   const [stateList, setStateList] = useState([]);
   const [specializationList, setSpecializationList] = useState([]);
+  const [countryList, setCountryList] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState("");
 
   //loader
   const [isLoading, setIsLoading] = useState(true);
@@ -79,7 +81,7 @@ const Network = () => {
     const urlParams = new URLSearchParams(queryString);
     let project = urlParams.get("projectId");
 
-    // if (!project) project = "ad1a626d-7279-4d17-a1ea-8ebab6531a5f";
+    if (!project) project = "1936e211-b997-11ed-8c61-52d672bc987d";
 
     let conf = configJson[project];
     setProjectId(project);
@@ -104,10 +106,13 @@ const Network = () => {
         formattedResponse.kols[0],
         selectedSpecialization,
         selectedState,
+        selectedCountry,
         setStateList,
         setSpecializationList,
+        setCountryList,
         setSelectedState,
         setSelectedSpecialization,
+        setSelectedCountry,
         conf?.unlockedNodes
       );
 
@@ -132,10 +137,13 @@ const Network = () => {
       selectedHcp,
       selectedSpecialization,
       selectedState,
+      selectedCountry,
       setStateList,
       setSpecializationList,
+      setCountryList,
       setSelectedState,
       setSelectedSpecialization,
+      setSelectedCountry,
       config?.unlockedNodes
     );
   }, [influenceTypes, selectedHcp?.key, KolsOffset, topHcps]);
@@ -172,12 +180,16 @@ const Network = () => {
         specializationList={specializationList}
         selectedHcp={selectedHcp}
         stateList={stateList}
+        countryList={countryList}
         influenceTypes={influenceTypes}
         setInfluenceTypes={setInfluenceTypes}
         selectedSpecialization={selectedSpecialization}
         setSelectedSpecialization={setSelectedSpecialization}
         selectedState={selectedState}
         setSelectedState={setSelectedState}
+        selectedCountry={selectedCountry}
+        setSelectedCountry={setSelectedCountry}
+        setCountryList={setCountryList}
         setStateList={setStateList}
         setSpecializationList={setSpecializationList}
         data={data}
