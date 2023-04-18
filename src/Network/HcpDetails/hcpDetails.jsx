@@ -235,6 +235,7 @@ const HcpDetails = ({
                   return (
                     <HcpDetailItem>
                       <b>{capitalizeWords(name)}</b>
+                      <br />
                       {` Claims ${values.claimsCount} Patients ${values.patientsCount}`}
                     </HcpDetailItem>
                   );

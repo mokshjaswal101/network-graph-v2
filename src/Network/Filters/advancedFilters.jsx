@@ -143,7 +143,7 @@ const AdvancedFilters = ({
                   .map((el, index) => {
                     return (
                       <option key={index} value={el}>
-                        {capitalizeWords(el)}
+                        {el.toUpperCase()}
                       </option>
                     );
                   })}

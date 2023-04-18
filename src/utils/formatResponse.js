@@ -175,7 +175,7 @@ const formatResponse = (
         target: edge.target,
         attributes: {
           color: "#008080",
-          size: edge.attributes?.weight * 0.1 > 6 ? 6 : edge.attributes.weight,
+          size: edge.attributes?.weight > 6 ? 6 : edge.attributes.weight,
           label: edge?.attributes.weight
             ? `Unique Patients referred : ${edge.attributes.weight}`
             : "",
