@@ -8,7 +8,7 @@ import capitalizeWords from "../../utils/capitalizeWords";
 const StyledSelect = styled.select`
   height: 35px;
   width: 175px;
-  border: 1px solid black;
+  border: 1px solid var(--color-bg);
   background: white;
   color: black;
   padding: 4px 5px;
@@ -52,8 +52,9 @@ const AdvancedFilters = ({
       {showFilters && (
         <div
           style={{
-            border: "1px solid black",
-            boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)",
+            border: "1px solid var(--color-bg)",
+            boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+            borderRadius: "5px",
             backgroundColor: "white",
             position: "absolute",
             top: "110%",
