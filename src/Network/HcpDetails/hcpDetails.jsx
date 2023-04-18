@@ -40,7 +40,6 @@ const HcpDetails = ({
         display: "flex",
         flexDirection: "column",
         background: "var(--color-offwhite)",
-        flex: "1 0 auto",
       }}
     >
       {/* Heading of Hcp Details Card */}
@@ -76,7 +75,7 @@ const HcpDetails = ({
         <div
           style={{
             overflowY: "scroll",
-            flex: "1",
+            flex: "1 1 auto",
             padding: ".75rem",
           }}
         >
@@ -188,7 +187,7 @@ const HcpDetails = ({
         <div
           style={{
             overflowY: "scroll",
-            flex: "1",
+            flex: "1 1 auto",
             padding: ".75rem",
           }}
         >

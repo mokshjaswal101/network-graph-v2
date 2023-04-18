@@ -15,6 +15,8 @@ const formatResponse = (
 ) => {
   let prescribers = [];
 
+  let data = new Date();
+
   //format nodes of KOL data
   kolData.nodes = kolData?.nodes?.map((node) => {
     let zip = calcLatLng(node.attributes.location, node, countriesOfInterest);
@@ -190,6 +192,7 @@ const formatResponse = (
 
   prescriberData.nodes = [...prescriberData.nodes, ...prescribers];
   kolData.nodes = [...kolData.nodes, ...kols];
+  console.log("time for formatting:", (new Date() - Date) / 1000);
   return { kolData, prescriberData, kols, prescribers };
 };
 
