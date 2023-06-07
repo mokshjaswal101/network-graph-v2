@@ -135,5 +135,32 @@
       "france"
     ],
     "edgesCharacteristics": ""
+  },
+  "695eeea1-370c-54e4-84e6-5933cb447731": {
+    "projectId": "695eeea1-370c-54e4-84e6-5933cb447731",
+    "projectName": "Elevation Oncology",
+    "unlockedNodes": -1,
+    "specializationsOfInterest": {
+      "medical oncology": "#63af34",
+      "hematology & oncology": "#bfd247",
+      "thoracic surgery": "#827ad5",
+      "surgical oncology": "#af2cb3",
+      "vascular & interventional radiology": "#ADD8E6",
+      "pathology anatomic pathology & clinical": "#454B1B",
+      "oncology": "#00FFFF",
+      "other": "#275E40"
+    },
+    "countriesOfInterest": [
+      "usa",
+      "us",
+      "uk",
+      "united states",
+      "united kingdom",
+      "germany",
+      "italy",
+      "spain",
+      "france"
+    ],
+    "edgesCharacteristics": ""
   }
 }

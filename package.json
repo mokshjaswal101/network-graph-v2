@@ -19,6 +19,7 @@
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
     "react-sigma": "^1.2.35",
+    "sass": "^1.62.1",
     "sigma": "^2.4.0",
     "styled-components": "^5.3.6",
     "web-vitals": "^2.1.4",
@@ -36,16 +37,9 @@
       "react-app/jest"
     ]
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ]
 }
