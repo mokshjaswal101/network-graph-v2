@@ -169,7 +169,8 @@
     "unlockedNodes": -1,
     "specializationsOfInterest": {
       "thoracic surgery": "#63af34",
-      "cardiothoracic vascular surgery": "#bfd247"
+      "cardiothoracic vascular surgery": "#bfd247",
+      "other": "#275E40"
     },
     "countriesOfInterest": ["usa", "us", "united states"],
     "edgesCharacteristics": ""
