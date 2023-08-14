@@ -162,5 +162,16 @@
       "france"
     ],
     "edgesCharacteristics": ""
+  },
+  "51e0508d-d99b-5c95-87c7-672a1216758d": {
+    "projectId": "51e0508d-d99b-5c95-87c7-672a1216758d",
+    "projectName": "Thoracic Surgery",
+    "unlockedNodes": -1,
+    "specializationsOfInterest": {
+      "thoracic surgery": "#63af34",
+      "cardiothoracic vascular surgery": "#bfd247"
+    },
+    "countriesOfInterest": ["usa", "us", "united states"],
+    "edgesCharacteristics": ""
   }
 }
