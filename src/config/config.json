@@ -211,5 +211,31 @@
       "japan"
     ],
     "edgesCharacteristics": ""
+  },
+  "729782d0-4d03-43dd-b8fb-519294284e52": {
+    "projectId": "729782d0-4d03-43dd-b8fb-519294284e52",
+    "projectName": "AML",
+    "unlockedNodes": -1,
+    "specializationsOfInterest": {
+      "hematology": "#63af34",
+      "hematology & oncology": "#bfd247",
+      "hematology / oncology": "#bfd247",
+      "hematology-oncology": "#bfd247",
+      "hematology./oncology": "#bfd247",
+      "hematology/oncology": "#bfd247",
+      "medical oncology": "#827ad5",
+      "hematologist-oncologist": "#af2cb3",
+      "medical oncologist": "#827ad5",
+      "oncologist": "#00FFFF",
+      "oncologist/hematologist": "#ADD8E6",
+      "oncologists": "#00FFFF",
+      "general hematology oncology": "#454B1B"
+      "oncology": "brown",
+      "other": "#275E40"
+    },
+    "countriesOfInterest": [
+      "usa"
+    ],
+    "edgesCharacteristics": ""
   }
 }
