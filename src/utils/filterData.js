@@ -174,15 +174,6 @@ const filterBasedOnAdvancedFilters = (
 
       if (source && target) {
         filteredData.edges.push(edge);
-      } else if (source || target) {
-        if (source) {
-          extraNodes.push(data.nodes.find((node) => node.key === edge.target));
-        }
-        if (target) {
-          extraNodes.push(data.nodes.find((node) => node.key === edge.source));
-        }
-
-        filteredData.edges.push(edge);
       }
       return false;
     });
@@ -225,16 +216,7 @@ const filterBasedOnAdvancedFilters = (
 
       if (source && target) {
         filteredData.edges.push(edge);
-      } else if (source || target) {
-        if (source) {
-          extraNodes.push(data.nodes.find((node) => node.key === edge.target));
-        }
-        if (target) {
-          extraNodes.push(data.nodes.find((node) => node.key === edge.source));
-        }
-
-        filteredData.edges.push(edge);
-      }
+      } 
       return false;
     });
 
@@ -275,16 +257,7 @@ const filterBasedOnAdvancedFilters = (
 
       if (source && target) {
         filteredData.edges.push(edge);
-      } else if (source || target) {
-        if (source) {
-          extraNodes.push(data.nodes.find((node) => node.key === edge.target));
-        }
-        if (target) {
-          extraNodes.push(data.nodes.find((node) => node.key === edge.source));
-        }
-
-        filteredData.edges.push(edge);
-      }
+      } 
       return false;
     });
 
