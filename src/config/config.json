@@ -237,5 +237,30 @@
       "usa"
     ],
     "edgesCharacteristics": ""
+  },
+  "d1f4db12-b64e-416a-9b47-a27a78337403": {
+    "projectId": "d1f4db12-b64e-416a-9b47-a27a78337403",
+    "projectName": "Regeneron",
+    "unlockedNodes": 0,
+    "specializationsOfInterest": {
+      "cardiology": "#63af34",
+      "cardiovascular disease": "#bfd247",
+      "adult congenital heart disease": "#bfd247",
+      "advanced heart failure and transplant cardiology": "#bfd247",
+      "pulmonary disease": "#bfd247",
+      "hypertension specialist": "#bfd247",
+      "rheumatology": "#827ad5",
+      "other": "#275E40"
+    },
+    "countriesOfInterest": [
+      "usa",
+      "uk",
+      "germany",
+      "france",
+      "spain",
+      "italy",
+      "japan"
+    ],
+    "edgesCharacteristics": ""
   }
 }
