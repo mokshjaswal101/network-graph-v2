@@ -20,7 +20,7 @@ const fetchAllData = async (projectId) => {
 const fetchHcpDetails = async (hcpId, projectId) => {
   try {
     let response = await axios.get(
-      `https://jbx5n3f7k0.execute-api.us-east-2.amazonaws.com/prod/getonedata?uuid=${hcpId}&projectId=1936e211-b997-11ed-8c61-52d672bc987d`
+      `https://pa-api.pharmaacuity.com:10000/getone?uuid=${hcpId}&projectId=1936e211-b997-11ed-8c61-52d672bc987d`
     );
 
     return response.data;
