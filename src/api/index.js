@@ -20,7 +20,7 @@ const fetchAllData = async (projectId) => {
 const fetchHcpDetails = async (hcpId, projectId) => {
   try {
     let response = await axios.get(
-      `https://9rl21epx74.execute-api.us-east-2.amazonaws.com/prod/getOneHcpData?uuid=${hcpId}&projectId=1936e211-b997-11ed-8c61-52d672bc987d`
+      `https://9rl21epx74.execute-api.us-east-2.amazonaws.com/prod/getOneHcpData?uuid=${hcpId}&projectId=${projectId}`
     );
 
     return response.data?.hits?.hits[0]._source || {};
