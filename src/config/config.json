@@ -275,7 +275,8 @@
       "cornea and external diseases specialist": "#bfd247",
       "glaucoma specialistt": "#bfd247",
       "rheumatology": "#827ad5",
-      "ophthalmology": "#275E40"
+      "ophthalmology": "brown",
+      "other": "#275E40"
     },
     "countriesOfInterest": [
      "usa",
