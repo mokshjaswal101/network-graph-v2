@@ -266,7 +266,7 @@
   "fba96ab8-d0ad-11ee-a3ad-52d672bc987d": {
     "projectId": "fba96ab8-d0ad-11ee-a3ad-52d672bc987d",
     "projectName": "GD Revised",
-    "unlockedNodes": 0,
+    "unlockedNodes": -1,
     "specializationsOfInterest": {
       "endocrinology": "#63af34",
       "ophthalmic plastic  and reconstructive surgery": "#bfd247",
