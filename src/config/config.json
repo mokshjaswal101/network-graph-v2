@@ -262,5 +262,30 @@
       "japan"
     ],
     "edgesCharacteristics": ""
+  },
+  "fba96ab8-d0ad-11ee-a3ad-52d672bc987d": {
+    "projectId": "fba96ab8-d0ad-11ee-a3ad-52d672bc987d",
+    "projectName": "GD Revised",
+    "unlockedNodes": 0,
+    "specializationsOfInterest": {
+      "endocrinology": "#63af34",
+      "ophthalmic plastic  and reconstructive surgery": "#bfd247",
+      "retina specialis": "#bfd247",
+      "neuro-ophthalmology": "#bfd247",
+      "cornea and external diseases specialist": "#bfd247",
+      "glaucoma specialistt": "#bfd247",
+      "rheumatology": "#827ad5",
+      "ophthalmology": "#275E40"
+    },
+    "countriesOfInterest": [
+     "usa",
+  "uk",
+  "united kingdom",
+  "germany",
+  "italy",
+  "spain",
+  "france"
+    ],
+    "edgesCharacteristics": ""
   }
 }
