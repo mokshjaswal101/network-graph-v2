@@ -17,6 +17,8 @@ const calcLatLng = (location, node, countriesOfInterest) => {
     let res = zipcodes.lookup(zipcode);
 
     if (res?.latitude && res?.longitude) {
+      
+      console.log("zip", location,node,res)
       return {
         latitude: res.latitude,
         longitude: res.longitude,
@@ -41,7 +43,7 @@ const calcLatLng = (location, node, countriesOfInterest) => {
     });
 
     if (res?.latitude && res?.longitude) {
-      console.log(location,node,res)
+      console.log("city", location,node,res)
       return {
         latitude: res.latitude,
         longitude: res.longitude,
@@ -77,6 +79,8 @@ const calcLatLng = (location, node, countriesOfInterest) => {
     );
 
     if (res?.latitude && res?.longitude) {
+      
+      console.log("state", location,node,res)
       return {
         latitude: res.latitude + Math.random(),
         longitude: res.longitude + Math.random(),
@@ -102,6 +106,8 @@ const calcLatLng = (location, node, countriesOfInterest) => {
     );
     if (res?.latitude && res?.longitude) {
       {
+        
+      console.log("country", location,node,res)
         return {
           latitude: res.latitude + Math.random(),
           longitude: res.longitude + Math.random(),
