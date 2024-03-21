@@ -3,6 +3,8 @@ import zipcodes from "zipcodes";
 
 const calcLatLng = (location, node, countriesOfInterest) => {
 
+  countriesOfInterest = countriesOfInterest.map((country) => country.toLowerCase());
+  
   if (countriesOfInterest.includes('usa'))
     countriesOfInterest = [...countriesOfInterest, 'united states', 'us'];
   if (countriesOfInterest.includes('uk')) countriesOfInterest.push('united kingdom');
