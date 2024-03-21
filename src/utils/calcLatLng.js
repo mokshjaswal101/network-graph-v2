@@ -108,7 +108,7 @@ const calcLatLng = (location, node, countriesOfInterest) => {
   }
 
   //console node if not able to calculate lat/lng
-  console.log(ooo, location);
+ 
 
   return { latitude: 0, longitude: 0 };
 };
