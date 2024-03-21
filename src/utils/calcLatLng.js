@@ -10,7 +10,6 @@ const calcLatLng = (location, node, countriesOfInterest) => {
     let res = zipcodes.lookup(zipcode);
 
     if (res?.latitude && res?.longitude) {
-      console.log(location,node,res)
       return {
         latitude: res.latitude,
         longitude: res.longitude,
@@ -35,6 +34,7 @@ const calcLatLng = (location, node, countriesOfInterest) => {
     });
 
     if (res?.latitude && res?.longitude) {
+      console.log(location,node,res)
       return {
         latitude: res.latitude,
         longitude: res.longitude,
