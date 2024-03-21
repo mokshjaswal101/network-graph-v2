@@ -37,6 +37,7 @@ const calcLatLng = (location, node, countriesOfInterest) => {
     let res = City.getAllCities(['name', 'countryCode']).find((el) => {
       if (
         el?.name.toLowerCase() == city.trim().toLowerCase() &&
+         (!state || el.stateCode?.toLowerCase() == state?.toLowerCase()) &&
         countriesOfInterest.includes(Country.getCountryByCode(el?.countryCode)?.name?.toLowerCase())
       )
         return true;
