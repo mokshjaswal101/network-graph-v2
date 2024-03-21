@@ -2,6 +2,11 @@ import { Country, State, City } from "country-state-city";
 import zipcodes from "zipcodes";
 
 const calcLatLng = (location, node, countriesOfInterest) => {
+
+  if (countriesOfInterest.includes('usa'))
+    countriesOfInterest = [...countriesOfInterest, 'united states', 'us'];
+  if (countriesOfInterest.includes('uk')) countriesOfInterest.push('united kingdom');
+  
   let { zipcode, city, state, country } = location;
 
   if (location?.zipcodes) zipcode = location?.zipcodes;
